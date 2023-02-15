@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib import admin
 
-
 class SimpleUser(models.Model):
     user_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255)
