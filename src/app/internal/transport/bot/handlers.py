@@ -15,4 +15,4 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def create_user(update: Update):
     print(update.effective_user.id)
-    sync_to_async(SimpleUser.objects.update_or_create(user_id=update.effective_user.id, name=update.effective_user.first_name, surname=update.effective_user.last_name))
+    sync_to_async(SimpleUser.objects.update_or_create(user_id=update.effective_user.id, name=update.effective_user.first_name, surname=update.effective_user.last_name, phone_number = None))
