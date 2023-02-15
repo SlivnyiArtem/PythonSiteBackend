@@ -8,6 +8,8 @@ from app.internal.models.simple_user import SimpleUser
 
 
 def me_inf_handler(message, bot):
+    bot.reply_to(message, message.text)
+
     result: SimpleUser = SimpleUser.objects.filter(user_id=message.from_user.id).first()
     bot.send_message(message.chat.id, str(result))
 
@@ -17,6 +19,7 @@ def start_handler(message, bot):
     print("@START")
     default_updates = {"name": user.first_name, "surname": user.last_name}
     SimpleUser.objects.update_or_create(user_id=user.id, defaults=default_updates)
+    bot.send_message(message.chat.id, f'пользователь {user.name} успешно добавлен в базу данных')
 
 
 
@@ -51,6 +54,8 @@ def phone_number_handler(message, bot):
     print("@USER_PHONE")
     msg = bot.send_message(message.chat.id, 'Укажите номер телефона, который вы хотите добавить в базу')
     bot.register_next_step_handler(msg, get_phone_number, bot)
+    bot.send_message(message.chat.id,
+                     f'Телефонный номер успешно добавлен к данным пользователя {message.from_user.name}')
 
     # phone_number = bot.register_next_step_handler(msg, get_phone_number)
     # print(phone_number)
