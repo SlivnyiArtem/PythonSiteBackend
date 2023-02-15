@@ -9,7 +9,7 @@ class SimpleUser(models.Model):
     phone_number = models.IntegerField(null=True)
 
     def __str__(self):
-        return self.string_deserialize()
+        return str(self.user_id)
 
     def string_deserialize(self):
         des_res = vars(self)
