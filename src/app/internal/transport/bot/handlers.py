@@ -1,5 +1,5 @@
 import threading
-
+import phonenumbers
 from asgiref.sync import sync_to_async
 from telegram import Update
 from telegram.ext import ContextTypes
@@ -67,16 +67,18 @@ def phone_number_handler(message, bot):
 
 
 def get_phone_number(message, bot):
+    # print(phonenumbers.is_valid_number(phonenumbers.parse(message.text, "IN")))
+    # print("SSSSS")
     number = message.text.replace("+7", "8", 1)
-    print(number)
-    if number.isdigit():
+    # print(number)
+    if phonenumbers.is_valid_number(phonenumbers.parse(message.text, "IN")):
         # return int(number)
         SimpleUser.objects.filter(user_id=message.from_user.id).update(phone_number=str(message.text))
     else:
         # bot.
         # return None
         # bot.register_next_step_handler("Неправильное введенный формат номера, введине номер из одних цифр, начинающийся с 8 или +7", set_phone_number)
-        bot.reply_to(message,"Неправильное введенный формат номера, введине номер из одних цифр")
+        bot.reply_to(message,"Некорректный номер, проверьте правильность формата, затем введите ещё раз")
     # bot.reply_to(message, """\
     # Hi there, I am EchoBot.
     # I am here to echo your kind words back to you. Just say anything nice and I'll say the exact same thing to you!\
