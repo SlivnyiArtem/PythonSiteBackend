@@ -8,8 +8,6 @@ from app.internal.models.simple_user import SimpleUser
 
 
 def me_inf_handler(message, bot):
-    bot.reply_to(message, message.text)
-
     result: SimpleUser = SimpleUser.objects.filter(user_id=message.from_user.id).first()
     print(result)
     print("@ME")
@@ -25,7 +23,8 @@ def start_handler(message, bot):
     print("@START")
     default_updates = {"name": user.first_name, "surname": user.last_name}
     SimpleUser.objects.update_or_create(user_id=user.id, defaults=default_updates)
-    bot.send_message(message.chat.id, f'пользователь {user.username} успешно добавлен в базу данных')
+    bot.send_message(message.chat.id, f'пользователь {user.username} успешно добавлен в базу данных, '
+                                      f'либо данные о нём обновлены')
 
     # SimpleUser.objects.update_or_create(user_id=messagef.effective_user.id, name=update.effective_user.first_name,
     #                                     surname=update.effective_user.last_name)
