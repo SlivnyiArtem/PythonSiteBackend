@@ -1,4 +1,5 @@
 from app.internal.models.simple_user import SimpleUser
+from app.internal.transport.messages import common_messages
 
 
 def update_user_number(user_id, number):
@@ -12,10 +13,9 @@ def update_create_user(user_id, default_updates):
 def try_get_information(user_id):
     result: SimpleUser = SimpleUser.objects.filter(user_id=user_id).first()
     if result is None:
-        return {"error_message": "К сожалению, в базе данных о Вас нет информации. "
-                                 "Попробуйте добавить себя в неё через команду бота /start"}
+        return {"error_message": common_messages.no_information_in_db_message()}
     elif result.phone_number is None:
-        return {"error_message": "В доступе к комманде отказано. Введите свой номер с помощью комманды /set_phone"}
+        return {"error_message": common_messages.access_restricted_message()}
     else:
         return result.get_dictionary_deserialize()
 
