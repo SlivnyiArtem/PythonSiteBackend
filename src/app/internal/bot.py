@@ -1,11 +1,14 @@
 import telebot
-
+import environ
 from app.internal.transport.bot import handlers
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 class Bot:
     def __init__(self):
-        self.application = telebot.TeleBot('6007627790:AAG3MqSDVIFkzfCRmYNDJNWc1UOqFpHxYdw')
+        self.application = telebot.TeleBot(env("BOT_KEY"))  # Final(secret) token
         self.application.message_handler(commands=['start'])(lambda message:
                                                              handlers.start_handler(message, self.application))
 
