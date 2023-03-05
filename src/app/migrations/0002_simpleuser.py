@@ -13,9 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SimpleUser',
             fields=[
-                ('user_id',
-                 models.IntegerField(primary_key=True,
-                                     serialize=False)),
+                ('user_id', models.IntegerField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=255)),
                 ('surname', models.CharField(max_length=255)),
                 ('phone_number', models.IntegerField(blank=True)),
