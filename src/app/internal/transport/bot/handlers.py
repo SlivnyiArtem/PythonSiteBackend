@@ -2,6 +2,7 @@ import phonenumbers
 from app.internal.services import user_service
 from app.internal.services.informing_service import dict_ser_to_str_ser
 from app.internal.transport.messages import common_messages
+from app.internal.transport.information_former import information_former
 
 
 def help_handler(message, bot):
@@ -11,7 +12,7 @@ def help_handler(message, bot):
 def me_inf_handler(message, bot):
     bot.send_message(message.chat.id,
                      dict_ser_to_str_ser
-                     (user_service.try_get_information(message.from_user.id)))
+                     (information_former.try_get_information(message.from_user.id)))
 
 
 def start_handler(message, bot):
