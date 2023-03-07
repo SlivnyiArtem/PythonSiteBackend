@@ -1,6 +1,6 @@
 import phonenumbers
 from app.internal.services import user_service
-from app.internal.services.informing_service import dict_ser_to_str_ser
+from internal.transport.bot.informing_handlers import dict_ser_to_str_ser
 from app.internal.transport.messages import common_messages
 from app.internal.transport.information_former import information_former
 
