@@ -19,7 +19,7 @@ def get_amount(message, bot):
     if amount is not None:
         bot.send_message(message.chat.id, amount)
     else:
-        bot.send_message(message.chat.id, common_messages.no_card_or_acc)
+        bot.send_message(message.chat.id, common_messages.no_card_or_acc())
 
 
 def help_handler(message, bot):

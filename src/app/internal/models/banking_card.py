@@ -10,9 +10,8 @@ class Card(models.Model):
     YY = models.IntegerField(max_length=255)
     system = models.CharField(null=False, max_length=20)
     banking_account = models.OneToOneField(BankingAccount, on_delete=models.CASCADE)
-    currency_amount = getattr(banking_account, "currency_amount")
-    card_owner = getattr(banking_account, "account_owner")
-
+    currency_amount = models.DecimalField(decimal_places=2, max_digits=20)
+    card_owner = models.OneToOneField(SimpleUser, on_delete=models.CASCADE)
     # card_owner = models.ForeignKey(SimpleUser, on_delete=models.CASCADE)
 
     def get_user(self):

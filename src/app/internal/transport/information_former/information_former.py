@@ -1,7 +1,7 @@
 from rest_framework import status
 from app.internal.models.simple_user import SimpleUser
 from app.internal.models.banking_account import BankingAccount
-from app.internal.models.card import Card
+from app.internal.models.banking_card import Card
 from app.internal.transport.messages import common_messages
 
 
@@ -28,7 +28,7 @@ def try_get_user(user_id):
     return result
 
 
-def try_get_card_information(user,card_id):
+def try_get_card_information(user, card_id):
     result_1: Card = Card. \
         objects.filter(card_number=card_id).filter(card_owner=user).first()
     result_2: BankingAccount = BankingAccount. \
