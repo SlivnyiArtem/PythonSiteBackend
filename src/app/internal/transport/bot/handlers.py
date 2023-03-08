@@ -5,6 +5,23 @@ from app.internal.transport.messages import common_messages
 from app.internal.transport.information_former import information_former
 
 
+def currency_amount_handler(message, bot):
+    msg = bot.send_message(message.chat.id,
+                           common_messages.ask_for_card_acc_number())
+    bot.register_next_step_handler(msg, get_amount, bot)
+
+
+def get_amount(message, bot):
+    user = information_former.try_get_user(message.from_user.id)
+    if user is None:
+        bot.send_message(message.chat.id, common_messages.no_information_in_db_message)
+    amount = information_former.try_get_card_information(user, int(message.text))
+    if amount is not None:
+        bot.send_message(message.chat.id, amount)
+    else:
+        bot.send_message(message.chat.id, common_messages.no_card_or_acc)
+
+
 def help_handler(message, bot):
     bot.send_message(message.chat.id, common_messages.help_command_message())
 
