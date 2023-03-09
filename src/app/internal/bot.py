@@ -30,8 +30,7 @@ class Bot:
         self.application \
             .message_handler(commands=['check_currency'])(
                 lambda message:
-                handlers.currency_amount_handler(message, self.application)
-        )
+                handlers.currency_amount_handler(message, self.application))
 
     def start(self):
         self.application.infinity_polling()
