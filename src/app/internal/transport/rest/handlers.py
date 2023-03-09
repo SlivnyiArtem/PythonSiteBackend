@@ -1,4 +1,4 @@
-from app.internal.transport.information_former import information_former
+from app.internal.transport.information_former import form_information_handlers
 from django.http import JsonResponse
 
 
