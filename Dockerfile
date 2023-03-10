@@ -6,7 +6,5 @@ COPY requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt --no-cache
 
-EXPOSE 8000
-
-ADD src src
+COPY src src
 
