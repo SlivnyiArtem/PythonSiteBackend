@@ -31,8 +31,12 @@ def get_amount(message, bot):
     if user is None:
         bot.send_message(message.chat.id,
                          common_messages.no_information_in_db_message)
-    amount = form_information_handlers. \
-        get_currency_information(user, int(message.text))
+    try:
+        amount = form_information_handlers. \
+            get_currency_information(user, int(message.text))
+    except PermissionError as _:
+        bot.send_message(message.chat.id, common_messages.access_denied())
+        return
     if amount is not None:
         bot.send_message(message.chat.id, amount)
     else:

@@ -4,12 +4,19 @@ from app.internal.models.simple_user import SimpleUser
 from app.internal.services import bd_service
 
 
-def get_currency_information(user_id, requisite_id):
-    card_inf = bd_service.get_card_by_id_and_user(user_id, requisite_id)
-    acc_inf = bd_service.get_acc_by_id_and_user(user_id, requisite_id)
+def get_currency_information(user, requisite_id):
+    acc_inf = bd_service.get_acc_by_id_and_user(user, requisite_id)
+    card_inf = bd_service.get_card_by_id_and_user(user, requisite_id)
     if card_inf is not None:
-        return card_inf.currency_amount
+        print(card_inf.banking_account.account_owner)
+        print(user)
+        if card_inf.banking_account.account_owner.user_id != user["user_id"]:
+            raise PermissionError("Доступ запрещен")
+        return card_inf.banking_account.currency_amount
+
     elif acc_inf is not None:
+        if acc_inf.account_owner.user_id != user["user_id"]:
+            raise PermissionError("Доступ запрещен")
         return acc_inf.currency_amount
     else:
         return None
