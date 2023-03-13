@@ -5,6 +5,21 @@ from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
 
+def error_handler(exc, message, bot):
+    bot.send_message(message.chat.id, common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
+
+
+def error_decorator(orig_func):
+    def wrapper(*args, **kwargs):
+        try:
+            orig_func(*args, **kwargs)
+        except Exception as exc:
+            error_handler(exc, args[0], args[1])
+
+    return wrapper
+
+
+@error_decorator
 def currency_amount_handler(message, bot):
     msg = bot.send_message(message.chat.id,
                            common_messages.ask_for_card_acc_number())
@@ -12,12 +27,12 @@ def currency_amount_handler(message, bot):
 
 
 def get_amount(message, bot):
-    user = form_information_handlers.get_user(message.from_user.id)
+    user = form_information_handlers.get_user_information(message.from_user.id)
     if user is None:
         bot.send_message(message.chat.id,
                          common_messages.no_information_in_db_message)
-    amount = form_information_handlers.\
-        get_card_information(user, int(message.text))
+    amount = form_information_handlers. \
+        get_currency_information(user, int(message.text))
     if amount is not None:
         bot.send_message(message.chat.id, amount)
     else:
@@ -25,17 +40,20 @@ def get_amount(message, bot):
                          common_messages.no_card_or_acc())
 
 
+@error_decorator
 def help_handler(message, bot):
     bot.send_message(message.chat.id,
                      common_messages.help_command_message())
 
 
+@error_decorator
 def me_inf_handler(message, bot):
     bot.send_message(message.chat.id,
                      convert_dict_to_str
                      (form_information_handlers.get_user_information(message.from_user.id)))
 
 
+@error_decorator
 def start_handler(message, bot):
     user = message.from_user
     default_updates = {"name": user.first_name, "surname": user.last_name}
@@ -45,6 +63,7 @@ def start_handler(message, bot):
                      user_add_message(user.username))
 
 
+@error_decorator
 def phone_number_handler(message, bot):
     msg = bot.send_message(message.chat.id,
                            common_messages.ask_for_phone_number_message())
