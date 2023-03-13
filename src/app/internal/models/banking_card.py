@@ -6,19 +6,15 @@ from django.db import models
 
 class Card(models.Model):
     card_number = models.IntegerField(primary_key=True)
-    MM = models.IntegerField(max_length=255,
-                             validators=[MaxValueValidator(24),
+    MM = models.IntegerField(validators=[MaxValueValidator(12),
                                          MinValueValidator(1)])
-    YY = models.IntegerField(max_length=255)
+    YY = models.IntegerField()
     system = models.CharField(null=False, max_length=20)
     banking_account = models.OneToOneField(BankingAccount,
                                            on_delete=models.CASCADE)
+    #!!!
     currency_amount = models.DecimalField(decimal_places=2, max_digits=20)
     card_owner = models.OneToOneField(SimpleUser, on_delete=models.CASCADE)
-    # card_owner = models.ForeignKey(SimpleUser, on_delete=models.CASCADE)
-
-    def get_user(self):
-        return self.banking_account
 
     def __str__(self):
         return str(self.card_number)

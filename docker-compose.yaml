@@ -4,10 +4,10 @@ services:
   app-service:
     container_name: python-django-app-1
     image: python-django-1
-    build: .src/
-    command: bash -c "python src/manage.py migrate & python src/manage.py runserver --insecure 0.0.0.0:8000"
+    build: .
+    command: bash -c "python src/manage.py migrate & python src/manage.py runserver"
     ports:
-      - "4000:8000"
+      - "8000:8000"
     depends_on:
       - db-service
     networks:
