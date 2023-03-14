@@ -13,13 +13,6 @@ class Card(models.Model):
     banking_account = models.OneToOneField(BankingAccount,
                                            on_delete=models.CASCADE)
 
-    # currency_amount = banking_account.related_model.currency_amount
-    # card_owner = banking_account.related_model.account_owner
-
-    # !!!
-    # currency_amount = models.DecimalField(decimal_places=2, max_digits=20)
-    # card_owner = models.OneToOneField(SimpleUser, on_delete=models.CASCADE)
-
     def __str__(self):
         return str(self.card_number)
 
