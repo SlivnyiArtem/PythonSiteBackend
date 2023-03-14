@@ -8,7 +8,6 @@ environ.Env.read_env()
 
 class Bot:
     def __init__(self):
-        # Final(secret) token
         self.application = telebot.TeleBot(env("BOT_KEY"))
         self.application.message_handler(commands=['help'])(
             lambda message: handlers.help_handler(message, self.application))

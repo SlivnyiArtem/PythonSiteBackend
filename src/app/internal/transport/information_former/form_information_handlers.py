@@ -8,8 +8,6 @@ def get_currency_information(user, requisite_id):
     acc_inf = bd_service.get_acc_by_id_and_user(user, requisite_id)
     card_inf = bd_service.get_card_by_id_and_user(user, requisite_id)
     if card_inf is not None:
-        print(card_inf.banking_account.account_owner)
-        print(user)
         if card_inf.banking_account.account_owner.user_id != user["user_id"]:
             raise PermissionError("Доступ запрещен")
         return card_inf.banking_account.currency_amount

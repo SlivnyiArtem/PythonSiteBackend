@@ -23,10 +23,10 @@ def error_decorator(orig_func):
 def currency_amount_handler(message, bot):
     msg = bot.send_message(message.chat.id,
                            common_messages.ask_for_card_acc_number())
-    bot.register_next_step_handler(msg, get_amount, bot)
+    bot.register_next_step_handler(msg, send_amount_inf, bot)
 
 
-def get_amount(message, bot):
+def send_amount_inf(message, bot):
     user = form_information_handlers.get_user_information(message.from_user.id)
     if user is None:
         bot.send_message(message.chat.id,
