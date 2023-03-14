@@ -1,7 +1,6 @@
+from app.internal.models.banking_account import BankingAccount
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
-from app.internal.models.banking_account import BankingAccount
 
 
 class Card(models.Model):

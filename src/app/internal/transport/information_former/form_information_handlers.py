@@ -1,7 +1,6 @@
-from rest_framework import status
-
 from app.internal.models.simple_user import SimpleUser
 from app.internal.services import bd_service
+from rest_framework import status
 
 
 def get_currency_information(user, requisite_id):

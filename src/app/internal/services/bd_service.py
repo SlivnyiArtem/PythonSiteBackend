@@ -15,5 +15,6 @@ def get_card_by_id_and_user(card_number) -> Card:
 
 
 def get_acc_by_id_and_user(acc_number) -> BankingAccount:
-    result: BankingAccount = BankingAccount.objects.filter(account_number=acc_number).first()
+    result: BankingAccount = \
+        BankingAccount.objects.filter(account_number=acc_number).first()
     return result

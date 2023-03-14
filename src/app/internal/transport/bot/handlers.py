@@ -1,12 +1,15 @@
 import phonenumbers
 from app.internal.services import user_service
-from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
+from app.internal.transport.bot.text_serialization_handlers import \
+    convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
 
 def error_handler(exc, message, bot):
-    bot.send_message(message.chat.id, common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
+    bot.send_message(message.chat.id,
+                     common_messages.MESSAGE_DICT
+                     .get("error_send_message") + f" {exc}")
 
 
 def error_decorator(orig_func):
@@ -34,14 +37,17 @@ def send_amount_inf(message, bot):
     try:
         amount = form_information_handlers. \
             get_currency_information(user, int(message.text))
-    except PermissionError as _:
-        bot.send_message(message.chat.id, common_messages.access_denied())
+    except PermissionError:
+        bot.send_message(message.chat.id,
+                         common_messages.access_denied())
         return
     if amount is not None:
         bot.send_message(message.chat.id, amount)
     else:
-        bot.send_message(message.chat.id,
-                         common_messages.no_card_or_acc())
+        bot.register_next_step_handler(bot.send_message(message.chat.id,
+                                                        common_messages
+                                                        .no_card_or_acc()),
+                                       send_amount_inf, bot)
 
 
 @error_decorator
@@ -54,7 +60,8 @@ def help_handler(message, bot):
 def me_inf_handler(message, bot):
     bot.send_message(message.chat.id,
                      convert_dict_to_str
-                     (form_information_handlers.get_user_information(message.from_user.id)))
+                     (form_information_handlers
+                      .get_user_information(message.from_user.id)))
 
 
 @error_decorator
