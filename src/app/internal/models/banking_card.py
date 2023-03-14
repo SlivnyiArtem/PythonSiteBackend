@@ -1,7 +1,7 @@
-from app.internal.models.banking_account import BankingAccount
-from app.internal.models.simple_user import SimpleUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from app.internal.models.banking_account import BankingAccount
 
 
 class Card(models.Model):
@@ -12,10 +12,11 @@ class Card(models.Model):
     system = models.CharField(null=False, max_length=20)
     banking_account = models.OneToOneField(BankingAccount,
                                            on_delete=models.CASCADE)
+
     # currency_amount = banking_account.related_model.currency_amount
     # card_owner = banking_account.related_model.account_owner
 
-    #!!!
+    # !!!
     # currency_amount = models.DecimalField(decimal_places=2, max_digits=20)
     # card_owner = models.OneToOneField(SimpleUser, on_delete=models.CASCADE)
 
