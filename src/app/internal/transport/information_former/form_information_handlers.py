@@ -14,8 +14,6 @@ def get_currency_information(user, requisite_id):
         if acc_inf.account_owner.user_id != user["user_id"]:
             raise PermissionError("Доступ запрещен")
         return acc_inf.currency_amount
-    else:
-        return None
 
 
 def get_user_information(user_id):
