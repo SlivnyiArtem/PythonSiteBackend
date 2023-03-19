@@ -36,3 +36,18 @@ check_lint:
 	isort --check --diff .
 	flake8 --config setup.cfg
 	black --check --config pyproject.toml .
+
+run_bot:
+	python src/manage.py start_bot
+
+run_server:
+	python src/manage.py runserver
+
+docker_build:
+	docker-compose build
+
+docker_stop:
+	docker compose down
+
+docker_start:
+	docker compose up

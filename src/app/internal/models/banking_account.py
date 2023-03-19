@@ -1,0 +1,15 @@
+from app.internal.models.simple_user import SimpleUser
+from django.db import models
+
+
+class BankingAccount(models.Model):
+    account_number = models.IntegerField(primary_key=True)
+    account_owner = models.OneToOneField(SimpleUser, on_delete=models.CASCADE)
+    currency_amount = models.DecimalField(decimal_places=2, max_digits=20)
+
+    def __str__(self):
+        return str(self.account_number)
+
+    def get_dictionary_deserialize(self):
+        serialize_dict = {"card_number": self.account_number}
+        return serialize_dict

@@ -7,3 +7,6 @@ __pycache__
 /.env*
 .idea
 .env
+.sqlLite
+db.sqlite3
+.orig

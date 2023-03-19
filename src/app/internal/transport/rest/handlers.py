@@ -1,6 +1,9 @@
+from app.internal.transport.information_former import form_information_handlers
 from django.http import JsonResponse
-from app.internal.services import user_service
 
 
 def me_http_inf_handler(_, user_id):
-    return JsonResponse(user_service.try_get_information(user_id), json_dumps_params={'ensure_ascii': False})
+    information = form_information_handlers.get_user_information(user_id)
+    return JsonResponse(information,
+                        json_dumps_params={'ensure_ascii': False},
+                        status=information["error_code"])
