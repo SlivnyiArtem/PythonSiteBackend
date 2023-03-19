@@ -44,7 +44,7 @@ run_server:
 	python src/manage.py runserver
 
 docker_build:
-	docker-compose build
+	docker compose build
 
 docker_stop:
 	docker compose down
