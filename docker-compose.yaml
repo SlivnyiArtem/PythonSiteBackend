@@ -23,7 +23,7 @@ services:
     image: postgres:12.0-alpine
     env_file: ./src/config/.env
     volumes:
-      - ./log-directory:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     extra_hosts:
@@ -42,3 +42,6 @@ services:
 networks:
   my-network:
     external: true
+
+volumes:
+    pgdata:
