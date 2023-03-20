@@ -10,6 +10,8 @@ services:
       - "0.0.0.0:8000:8000"
     depends_on:
       - db-service
+    networks:
+      - my-network
 
 
   db-service:
@@ -28,3 +30,7 @@ services:
     depends_on:
       - db-service
     env_file: ./src/config/.env
+
+networks:
+  my-network:
+    external: true
