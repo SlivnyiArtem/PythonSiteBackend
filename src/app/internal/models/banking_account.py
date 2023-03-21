@@ -1,5 +1,6 @@
-from app.internal.models.simple_user import SimpleUser
 from django.db import models
+
+from app.internal.models.simple_user import SimpleUser
 
 
 class BankingAccount(models.Model):
