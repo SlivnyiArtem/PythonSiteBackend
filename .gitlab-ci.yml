@@ -9,10 +9,6 @@ stages:
 before_script:
   - apk add make
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  - echo $(pwd)
-  - touch $(pwd)/src/config/.env
-  - cp $DOT_ENV $(pwd)/src/config/.env
-  - cat $(pwd)/src/config.env
 
 build:
   stage: build
