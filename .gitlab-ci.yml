@@ -9,12 +9,14 @@ stages:
 before_script:
   - apk add make
   - apk add py3-pip
+  - pip install flake8
+  - pip install isort
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 build:
   stage: build
   script:
-    - make docker_build push
+    - make docker_build
   tags:
     - job:build
   only:
