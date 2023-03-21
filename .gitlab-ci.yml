@@ -13,7 +13,7 @@ before_script:
 build:
   stage: build
   script:
-    - make docker-build push
+    - make docker_build push
   tags:
     - job:build
   only:
@@ -46,7 +46,7 @@ test:
 deploy:
   stage: deploy
   script:
-    - make pull docker-stop migrate docker-start
+    - make pull docker_stop migrate docker_start
   tags:
     - job:deploy
   only:
