@@ -44,13 +44,13 @@ run_server:
 	python src/manage.py runserver
 
 docker_build:
-	docker compose build
+	docker-compose build
 
 docker_stop:
-	docker compose down
+	docker-compose down
 
 docker_start:
-	docker compose up
+	docker-compose up
 
 docker_test:
 	python printf("test")
