@@ -13,6 +13,7 @@ before_script:
 build:
   stage: build
   script:
+    - pip install -r requirements.txt
     - make docker_build
   tags:
     - job:build
