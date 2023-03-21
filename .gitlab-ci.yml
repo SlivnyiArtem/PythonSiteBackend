@@ -7,9 +7,8 @@ stages:
   - deploy
 
 before_script:
-  - apk add py3-pip
+  - apk add --update py-pip
   - apk add make
-  - apk add pip
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 build:
