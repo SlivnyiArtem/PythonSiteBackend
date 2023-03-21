@@ -4,9 +4,7 @@ media/
 local_settings.py
 __pycache__
 *.pyc
-/.env*
 .idea
-.env
 .sqlLite
 db.sqlite3
 .orig
