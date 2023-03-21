@@ -1,5 +1,6 @@
 import environ
 import telebot
+
 from app.internal.transport.bot import handlers
 
 env = environ.Env()

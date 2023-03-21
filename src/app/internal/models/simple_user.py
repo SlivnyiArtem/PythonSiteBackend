@@ -1,6 +1,7 @@
-from app.internal.transport.messages import common_messages
 from django.db import models
 from rest_framework import status
+
+from app.internal.transport.messages import common_messages
 
 
 class SimpleUser(models.Model):

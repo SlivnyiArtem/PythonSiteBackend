@@ -1,5 +1,6 @@
-from app.internal.transport.information_former import form_information_handlers
 from django.http import JsonResponse
+
+from app.internal.transport.information_former import form_information_handlers
 
 
 def me_http_inf_handler(_, user_id):
