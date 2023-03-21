@@ -3,7 +3,7 @@ version: "3.10"
 services:
   app-service:
     container_name: python-django-app-1
-    image: python-django-1
+    image: ${IMAGE_APP}
     build: .
     command: bash -c "python src/manage.py migrate & python src/manage.py runserver 0.0.0.0:8000"
     links:
@@ -23,10 +23,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432"
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=178953
+    env_file: ./src/config/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
