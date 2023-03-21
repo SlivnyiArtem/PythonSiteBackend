@@ -51,3 +51,6 @@ docker_stop:
 
 docker_start:
 	docker compose up
+
+docker_test:
+	python printf("test")
