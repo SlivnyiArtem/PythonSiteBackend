@@ -3,7 +3,7 @@ version: "3.10"
 services:
   app-service:
     container_name: python-django-app-1
-    image: python-django-1
+    image: ${IMAGE_APP}
     build: .
     command: bash -c "python src/manage.py migrate & python src/manage.py runserver 0.0.0.0:8000"
     links:
