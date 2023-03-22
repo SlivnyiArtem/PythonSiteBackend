@@ -1,7 +1,8 @@
 import phonenumbers
 
 from app.internal.services import user_service
-from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
+from app.internal.transport.bot.\
+    text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
