@@ -1,4 +1,7 @@
 migrate:
+	python src/manage.py migrate $(if $m, api $m,)
+
+migrate3:
 	python3 src/manage.py migrate $(if $m, api $m,)
 
 makemigrations:
