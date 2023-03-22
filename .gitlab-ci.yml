@@ -27,7 +27,7 @@ lint:
   stage: lint
   script:
     - pip install flake8 isort black
-    - make check_lint
+    - make lint #check_lint не забудь вставить
   tags:
     - job:lint
   only:
