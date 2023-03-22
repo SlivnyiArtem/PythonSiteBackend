@@ -9,7 +9,7 @@ makemigrations:
 	sudo chown -R ${USER} src/app/migrations/
 
 createsuperuser:
-	python src/manage.py createsuperuser
+	python src/manage.py createsuperuser --settings=config.settings_local
 
 collectstatic:
 	python src/manage.py collectstatic --no-input
@@ -41,10 +41,10 @@ check_lint:
 	black --check --config pyproject.toml .
 
 run_bot:
-	python src/manage.py start_bot
+	python src/manage.py start_bot --settings=config.settings_local
 
 run_server:
-	python src/manage.py runserver
+	python src/manage.py runserver --settings=config.settings_local
 
 docker_build:
 	docker-compose build

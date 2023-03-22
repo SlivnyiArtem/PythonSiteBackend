@@ -12,3 +12,7 @@ db.sqlite3
 /src/config/.env
 /env
 /.env
+/.env.local
+/env.local
+.env.local
+/src/config/.env.local
