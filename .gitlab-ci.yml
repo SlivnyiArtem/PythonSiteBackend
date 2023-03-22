@@ -50,7 +50,7 @@ test:
 deployment:
   stage: deploy
   script:
-    - pip install -r requirements.txt
+    - pip install -r requirementsCI.txt
     - make docker_stop migrate3 docker_start
   tags:
     - job:deploy

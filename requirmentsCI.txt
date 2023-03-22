@@ -1,0 +1,8 @@
+Django==4.1.7
+django_environ==0.9.0
+djangorestframework==3.14.0
+environ==1.0
+phonenumbers==8.13.6
+pyTelegramBotAPI==4.10.0
+isort==5.12.0
+flake8==6.0.0
