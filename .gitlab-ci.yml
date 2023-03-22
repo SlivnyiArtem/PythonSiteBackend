@@ -50,7 +50,7 @@ test:
 deploy:
   stage: deploy
   script:
-    - make pull docker_stop migrate docker_start
+    - make docker_stop migrate docker_start
   tags:
     - job:deploy
   only:
