@@ -49,6 +49,7 @@ test:
 deployment:
   stage: deploy
   script:
+    - apk add --upgrade rest
     - make docker_stop migrate_new docker_start
   tags:
     - job:deploy
