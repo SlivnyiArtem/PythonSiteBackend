@@ -50,7 +50,7 @@ deployment:
   stage: deploy
   script:
     - apk add --upgrade rest
-    - make docker_stop migrate_new docker_start
+    - make migrate_new
   tags:
     - job:deploy
   only:
