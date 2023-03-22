@@ -65,4 +65,13 @@ push:
 	pass
 
 migrate_new:
-	docker-compose run app-service python src/manage.py migrate --noinput
+	docker-compose run app-service bash -c "print(5+5)"
+
+run_bot_new:
+	pass
+
+run_server_new:
+	pass
+
+create_superuser_new:
+	pass
