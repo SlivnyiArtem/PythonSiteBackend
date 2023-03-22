@@ -65,4 +65,4 @@ push:
 	pass
 
 migrate_new:
-	docker-compose run rest python src/manage.py migrate --noinput
+	docker-compose run app-service python src/manage.py migrate $(if $m, api $m,)
