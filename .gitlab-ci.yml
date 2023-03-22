@@ -8,10 +8,6 @@ stages:
 
 before_script:
   - apk add make
-  - apk add py3-pip
-  - pip install flake8
-  - pip install isort
-  - pip install black
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 build:
@@ -28,6 +24,10 @@ build:
 lint:
   stage: lint
   script:
+    - apk add py3-pip
+    - pip install flake8
+    - pip install isort
+    - pip install black
     - make lint
   tags:
     - job:lint
@@ -47,13 +47,13 @@ test:
   environment:
     name: prod
 
-deploy:
+deployment:
   stage: deploy
   script:
     - make docker_stop migrate docker_start
   tags:
     - job:deploy
   only:
-    - master
+    - main
   environment:
     name: prod
