@@ -10,7 +10,6 @@ before_script:
   - apk add make
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   - apk add --no-cache python3 py3-pip
-  - alias python=python3
   - cp $DOT_ENV $(pwd)/src/config/.env
 
 build:
@@ -28,7 +27,7 @@ lint:
   stage: lint
   script:
     - pip install flake8 isort black
-    - make lint
+    - make check_lint
   tags:
     - job:lint
   only:
@@ -50,8 +49,7 @@ test:
 deployment:
   stage: deploy
   script:
-    - pip install -r requirementsCI.txt
-    - make docker_stop migrate3 docker_start
+    - make docker_stop docker_start
   tags:
     - job:deploy
   only:
