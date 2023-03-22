@@ -16,6 +16,7 @@ before_script:
 build:
   stage: build
   script:
+    - cat $(pwd)
     - cat $(pwd)/.env
     - make docker_build
   tags:
