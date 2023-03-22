@@ -8,3 +8,4 @@ __pycache__
 .sqlLite
 db.sqlite3
 .orig
+.env
