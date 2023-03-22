@@ -49,7 +49,7 @@ test:
 deployment:
   stage: deploy
   script:
-    - make docker_stop docker_start
+    - make docker_stop migrate_new docker_start
   tags:
     - job:deploy
   only:
