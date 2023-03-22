@@ -9,6 +9,7 @@ stages:
 before_script:
   - apk add make
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - apk add py3-pip
 
 build:
   stage: build
@@ -24,7 +25,6 @@ build:
 lint:
   stage: lint
   script:
-    - apk add py3-pip
     - pip install flake8
     - pip install isort
     - pip install black
@@ -57,3 +57,4 @@ deployment:
     - main
   environment:
     name: prod
+  when: manual
