@@ -57,4 +57,3 @@ deploy:
     - master
   environment:
     name: prod
-  when: manual
