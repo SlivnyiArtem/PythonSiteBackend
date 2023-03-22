@@ -65,7 +65,7 @@ push:
 	pass
 
 migrate_new:
-	docker-compose exec python-django-app-1 bash -c "print(5+5)"
+	docker-compose exec app-service bash -c "print(5+5)"
 
 run_bot_new:
 	pass
