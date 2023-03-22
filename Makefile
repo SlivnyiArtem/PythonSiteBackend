@@ -57,3 +57,13 @@ docker_start:
 
 docker_test:
 	echo "There will be tests"
+
+pull:
+	pass
+
+push:
+	pass
+
+
+migrate_new:
+	docker-compose run rest python src/manage.py migrate $(if $m, api $m,)

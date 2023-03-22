@@ -12,6 +12,7 @@ services:
       - "0.0.0.0:8000:8000"
     depends_on:
       - db
+    env_file: ./src/config/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
