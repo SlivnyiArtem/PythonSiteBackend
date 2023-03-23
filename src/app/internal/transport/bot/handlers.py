@@ -1,5 +1,4 @@
 import phonenumbers
-import telegram
 
 from app.internal.services import user_service
 from app.internal.transport.bot.\
@@ -18,7 +17,7 @@ def error_decorator(orig_func):
     def wrapper(*args, **kwargs):
         try:
             orig_func(*args, **kwargs)
-        except telegram.error.TelegramError as exc:
+        except Exception as exc:
             error_handler(exc, args[0], args[1])
 
     return wrapper
@@ -36,6 +35,7 @@ def send_amount_inf(message, bot):
     if user is None:
         bot.send_message(message.chat.id,
                          common_messages.no_information_in_db_message)
+        return
     try:
         amount = form_information_handlers. \
             get_currency_information(user, int(message.text))

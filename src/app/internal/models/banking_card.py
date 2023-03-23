@@ -16,6 +16,6 @@ class Card(models.Model):
     def __str__(self):
         return str(self.card_number)
 
-    def get_dictionary_deserialize(self):
+    def get_dictionary_deserialize(self) -> dict:
         serialize_dict = {"card_number": self.card_number}
         return serialize_dict
