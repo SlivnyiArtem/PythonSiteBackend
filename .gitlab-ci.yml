@@ -27,24 +27,6 @@ build:
   environment:
     name: prod
 
-#build:
-#  image: docker:latest
-#  stage: build
-#  services:
-#    - docker:dind
-#  before_script:
-#    - export
-#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-#  script:
-#    - docker build --pull -t "$CI_REGISTRY_IMAGE"
-#    - docker push "$CI_REGISTRY_IMAGE"
-#  tags:
-#    - job:build
-#  only:
-#    - main
-#  environment:
-#    name: prod
-
 lint:
   stage: lint
   script:
@@ -75,10 +57,8 @@ deployment:
     - docker pull "$CI_REGISTRY_IMAGE"
     - apk add --upgrade rest
     - docker-compose down
-    - cp $DOT_ENV $(pwd)/src/config/.env
-    - cp $DOT_ENV_LOC $(pwd)/src/config/.env
     #- docker-compose --env-file=/src/config/.env run app-service bash -c "python3 src/manage.py migrate"
-    - docker-compose up -d
+    - docker-compose up
   tags:
     - job:deploy
   only:
