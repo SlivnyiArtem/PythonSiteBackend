@@ -75,7 +75,7 @@ deployment:
     - docker pull "$CI_REGISTRY_IMAGE"
     - apk add --upgrade rest
     - docker-compose down
-    - docker-compose run app-service src/manage.py migrate $(if $m, api $m,)
+    - docker-compose run app-service bash -c "python src/manage.py migrate"
     - docker-compose up
   tags:
     - job:deploy
