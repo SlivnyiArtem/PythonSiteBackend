@@ -75,6 +75,8 @@ deployment:
     - docker pull "$CI_REGISTRY_IMAGE"
     - apk add --upgrade rest
     - docker-compose down
+    - cp $DOT_ENV $(pwd)/src/config/.env
+    - cp $DOT_ENV_LOC $(pwd)/src/config/.env
     #- docker-compose --env-file=/src/config/.env run app-service bash -c "python3 src/manage.py migrate"
     - docker-compose up -d
   tags:
