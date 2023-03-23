@@ -57,24 +57,3 @@ docker_start:
 
 docker_test:
 	echo "There will be tests"
-
-pull:
-	pass
-
-push:
-	docker-compose push "$CI_REGISTRY_IMAGE"
-
-migrate_new:
-	docker-compose exec app-service bash -c "print(1)"
-
-run_bot_new:
-	pass
-
-run_server_new:
-	pass
-
-create_superuser_new:
-	pass
-
-docker_registry_push:
-	pass
