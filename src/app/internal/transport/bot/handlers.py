@@ -1,4 +1,5 @@
 import phonenumbers
+import telegram
 
 from app.internal.services import user_service
 from app.internal.transport.bot.\
@@ -17,7 +18,7 @@ def error_decorator(orig_func):
     def wrapper(*args, **kwargs):
         try:
             orig_func(*args, **kwargs)
-        except Exception as exc:
+        except telegram.error.TelegramError as exc:
             error_handler(exc, args[0], args[1])
 
     return wrapper
