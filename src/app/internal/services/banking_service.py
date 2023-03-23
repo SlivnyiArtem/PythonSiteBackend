@@ -1,12 +1,5 @@
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.banking_card import Card
-from app.internal.models.simple_user import SimpleUser
-
-
-def get_user_by_id(user_id) -> SimpleUser:
-    result: SimpleUser = SimpleUser. \
-        objects.filter(user_id=user_id).first()
-    return result
 
 
 def get_card_by_id_and_user(card_number) -> Card:
