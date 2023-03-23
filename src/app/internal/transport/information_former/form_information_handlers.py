@@ -4,7 +4,8 @@ from app.internal.models.simple_user import SimpleUser
 from app.internal.services import banking_service, user_service
 
 
-def get_currency_information(user, requisite_id):
+def get_currency_information(user: SimpleUser,
+                             requisite_id: int) -> int:
     acc_inf = banking_service.get_acc_by_id_and_user(requisite_id)
     card_inf = banking_service.get_card_by_id_and_user(requisite_id)
     if card_inf is not None:
@@ -17,7 +18,7 @@ def get_currency_information(user, requisite_id):
         return acc_inf.currency_amount
 
 
-def get_user_information(user_id):
+def get_user_information(user_id: int) -> dict:
     user = user_service.get_user_by_id(user_id)
     code = status.HTTP_200_OK
     if user is None:
