@@ -8,7 +8,7 @@ stages:
 
 before_script:
   - apk add make
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_GITLAB_TOKEN"
   - apk add --no-cache python3 py3-pip
   - cp $DOT_ENV $(pwd)/src/config/.env
   - cp $DOT_ENV_LOC $(pwd)/src/config/.env
@@ -16,10 +16,10 @@ before_script:
 build:
   stage: build
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login registry.gitlab.com -u "$CI_REGISTRY_USER" -p "$CI_GITLAB_TOKEN"
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:latest .
-    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker build -t registry.gitlab.com/Flambergsman/pythonbackend2023 .
+    - docker push registry.gitlab.com/Flambergsman/pythonbackend2023
   tags:
     - job:build
   only:
