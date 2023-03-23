@@ -85,7 +85,7 @@ DATABASES = {
         "NAME": env("DB_NAME"),
         "USER": env("DB_USER"),
         "PASSWORD": env("DB_PASSWORD"),
-        "HOST": "host.docker.internal",
+        "HOST": "localhost",
     }
 }
 

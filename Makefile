@@ -47,7 +47,7 @@ run_server:
 	python src/manage.py runserver --settings=config.settings_local
 
 docker_build:
-	docker-compose build
+	docker-compose build --pull -t "$CI_REGISTRY_IMAGE"
 
 docker_stop:
 	docker-compose down
@@ -62,7 +62,7 @@ pull:
 	pass
 
 push:
-	pass
+	docker-compose push "$CI_REGISTRY_IMAGE"
 
 migrate_new:
 	docker-compose exec app-service bash -c "print(1)"

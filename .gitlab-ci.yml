@@ -16,7 +16,7 @@ before_script:
 build:
   stage: build
   script:
-    - make docker_build
+    - make docker_build push
   tags:
     - job:build
   only:
