@@ -75,3 +75,6 @@ run_server_new:
 
 create_superuser_new:
 	pass
+
+docker_registry_push:
+	pass

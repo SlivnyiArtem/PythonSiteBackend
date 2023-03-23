@@ -12,24 +12,40 @@ before_script:
   - apk add --no-cache python3 py3-pip
   - cp $DOT_ENV $(pwd)/src/config/.env
   - cp $DOT_ENV_LOC $(pwd)/src/config/.env
+  - export
 
 build:
-  image: docker:latest
+  image: $CI_REGISTRY/pythonbackend2023/alpine:3.13
   stage: build
-  services:
-    - docker:dind
   before_script:
-    - export
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE"
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker build -t "$CI_REGISTRY IMAGE" .
+    - docker push "CI_REGISTRY_IMAGE"
   tags:
     - job:build
   only:
     - main
   environment:
     name: prod
+
+#build:
+#  image: docker:latest
+#  stage: build
+#  services:
+#    - docker:dind
+#  before_script:
+#    - export
+#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+#  script:
+#    - docker build --pull -t "$CI_REGISTRY_IMAGE"
+#    - docker push "$CI_REGISTRY_IMAGE"
+#  tags:
+#    - job:build
+#  only:
+#    - main
+#  environment:
+#    name: prod
 
 lint:
   stage: lint
