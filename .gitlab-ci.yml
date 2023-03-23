@@ -19,7 +19,6 @@ build:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - docker build -t "$CI_REGISTRY_IMAGE" .
-    -
     - docker push "$CI_REGISTRY_IMAGE"
   tags:
     - job:build
@@ -73,8 +72,11 @@ test:
 deployment:
   stage: deploy
   script:
+    - docker pull "$CI_REGISTRY_IMAGE"
     - apk add --upgrade rest
+    - docker-compose down
     - make migrate_new
+    - docker-compose up
   tags:
     - job:deploy
   only:
