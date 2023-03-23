@@ -18,8 +18,8 @@ build:
   before_script:
     - docker login registry.gitlab.com -u "$CI_REGISTRY_USER" -p "$CI_GITLAB_TOKEN"
   script:
-    - docker build -t registry.gitlab.com/Flambergsman/pythonbackend2023 .
-    - docker push registry.gitlab.com/Flambergsman/pythonbackend2023
+    - docker build -t registry.gitlab.com/flambergsman/pythonbackend2023 .
+    - docker push registry.gitlab.com/flambergsman/pythonbackend2023
   tags:
     - job:build
   only:
