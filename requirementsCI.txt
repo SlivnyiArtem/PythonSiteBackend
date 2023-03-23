@@ -1,4 +1,0 @@
-Django==4.1.7
-djangorestframework==3.14.0
-phonenumbers==8.13.6
-pyTelegramBotAPI==4.10.0
