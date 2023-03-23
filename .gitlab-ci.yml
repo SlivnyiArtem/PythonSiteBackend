@@ -73,10 +73,10 @@ deployment:
   stage: deploy
   script:
     - docker pull "$CI_REGISTRY_IMAGE"
-    # - apk add --upgrade rest
-    # - docker-compose down
-    - docker-compose --env-file=/src/config/.env run app-service bash -c "python3 src/manage.py migrate"
-    # - docker-compose up
+    - apk add --upgrade rest
+    - docker-compose down
+    #- docker-compose --env-file=/src/config/.env run app-service bash -c "python3 src/manage.py migrate"
+    - docker-compose up
   tags:
     - job:deploy
   only:
