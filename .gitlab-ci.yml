@@ -16,7 +16,7 @@ before_script:
 build:
   stage: build
   script:
-    - make docker_build push
+    - docker build --pull -t $CI_REGISTRY_IMAGE
   tags:
     - job:build
   only:
