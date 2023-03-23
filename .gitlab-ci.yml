@@ -72,8 +72,11 @@ test:
 deployment:
   stage: deploy
   script:
+    - docker pull "$CI_REGISTRY_IMAGE"
     - apk add --upgrade rest
+    - docker-compose down
     - make migrate_new
+    - docker-compose up
   tags:
     - job:deploy
   only:
