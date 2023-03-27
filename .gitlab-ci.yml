@@ -31,7 +31,7 @@ build:
 lint:
   stage: lint
   script:
-    # - pip install flake8 isort black #запуллить конотейнер и там прогнать
+    - pip install flake8 isort black #запуллить конотейнер и там прогнать
     - make check_lint
   tags:
     - job:lint
