@@ -58,7 +58,7 @@ deployment:
     - docker-compose down
     # - make migrate3
     # - docker-compose --env-file=/src/config/.env run app-service bash -c "python3 src/manage.py migrate"
-    - bash -c "python3 src/manage.py migrate"
+    # - bash -c "python3 src/manage.py migrate"
     - docker-compose up -d # миграция совершится?
     # - docker-compose down
   tags:
