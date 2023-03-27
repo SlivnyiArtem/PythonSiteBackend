@@ -5,15 +5,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('app', '0006_remove_card_card_owner'),
+        ("app", "0006_remove_card_card_owner"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='card',
-            name='banking_account',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.bankingaccount'),
+            model_name="card",
+            name="banking_account",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="app.bankingaccount"),
         ),
     ]

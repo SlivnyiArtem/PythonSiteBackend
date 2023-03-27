@@ -14,11 +14,12 @@ class SimpleUser(models.Model):
         return str(self.user_id)
 
     @staticmethod
-    def get_dictionary_deserialize(user,
-                                   code: str) -> dict:
-        serialize_dict = vars(user) if \
-            (user is not None and code == status.HTTP_200_OK) \
+    def get_dictionary_deserialize(user, code: str) -> dict:
+        serialize_dict = (
+            vars(user)
+            if (user is not None and code == status.HTTP_200_OK)
             else {"error_message": common_messages.MESSAGE_DICT.get(code)}
+        )
         serialize_dict.update(error_code=code)
         if code == status.HTTP_200_OK:
             serialize_dict.pop("_state")

@@ -5,15 +5,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('app', '0007_alter_card_banking_account'),
+        ("app", "0007_alter_card_banking_account"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='card',
-            name='banking_account',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='app.bankingaccount'),
+            model_name="card",
+            name="banking_account",
+            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="app.bankingaccount"),
         ),
     ]
