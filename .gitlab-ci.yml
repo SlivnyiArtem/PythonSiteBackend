@@ -31,7 +31,7 @@ build:
 lint:
   stage: lint
   script:
-    - pip install flake8 isort black #запуллить конотейнер и там прогнать
+    # - pip install flake8 isort black #запуллить конотейнер и там прогнать
     - make check_lint
   tags:
     - job:lint
@@ -56,6 +56,7 @@ deployment:
   script:
     - docker pull registry.gitlab.com/flambergsman/pythonbackend2023
     - docker-compose down
+    - make migrate
     # - docker-compose --env-file=/src/config/.env run app-service bash -c "python3 src/manage.py migrate"
     - docker-compose up -d
     # - docker-compose down
