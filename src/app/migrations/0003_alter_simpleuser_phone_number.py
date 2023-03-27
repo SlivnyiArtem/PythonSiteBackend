@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('app', '0002_rename_amount_card_currency_amount'),
+        ("app", "0002_rename_amount_card_currency_amount"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='simpleuser',
-            name='phone_number',
+            model_name="simpleuser",
+            name="phone_number",
             field=models.BigIntegerField(null=True),
         ),
     ]
