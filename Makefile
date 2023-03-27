@@ -38,6 +38,7 @@ lint:
 check_lint:
 	apk add py3-isort
 	apk add py3-flake8
+	apk add py3-black
 	isort --check --diff .
 	flake8 --config setup.cfg
 	black --check --config pyproject.toml .
