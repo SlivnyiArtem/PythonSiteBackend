@@ -34,7 +34,7 @@ lint:
     # - docker-compose run app-service python make check_lint
     # - pip install flake8 isort black #запуллить конотейнер и там прогнать
     - apk add --no-cache py3-pip
-    - pip install flake8
+    - pip install black
     - make check_lint
   tags:
     - job:lint
