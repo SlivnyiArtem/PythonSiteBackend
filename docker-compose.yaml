@@ -38,9 +38,5 @@ services:
       - db
     env_file: ./src/config/.env
 
-networks:
-  my-network:
-    external: true
-
 volumes:
     pgdata:
