@@ -46,14 +46,14 @@ run_bot:
 run_server:
 	python src/manage.py runserver --settings=config.settings_local
 
-docker_build:
-	docker build --pull -t "$CI_REGISTRY_IMAGE"
-
 docker_stop:
 	docker-compose down
 
 docker_start:
 	docker-compose up
+
+push:
+	docker-compose push ${IMAGE_APP}
 
 docker_test:
 	echo "There will be tests"

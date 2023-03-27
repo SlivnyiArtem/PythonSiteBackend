@@ -31,7 +31,7 @@ services:
 
   bot:
     container_name: python-django-bot-1
-    image: pythondjango1
+    image: ${IMAGE_APP}
     build: .
     command: bash -c "python src/manage.py migrate & python src/manage.py start_bot"
     depends_on:
