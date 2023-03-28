@@ -9,18 +9,13 @@ stages:
 before_script:
   - apk add make
   - docker login registry.gitlab.com -u "$CI_REGISTRY_USER" -p "$CI_GITLAB_TOKEN"
-  # - apk add --no-cache python3 # py3-pip # убрать pip в lint python3 убрать вообще
   - cp $DOT_ENV $(pwd)/src/config/.env
-  #- cp $DOT_ENV_LOC $(pwd)/src/config/.env
 
 build:
   stage: build
-  #before_script:
-  #  - docker login registry.gitlab.com -u "$CI_REGISTRY_USER" -p "$CI_GITLAB_TOKEN"
   script:
-    - docker-compose build #-t registry.gitlab.com/flambergsman/pythonbackend2023 .
+    - docker-compose build
     - docker-compose push
-#      registry.gitlab.com/flambergsman/pythonbackend2023
   tags:
     - job:build
   only:
@@ -32,10 +27,8 @@ lint:
   stage: lint
   script:
     # - docker-compose run app-service python make check_lint
-
     - apk add --no-cache py3-pip
     - pip install flake8 isort black #запуллить конотейнер и там прогнать
-    # - pip install black
     - make check_lint
   tags:
     - job:lint
@@ -62,11 +55,7 @@ deployment:
     - docker-compose down
     - docker-compose run app-service python src/manage.py makemigrations
     - docker-compose run app-service python src/manage.py migrate
-    # - make migrate3
-    # - docker-compose --env-file=/src/config/.env run app-service bash -c "python3 src/manage.py migrate"
-    # - bash -c "python3 src/manage.py migrate"
-    - docker-compose up -d # миграция совершится?
-    # - docker-compose down
+    - docker-compose up -d
   tags:
     - job:deploy
   only:
