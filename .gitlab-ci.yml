@@ -20,6 +20,7 @@ build:
     - job:build
   only:
     - main
+    - nginx
   environment:
     name: prod
 
