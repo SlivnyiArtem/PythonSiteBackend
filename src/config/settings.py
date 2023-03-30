@@ -32,6 +32,8 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
 
+CSRF_TRUSTED_ORIGINS = ['https://*.flamberg.backend23.2tapp.cc']
+
 # Application definition
 
 INSTALLED_APPS = [
