@@ -49,9 +49,9 @@ services:
 #    depends_on:
 #      - app-service\
 
-  nginx:
-    build:
-      dockerfile: Dockerfile
+#  nginx:
+#    build:
+#      dockerfile: Dockerfile
 
 
 volumes:
