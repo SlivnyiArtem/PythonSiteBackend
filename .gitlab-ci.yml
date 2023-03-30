@@ -26,7 +26,6 @@ lint:
   stage: lint
   script:
     - apk add make
-    # - docker-compose run app-service python make check_lint
     - apk add --no-cache py3-pip
     - pip install flake8 isort black #запуллить конотейнер и там прогнать
     - make check_lint
