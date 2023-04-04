@@ -65,7 +65,7 @@ def start_bot():
         listen="127.0.0.1",
         port=5000,
         url_path=env("BOT_KEY"),
-        cert=get_key(),
+        cert="$SSL_CERT",
         # cert=open('/etc/letsencrypt/live/${MY_DOMEN}/cert.pem', 'rb'),
         # key="/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem",
         # cert="/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem",
