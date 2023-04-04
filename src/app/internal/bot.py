@@ -1,9 +1,11 @@
 import environ
 import telegram
 from telegram.ext import CommandHandler, Updater
-# from telegram import Bot as b
 
 from app.internal.transport.bot import handlers
+
+# from telegram import Bot as b
+
 
 env = environ.Env()
 environ.Env.read_env()
@@ -62,7 +64,7 @@ def start_bot():
                               cert='/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem',
                               webhook_url='${MY_DOMEN}/${BOT_KEY}')
     bot.updater.idle()
-    #bot.updater.start_polling()
+    # bot.updater.start_polling()
 
 
 # updater = Updater('YOUR_TOKEN')
