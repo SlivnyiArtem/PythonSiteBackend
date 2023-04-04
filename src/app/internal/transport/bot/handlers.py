@@ -66,9 +66,11 @@ def error_decorator(orig_func):
 # def help_handler(message, bot):
 #     bot.send_message(message.chat.id, common_messages.help_command_message())
 
+
 @error_decorator
 def help_handler(update: Update, context):
     update.message.reply_text(common_messages.help_command_message())
+
 
 # @error_decorator
 # def me_inf_handler(message, bot):

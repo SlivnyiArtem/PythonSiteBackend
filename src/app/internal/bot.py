@@ -57,12 +57,14 @@ class Bot:
 
 def start_bot():
     bot = Bot()
-    bot.updater.start_webhook(listen='127.0.0.1',
-                              port=5000,
-                              url_path=env("BOT_KEY"),
-                              key='/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem',
-                              cert='/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem',
-                              webhook_url='${MY_DOMEN}/${BOT_KEY}')
+    bot.updater.start_webhook(
+        listen="127.0.0.1",
+        port=5000,
+        url_path=env("BOT_KEY"),
+        key="/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem",
+        cert="/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem",
+        webhook_url="${MY_DOMEN}/${BOT_KEY}",
+    )
     bot.updater.idle()
     # bot.updater.start_polling()
 
