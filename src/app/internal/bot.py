@@ -1,9 +1,11 @@
 import environ
 import telebot
+
+from app.internal.transport.bot import handlers
+
 # import telegram
 # from telegram.ext import CommandHandler, Updater
 
-from app.internal.transport.bot import handlers
 
 # from telegram import Bot as b
 
