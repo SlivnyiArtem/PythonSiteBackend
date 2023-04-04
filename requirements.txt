@@ -3,7 +3,7 @@ django_environ==0.9.0
 djangorestframework==3.14.0
 environ==1.0
 phonenumbers==8.13.6
-pyTelegramBotAPI==4.10.0
+python-telegram-bot==13.15
 psycopg2-binary==2.9.5
 isort==5.12.0
 flake8==6.0.0
