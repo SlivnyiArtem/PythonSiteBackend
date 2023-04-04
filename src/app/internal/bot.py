@@ -53,14 +53,22 @@ class Bot:
         self.dispatcher.add_handler(CommandHandler("help", handlers.help_handler))
 
 
+def get_key():
+    with open("/etc/letsencrypt/live/${MY_DOMEN}/cert.pem", "rb") as f:
+        print(str(f.read()))
+        return str(f.read())
+
+
 def start_bot():
     bot = Bot()
     bot.updater.start_webhook(
         listen="127.0.0.1",
         port=5000,
         url_path=env("BOT_KEY"),
-        key="/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem",
-        cert="/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem",
+        cert=get_key(),
+        # cert=open('/etc/letsencrypt/live/${MY_DOMEN}/cert.pem', 'rb'),
+        # key="/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem",
+        # cert="/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem",
         webhook_url="${MY_DOMEN}/${BOT_KEY}",
     )
     bot.updater.idle()
