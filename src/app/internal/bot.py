@@ -54,7 +54,7 @@ class Bot:
 
 
 def get_key():
-    with open("/etc/letsencrypt/live/${flamberg.backend23.2tapp.cc}/cert.pem", "r") as f:
+    with open("/etc/letsencrypt/live/flamberg.backend23.2tapp.cc/cert.pem", "r") as f:
         print(f.read())
         return f.read()
 
