@@ -1,10 +1,10 @@
 import environ
-# import telebot
+import telegram
+from telegram.ext import CommandHandler, Updater
 
 from app.internal.transport.bot import handlers
 
-import telegram
-from telegram.ext import CommandHandler, Updater
+# import telebot
 
 
 # from telegram import Bot as b
@@ -43,8 +43,6 @@ environ.Env.read_env()
 # def start_bot():
 #     bot = Bot()
 #     bot.start()
-
-
 
 
 class Bot:
