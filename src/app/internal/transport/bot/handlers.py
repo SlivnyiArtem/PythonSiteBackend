@@ -8,8 +8,27 @@ from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
 
-def error_handler(exc, update: Update, context):
-    update.message.reply_text(common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
+# def error_handler(exc, update: Update, context):
+#     update.message.reply_text(common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
+#
+#
+# def error_decorator(orig_func):
+#     def wrapper(*args, **kwargs):
+#         try:
+#             orig_func(*args, **kwargs)
+#         except Exception as exc:
+#             error_handler(exc, args[0], args[1])
+#
+#     return wrapper
+#
+#
+# @error_decorator
+# def help_handler(update: Update, context):
+#     update.message.reply_text(common_messages.help_command_message())
+
+
+def error_handler(exc, message, bot):
+    bot.send_message(message.chat.id, common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
 
 
 def error_decorator(orig_func):
@@ -22,22 +41,10 @@ def error_decorator(orig_func):
     return wrapper
 
 
-# def error_handler(exc, message, bot):
-#     bot.send_message(message.chat.id, common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
-#
-#
-# def error_decorator(orig_func):
-#     def wrapper(*args, **kwargs):
-#         try:
-#             orig_func(*args, **kwargs)
-#         except Exception as exc:
-#             error_handler(exc, args[0], args[1])
-#
-#     return wrapper
+@error_decorator
+def help_handler(message, bot):
+    bot.send_message(message.chat.id, common_messages.help_command_message())
 
-
-#
-#
 # @error_decorator
 # def currency_amount_handler(message, bot):
 #     msg = bot.send_message(message.chat.id, common_messages.ask_for_card_acc_number())
@@ -65,11 +72,6 @@ def error_decorator(orig_func):
 # @error_decorator
 # def help_handler(message, bot):
 #     bot.send_message(message.chat.id, common_messages.help_command_message())
-
-
-@error_decorator
-def help_handler(update: Update, context):
-    update.message.reply_text(common_messages.help_command_message())
 
 
 # @error_decorator
