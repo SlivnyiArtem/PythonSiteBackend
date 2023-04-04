@@ -1,11 +1,11 @@
 import environ
-import telegram
-from telegram.ext import CommandHandler, Updater
+import telebot
+# import telegram
+# from telegram.ext import CommandHandler, Updater
 
 from app.internal.transport.bot import handlers
 
 # from telegram import Bot as b
-
 
 
 env = environ.Env()
@@ -42,6 +42,7 @@ def start_bot():
     bot = Bot()
     bot.start()
 
+
 # class Bot:
 #     def __init__(self):
 #         self.application = Application.builder().token(env("BOT_KEY")).build()
@@ -68,7 +69,6 @@ def start_bot():
 #     )
 #     bot.updater.idle()
 #     # bot.updater.start_polling()
-
 
 
 if __name__ == "__main__":
