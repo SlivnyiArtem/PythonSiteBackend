@@ -1,11 +1,5 @@
-from os.path import join
-
 import environ
 import telebot
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from telebot import TeleBot, types
 
 from app.internal.transport.bot import handlers
 
@@ -47,11 +41,10 @@ class Bot:
     #     )
 
     def start(self):
-        print("straight")
         self.application.remove_webhook()
+        # self.application.run_webhooks()
         # self.application.set_webhook(
-        #     url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
-        #     # certificate=open("/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem"),
+        #     url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=open("privkey.pem")
         # )
         self.application.infinity_polling()
 
