@@ -33,8 +33,8 @@ class Bot:
         self.application.remove_webhook()
         # self.application.run_webhooks()
         # self.application.set_webhook(
-        #     url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=open("privkey.pem")
         # )
+
         self.application.infinity_polling()
 
 
