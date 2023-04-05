@@ -9,7 +9,7 @@ environ.Env.read_env()
 
 class Bot:
     def __init__(self):
-        self.application = TeleBot(env("BOT_KEY"))
+        self.application = telebot.TeleBot(env("BOT_KEY"))
         self.application.message_handler(commands=["help"])(
             lambda message: handlers.help_handler(message, self.application)
         )
@@ -28,16 +28,6 @@ class Bot:
         self.application.message_handler(commands=["check_currency"])(
             lambda message: handlers.currency_amount_handler(message, self.application)
         )
-
-    # @csrf_exempt
-    # def start(self):
-    #     print("hook")
-    #     self.application.run_webhooks(
-    #         webhook_url="https://" + env("MY_DOMEN") + "/bot/",
-    #         url_path="bot",
-    #         listen="0.0.0.0",
-    #         port=127,
-    #     )
 
     def start(self):
         self.application.remove_webhook()
