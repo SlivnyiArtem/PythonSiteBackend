@@ -119,7 +119,7 @@ def my_relationships(message, bot):
     msg = ""
     el = relationships["money_friends"]
     for user in el:
-        msg += user+"\n"
+        msg += user + "\n"
 
     bot.send_message(message.chat.id, relationships)
 
