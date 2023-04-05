@@ -40,9 +40,14 @@ class Bot:
     def start(self):
         print("hollow")
         self.application.run_webhooks(
-            url_path="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
-            certificate="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem",
-            certificate_key="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/privkey.pem",
+            webhook_url="https://" + env("MY_DOMEN") + "/bot/",
+            url_path="bot",
+            listen="0.0.0.0",
+            port=127,
+            # webhook_url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY")
+            # url_path="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
+            # certificate="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem",
+            # certificate_key="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/privkey.pem",
         )
 
     # def start(self):
