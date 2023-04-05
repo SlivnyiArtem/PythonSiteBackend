@@ -52,20 +52,21 @@ class Bot:
         self.dispatcher = self.updater.dispatcher
         self.dispatcher.add_handler(CommandHandler("help", handlers.help_handler))
 
+
 def gg():
     with open("privkey.pem") as f:
         f.read()
 
+
 def start_bot():
     # gg()
-    #raise Exception("https://"+env("MY_DOMEN")+"/"+env("BOT_KEY"))
+    # raise Exception("https://"+env("MY_DOMEN")+"/"+env("BOT_KEY"))
     bot = Bot()
     bot.updater.start_webhook(
         listen="158.160.52.96",
         port=443,
         url_path=env("BOT_KEY"),
         webhook_url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
-
     )
     # bot.updater.start_webhook(
     #     # listen="127.0.0.1",
