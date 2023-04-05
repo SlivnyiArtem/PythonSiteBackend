@@ -1,6 +1,7 @@
+import json
+
 from django.db import models
 from rest_framework import status
-import json
 
 from app.internal.transport.messages import common_messages
 
