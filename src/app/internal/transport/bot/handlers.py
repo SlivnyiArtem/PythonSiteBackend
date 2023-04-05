@@ -1,7 +1,5 @@
-import json
-from json import JSONDecoder
-
 import phonenumbers
+from django.db import models
 
 from app.internal.services import user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
@@ -10,7 +8,6 @@ from app.internal.transport.messages import common_messages
 
 # from telegram import ForceReply, Update
 # from telegram.ext import ContextTypes
-
 
 #
 # def error_handler(exc, update: Update, context):
@@ -114,13 +111,14 @@ def get_phone_number(message, bot):
 
 @error_decorator
 def my_relationships(message, bot):
-    relationships = user_service.get_user_by_id(message.from_user.id).relationships
-    print(relationships)
-    msg = ""
-    el = relationships["money_friends"]
-    for user in el:
-        msg += user + "\n"
-    print(msg)
+    relationships: models.JSONField = user_service.get_user_by_id(message.from_user.id).relationships
+    bot.send_message(message.chat.id, relationships)
+    # print(relationships)
+    # msg = ""
+    # el = relationships["money_friends"]
+    # for user in el:
+    #     msg += user + "\n"
+    # print(msg)
     # bot.send_message(message.chat.id, msg)
 
 
@@ -138,10 +136,12 @@ def add_user(message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        a: list = user.relationships["money_friends"]
-        a.append(message.text)
-        user.relationships = a
-        user.save()
+        # relationships: models.JSONField = user.relationships
+
+        # a: list = user.relationships["money_friends"]
+        # a.append(message.text)
+        # user.relationships = a
+        # user.save()
 
         # data = json.load(relationships)
         # money_friends: list = data["money_friends"]
