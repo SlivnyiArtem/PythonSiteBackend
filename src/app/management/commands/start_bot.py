@@ -5,4 +5,4 @@ from app.internal import bot
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        bot.start_bot()
+        bot.initial_start()

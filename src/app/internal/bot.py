@@ -94,7 +94,14 @@ def start_bot(bot: Bot):
 #     # bot.updater.start_polling()
 
 
-if __name__ == "__main__":
-    bot = Bot()
+def initial_start():
+    # bot = Bot()
     bot.start()
+
+
+if __name__ == "__main__":
+    # bot = Bot()
+    # bot.start()
     # start_bot(bot)
+    bot = Bot()
+    initial_start()
