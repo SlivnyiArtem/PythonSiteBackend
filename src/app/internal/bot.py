@@ -3,6 +3,7 @@ from os.path import join
 import environ
 import telebot
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -15,6 +16,7 @@ env = environ.Env()
 environ.Env.read_env()
 
 
+@csrf_exempt
 class Bot:
     def __init__(self):
         self.application = telebot.TeleBot(env("BOT_KEY"))
@@ -37,10 +39,12 @@ class Bot:
             lambda message: handlers.currency_amount_handler(message, self.application)
         )
 
+    @csrf_exempt
     def start(self):
         print("hollow")
         self.application.run_webhooks(
             webhook_url="https://" + env("MY_DOMEN") + "/bot/",
+
             url_path="bot",
             listen="0.0.0.0",
             port=127,
