@@ -39,19 +39,19 @@ class Bot:
             lambda message: handlers.currency_amount_handler(message, self.application)
         )
 
-    @csrf_exempt
-    def start(self):
-        print("hollow")
-        self.application.run_webhooks(
-            webhook_url="https://" + env("MY_DOMEN") + "/bot/",
-            url_path="bot",
-            listen="0.0.0.0",
-            port=127,
-            # webhook_url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY")
-            # url_path="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
-            # certificate="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem",
-            # certificate_key="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/privkey.pem",
-        )
+    # @csrf_exempt
+    # def start(self):
+    #     print("hollow")
+    #     self.application.run_webhooks(
+    #         webhook_url="https://" + env("MY_DOMEN") + "/bot/",
+    #         url_path="bot",
+    #         listen="0.0.0.0",
+    #         port=127,
+    #         # webhook_url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY")
+    #         # url_path="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
+    #         # certificate="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem",
+    #         # certificate_key="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/privkey.pem",
+    #     )
 
     # def start(self):
     #     print("kfdjgh")
@@ -63,18 +63,18 @@ class Bot:
     # self.application.infinity_polling()
 
 
-class Updater(APIView):
-    def post(self, request):
-        json_str = request.body.decode("UTF-8")
-        print(json_str)
-        update = types.Update.de_json(json_str)
-        bot.application.process_new_updates([update])
+# class Updater(APIView):
+#     def post(self, request):
+#         json_str = request.body.decode("UTF-8")
+#         print(json_str)
+#         update = types.Update.de_json(json_str)
+#         bot.application.process_new_updates([update])
+#
+#         return Response({"code": 200})
 
-        return Response({"code": 200})
 
-
-def start_bot(bot: Bot):
-    bot.start()
+# def start_bot(bot: Bot):
+#     bot.start()
 
 
 # class Bot:
@@ -115,16 +115,16 @@ def start_bot(bot: Bot):
 #     # bot.updater.start_polling()
 
 
-# def initial_start():
-# bot = Bot()
-# bot.start()
+def initial_start():
+    bot = Bot()
+    bot.start()
 
 
 if __name__ == "__main__":
-    bot = Bot()
+    # bot = Bot()
     # start_bot(bot)
     # bot = Bot()
     # bot.start()
     # # start_bot(bot)
     # bot = Bot()
-    # initial_start()
+    initial_start()
