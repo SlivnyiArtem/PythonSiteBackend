@@ -7,7 +7,6 @@ env = environ.Env()
 environ.Env.read_env()
 
 
-@csrf_exempt
 class Bot:
     def __init__(self):
         self.application = TeleBot(env("BOT_KEY"))
