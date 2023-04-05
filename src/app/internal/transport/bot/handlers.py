@@ -1,4 +1,8 @@
+import json
+from json import JSONDecoder
+
 import phonenumbers
+from django.db import models
 
 from app.internal.services import user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
@@ -110,6 +114,13 @@ def get_phone_number(message, bot):
 
 
 @error_decorator
+def my_relationships(message, bot):
+    relationships: models.JSONField = user_service.get_user_by_id(message.from_user.id).relationships
+
+    bot.send_message(message.chat.id, relationships)
+
+
+@error_decorator
 def add_money_recipient(message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_user_name())
     bot.register_next_step_handler(msg, add_user, bot)
@@ -120,6 +131,8 @@ def add_user(message, bot):
         answer = bot.send_message(message.chat.id, common_messages.incorrect_user_name)
         bot.register_next_step_handler(answer, add_user, bot)
     else:
+        # relationships = user_service.get_user_by_id(message.from_user.id).relationships
+        user_service.get_user_by_id(message.from_user.id).relationships = json.dumps({"money_friends": ["hjsadkjh"]})
         bot.send_message(message.chat.id, "ADDUSER")
 
 
