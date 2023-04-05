@@ -41,7 +41,7 @@ class Bot:
         print("kfdjgh")
         self.application.remove_webhook()
         self.application.set_webhook(
-            url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=open("privkey.pem")
+            url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=open("cert.pem")
         )
         # self.application.infinity_polling()
 
@@ -91,7 +91,7 @@ def start_bot(bot: Bot):
 #     #     # key="/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem",
 #     #     # cert="/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem",
 #     #     cert ="pythonbackend2023/privkey.pem",
-#     #     # cert = open('privkey.pem', 'rb'),
+#     #     
 #     #     webhook_url="https://"+env("MY_DOMEN")+"/"+env("BOT_KEY"),
 #     # )
 #     bot.updater.idle()
