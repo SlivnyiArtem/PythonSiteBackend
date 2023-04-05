@@ -40,10 +40,10 @@ class Bot:
     def start(self):
         self.application.remove_webhook()
         self.application.set_webhook(url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=None)
-        self.application.infinity_polling()
+        # self.application.infinity_polling()
 
 
-class UpdateBot(APIView):
+class Updater(APIView):
     def post(self, request):
         json_str = request.body.decode("UTF-8")
         update = types.Update.de_json(json_str)
@@ -52,7 +52,7 @@ class UpdateBot(APIView):
         return Response({"code": 200})
 
 
-def start_bot():
+def start_bot(bot: Bot):
     bot.start()
 
 
@@ -96,4 +96,5 @@ def start_bot():
 
 if __name__ == "__main__":
     bot = Bot()
-    start_bot()
+    bot.start()
+    # start_bot(bot)
