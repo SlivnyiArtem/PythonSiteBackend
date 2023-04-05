@@ -38,6 +38,7 @@ class Bot:
         )
 
     def start(self):
+        print("kfdjgh")
         self.application.remove_webhook()
         self.application.set_webhook(url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=None)
         # self.application.infinity_polling()
@@ -94,14 +95,16 @@ def start_bot(bot: Bot):
 #     # bot.updater.start_polling()
 
 
-def initial_start():
-    # bot = Bot()
-    bot.start()
+# def initial_start():
+# bot = Bot()
+# bot.start()
 
 
 if __name__ == "__main__":
+    bot = Bot()
+    # start_bot(bot)
     # bot = Bot()
     # bot.start()
-    # start_bot(bot)
-    bot = Bot()
-    initial_start()
+    # # start_bot(bot)
+    # bot = Bot()
+    # initial_start()
