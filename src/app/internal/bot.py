@@ -1,16 +1,15 @@
+from os.path import join
+
 import environ
+import telebot
+from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-# import telegram
-# from telegram.ext import CommandHandler, Updater
+# from telegram import Bot as b
+from telebot import TeleBot, types
 
 from app.internal.transport.bot import handlers
-
-import telebot
-
-# from telegram import Bot as b
-
 
 env = environ.Env()
 environ.Env.read_env()
@@ -40,26 +39,22 @@ class Bot:
 
     def start(self):
         self.application.remove_webhook()
-        # self.application.set_webhook("https://0.0.0.0/"+env("BOT_KEY"))
-        self.application.set_webhook("https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"))
+        self.application.set_webhook(url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=None)
         self.application.infinity_polling()
-
-
-bot = Bot()
 
 
 class UpdateBot(APIView):
     def post(self, request):
-        # Сюда должны получать сообщения от телеграм и далее обрабатываться ботом
-        json_str = request.body.decode('UTF-8')
-        update = telebot.types.Update.de_json(json_str)
+        json_str = request.body.decode("UTF-8")
+        update = types.Update.de_json(json_str)
         bot.application.process_new_updates([update])
 
-        return Response({'code': 200})
+        return Response({"code": 200})
 
 
 def start_bot():
     bot.start()
+
 
 # class Bot:
 #     def __init__(self):
@@ -96,9 +91,9 @@ def start_bot():
 #     #     webhook_url="https://"+env("MY_DOMEN")+"/"+env("BOT_KEY"),
 #     # )
 #     bot.updater.idle()
-#     bot.application.bot.send_message(text="kjgkjfgslkfjslkfj")
 #     # bot.updater.start_polling()
-#
-#
-# if __name__ == "__main__":
-#     start_bot()
+
+
+if __name__ == "__main__":
+    bot = Bot()
+    start_bot()
