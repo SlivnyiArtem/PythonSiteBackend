@@ -115,7 +115,11 @@ def get_phone_number(message, bot):
 
 @error_decorator
 def my_relationships(message, bot):
-    relationships: models.JSONField = user_service.get_user_by_id(message.from_user.id).relationships
+    relationships = user_service.get_user_by_id(message.from_user.id).relationships
+    msg = ""
+    el = relationships["money_friends"]
+    for user in el:
+        msg += user+"\n"
 
     bot.send_message(message.chat.id, relationships)
 
@@ -127,12 +131,23 @@ def add_money_recipient(message, bot):
 
 
 def add_user(message, bot):
-    if message.text[0] != "@":
+    if message.text[0] != "@" or len(message.text.split()) != 1:
         answer = bot.send_message(message.chat.id, common_messages.incorrect_user_name)
         bot.register_next_step_handler(answer, add_user, bot)
     else:
-        # relationships = user_service.get_user_by_id(message.from_user.id).relationships
-        user_service.get_user_by_id(message.from_user.id).relationships = json.dumps({"money_friends": ["hjsadkjh"]})
+        user = user_service.get_user_by_id(message.from_user.id)
+        if user is None:
+            return
+        a: list = user.relationships["money_friends"]
+        a.append(message.text)
+        user.relationships = a
+        user.save()
+
+        # data = json.load(relationships)
+        # money_friends: list = data["money_friends"]
+        # money_friends.append(message.text)
+        #
+        # user_service.get_user_by_id(message.from_user.id).relationships = json.dumps({"money_friends": ["hjsadkjh"]})
         bot.send_message(message.chat.id, "ADDUSER")
 
 
@@ -143,8 +158,15 @@ def delete_money_recipient(message, bot):
 
 
 def remove_user(message, bot):
-    if message.text[0] != "@":
+    if message.text[0] != "@" or len(message.text.split()) != 1:
         answer = bot.send_message(message.chat.id, common_messages.incorrect_user_name)
         bot.register_next_step_handler(answer, remove_user, bot)
     else:
+        user = user_service.get_user_by_id(message.from_user.id)
+        if user is None:
+            return
+        a: list = user.relationships["money_friends"]
+        a.remove(message.text)
+        user.relationships = a
+        user.save()
         bot.send_message(message.chat.id, "REMOVEUSER")
