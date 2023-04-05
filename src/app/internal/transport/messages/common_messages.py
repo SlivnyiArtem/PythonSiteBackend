@@ -70,8 +70,8 @@ def access_denied():
 
 
 def ask_for_user_name():
-    return None
+    return "A"
 
 
 def incorrect_user_name():
-    return None
+    return "B"
