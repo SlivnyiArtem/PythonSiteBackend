@@ -44,7 +44,6 @@ class Bot:
         print("hollow")
         self.application.run_webhooks(
             webhook_url="https://" + env("MY_DOMEN") + "/bot/",
-
             url_path="bot",
             listen="0.0.0.0",
             port=127,
