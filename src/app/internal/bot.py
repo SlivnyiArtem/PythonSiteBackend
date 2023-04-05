@@ -29,6 +29,14 @@ class Bot:
             lambda message: handlers.currency_amount_handler(message, self.application)
         )
 
+        self.application.message_handler(commands=["add_money_recipient"])(
+            lambda message: handlers.add_money_recipient(message, self.application)
+        )
+
+        self.application.message_handler(commands=["delete_money_recipient"])(
+            lambda message: handlers.delete_money_recipient(message, self.application)
+        )
+
     def start(self):
         self.application.remove_webhook()
         # self.application.run_webhooks()
