@@ -38,12 +38,18 @@ class Bot:
         )
 
     def start(self):
-        print("kfdjgh")
-        self.application.remove_webhook()
-        self.application.set_webhook(
-            url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
-            # certificate=open("/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem"),
-        )
+        print("hollow")
+        self.application.run_webhooks(url_path="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
+                                      certificate="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem",
+                                      certificate_key="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/privkey.pem")
+
+    # def start(self):
+    #     print("kfdjgh")
+    #     self.application.remove_webhook()
+    #     self.application.set_webhook(
+    #         url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
+    #         # certificate=open("/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem"),
+    #     )
         # self.application.infinity_polling()
 
 
