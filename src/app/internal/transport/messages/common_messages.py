@@ -70,8 +70,8 @@ def access_denied():
 
 
 def ask_for_user_name():
-    return "A"
+    return "Введите имя пользователя"
 
 
 def incorrect_user_name():
-    return "B"
+    return "Некорректное имя пользователя повторите ввод"
