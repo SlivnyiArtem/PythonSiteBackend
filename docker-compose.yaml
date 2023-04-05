@@ -6,6 +6,8 @@ services:
     image: ${IMAGE_APP}
     build: .
     command: bash -c "python src/manage.py migrate & python src/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - /etc/letsencrypt:/cert
     links:
       - db
     ports:
@@ -34,6 +36,8 @@ services:
     image: ${IMAGE_APP}
     build: .
     command: bash -c "python src/manage.py migrate & python src/manage.py start_bot"
+    volumes:
+      - /etc/letsencrypt:/cert
     depends_on:
       - db
     env_file: ./src/config/.env
