@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_telegrambot",
     "app",
 ]
 
@@ -55,6 +56,20 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+DJANGO_TELEGRAMBOT = {
+    "MODE": "WEBHOOK",
+    "WEBHOOK_SITE": "https://" + env("MY_DOMEN"),
+    # 'WEBHOOK_PREFIX': '/prefix',
+    # 'WEBHOOK_CERTIFICATE' : 'cert.pem', # If your site use self-signed
+    # certificate, must be set with location of your public key
+    # certificate.(More info at https://core.telegram.org/bots/self-signed )
+    "BOTS": [
+        {
+            "TOKEN": env("BOT_KEY"),
+        },
+    ],
+}
 
 ROOT_URLCONF = "config.urls"
 
