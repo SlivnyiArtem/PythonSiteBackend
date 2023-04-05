@@ -67,3 +67,11 @@ def no_card_or_acc():
 
 def access_denied():
     return "Доступ к данному аккаунту запрещен, вы не являетесь его владельцем"
+
+
+def ask_for_user_name():
+    return None
+
+
+def incorrect_user_name():
+    return None

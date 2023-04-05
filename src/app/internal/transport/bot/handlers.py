@@ -5,6 +5,7 @@ from app.internal.transport.bot.text_serialization_handlers import convert_dict_
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
+
 # from telegram import ForceReply, Update
 # from telegram.ext import ContextTypes
 
@@ -58,12 +59,12 @@ def currency_amount_handler(message, bot):
 
 
 def send_amount_inf(message, bot):
-    user = form_information_handlers.get_user_information(message.from_user.id)
-    if user is None:
+    user_inf = form_information_handlers.get_user_information(message.from_user.id)
+    if user_inf is None:
         bot.send_message(message.chat.id, common_messages.no_information_in_db_message)
         return
     try:
-        amount = form_information_handlers.get_currency_information(user, int(message.text))
+        amount = form_information_handlers.get_currency_information(user_inf, int(message.text))
     except PermissionError:
         bot.send_message(message.chat.id, common_messages.access_denied())
         return
@@ -107,3 +108,31 @@ def get_phone_number(message, bot):
     else:
         msg = bot.send_message(message.chat.id, common_messages.incorrect_phone_number_message())
         bot.register_next_step_handler(msg, get_phone_number, bot)
+
+
+@error_decorator
+def add_money_recipient(message, bot):
+    msg = bot.send_message(message.chat.id, common_messages.ask_for_user_name())
+    bot.register_next_step_handler(msg, add_user, bot)
+
+
+def add_user(message, bot):
+    if message.text[0] != "@":
+        answer = bot.send_message(message.chat.id, common_messages.incorrect_user_name)
+        bot.register_next_step_handler(answer, add_user, bot)
+    else:
+        bot.send_message(message.chat.id, "ADDUSER")
+
+
+@error_decorator
+def delete_money_recipient(message, bot):
+    msg = bot.send_message(message.chat.id, common_messages.ask_for_user_name())
+    bot.register_next_step_handler(msg, remove_user, bot)
+
+
+def remove_user(message, bot):
+    if message.text[0] != "@":
+        answer = bot.send_message(message.chat.id, common_messages.incorrect_user_name)
+        bot.register_next_step_handler(answer, remove_user, bot)
+    else:
+        bot.send_message(message.chat.id, "REMOVEUSER")
