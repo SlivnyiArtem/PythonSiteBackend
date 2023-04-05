@@ -63,8 +63,8 @@ def start_bot():
     # raise Exception("https://"+env("MY_DOMEN")+"/"+env("BOT_KEY"))
     bot = Bot()
     bot.updater.start_webhook(
-        listen="158.160.52.96",
-        port=443,
+        # listen="158.160.52.96",
+        # port=443,
         url_path=env("BOT_KEY"),
         webhook_url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
     )
