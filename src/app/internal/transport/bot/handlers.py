@@ -1,6 +1,6 @@
 import phonenumbers
-from telegram import ForceReply, Update
-from telegram.ext import ContextTypes
+# from telegram import ForceReply, Update
+# from telegram.ext import ContextTypes
 
 from app.internal.services import user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
@@ -8,27 +8,8 @@ from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
 
-def error_handler(exc, update: Update, context):
-    update.message.reply_text(common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
-
-
-def error_decorator(orig_func):
-    def wrapper(*args, **kwargs):
-        try:
-            orig_func(*args, **kwargs)
-        except Exception as exc:
-            error_handler(exc, args[0], args[1])
-
-    return wrapper
-
-
-@error_decorator
-def help_handler(update: Update, context):
-    update.message.reply_text(common_messages.help_command_message())
-
-
-# def error_handler(exc, message, bot):
-#     bot.send_message(message.chat.id, common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
+# def error_handler(exc, update: Update, context):
+#     update.message.reply_text(common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
 #
 #
 # def error_decorator(orig_func):
@@ -42,8 +23,27 @@ def help_handler(update: Update, context):
 #
 #
 # @error_decorator
-# def help_handler(message, bot):
-#     bot.send_message(message.chat.id, common_messages.help_command_message())
+# def help_handler(update: Update, context):
+#     update.message.reply_text(common_messages.help_command_message())
+
+
+def error_handler(exc, message, bot):
+    bot.send_message(message.chat.id, common_messages.MESSAGE_DICT.get("error_send_message") + f" {exc}")
+
+
+def error_decorator(orig_func):
+    def wrapper(*args, **kwargs):
+        try:
+            orig_func(*args, **kwargs)
+        except Exception as exc:
+            error_handler(exc, args[0], args[1])
+
+    return wrapper
+
+
+@error_decorator
+def help_handler(message, bot):
+    bot.send_message(message.chat.id, common_messages.help_command_message())
 
 # ----------------------------
 
