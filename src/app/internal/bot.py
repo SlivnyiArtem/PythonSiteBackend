@@ -40,7 +40,9 @@ class Bot:
     def start(self):
         print("kfdjgh")
         self.application.remove_webhook()
-        self.application.set_webhook(url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=open())
+        self.application.set_webhook(
+            url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=open("privkey.pem")
+        )
         # self.application.infinity_polling()
 
 
