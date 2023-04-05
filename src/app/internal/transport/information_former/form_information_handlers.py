@@ -29,9 +29,4 @@ def get_user_information(user_id: int) -> dict:
 
 # def get_user_relationships(user_id: int) -> dict:
 #     user = user_service.get_user_by_id(user_id)
-#     code = status.HTTP_200_OK
-#     if user is None:
-#         code = status.HTTP_404_NOT_FOUND
-#     elif user.phone_number is None:
-#         code = status.HTTP_403_FORBIDDEN
-#     return SimpleUser.get_dictionary_deserialize(user, code)
+#     return user.relationships
