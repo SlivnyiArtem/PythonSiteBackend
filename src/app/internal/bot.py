@@ -39,9 +39,11 @@ class Bot:
 
     def start(self):
         print("hollow")
-        self.application.run_webhooks(url_path="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
-                                      certificate="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem",
-                                      certificate_key="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/privkey.pem")
+        self.application.run_webhooks(
+            url_path="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
+            certificate="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem",
+            certificate_key="/etc/letsencrypt/live/" + env("MY_DOMEN") + "/privkey.pem",
+        )
 
     # def start(self):
     #     print("kfdjgh")
@@ -50,7 +52,7 @@ class Bot:
     #         url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
     #         # certificate=open("/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem"),
     #     )
-        # self.application.infinity_polling()
+    # self.application.infinity_polling()
 
 
 class Updater(APIView):
