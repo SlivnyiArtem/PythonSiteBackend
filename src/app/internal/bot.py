@@ -52,18 +52,32 @@ class Bot:
         self.dispatcher = self.updater.dispatcher
         self.dispatcher.add_handler(CommandHandler("help", handlers.help_handler))
 
+def gg():
+    with open("privkey.pem") as f:
+        f.read()
 
 def start_bot():
+    # gg()
+    #raise Exception("https://"+env("MY_DOMEN")+"/"+env("BOT_KEY"))
     bot = Bot()
     bot.updater.start_webhook(
-        listen="127.0.0.1",
-        port=5000,
+        listen="158.160.52.96",
+        port=443,
         url_path=env("BOT_KEY"),
-        # cert=get_key(),
-        # key="/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem",
-        # cert="/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem",
-        webhook_url="${MY_DOMEN}/${BOT_KEY}",
+        webhook_url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
+
     )
+    # bot.updater.start_webhook(
+    #     # listen="127.0.0.1",
+    #     # port=5000,
+    #     url_path=env("BOT_KEY"),
+    #     # cert=get_key(),
+    #     # key="/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem",
+    #     # cert="/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem",
+    #     cert ="pythonbackend2023/privkey.pem",
+    #     # cert = open('privkey.pem', 'rb'),
+    #     webhook_url="https://"+env("MY_DOMEN")+"/"+env("BOT_KEY"),
+    # )
     bot.updater.idle()
     # bot.updater.start_polling()
 
