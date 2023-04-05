@@ -40,13 +40,14 @@ class Bot:
     def start(self):
         print("kfdjgh")
         self.application.remove_webhook()
-        self.application.set_webhook(url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=None)
+        self.application.set_webhook(url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"), certificate=open())
         # self.application.infinity_polling()
 
 
 class Updater(APIView):
     def post(self, request):
         json_str = request.body.decode("UTF-8")
+        print(json_str)
         update = types.Update.de_json(json_str)
         bot.application.process_new_updates([update])
 
