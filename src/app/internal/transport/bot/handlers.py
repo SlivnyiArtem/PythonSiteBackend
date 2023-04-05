@@ -1,5 +1,6 @@
 import phonenumbers
 from django.db import models
+from rest_framework import serializers
 
 from app.internal.services import user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
@@ -136,7 +137,8 @@ def add_user(message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        # relationships: models.JSONField = user.relationships
+        relationships: models.JSONField = user.relationships
+        bot.send_message(message.chat.id, relationships)
 
         # a: list = user.relationships["money_friends"]
         # a.append(message.text)
