@@ -9,6 +9,7 @@ from app.internal.transport.bot.text_serialization_handlers import convert_dict_
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
+
 # from telegram import ForceReply, Update
 # from telegram.ext import ContextTypes
 
@@ -116,13 +117,13 @@ def get_phone_number(message, bot):
 @error_decorator
 def my_relationships(message, bot):
     relationships = user_service.get_user_by_id(message.from_user.id).relationships
-    bot.send_message(message.chat.id, relationships["money_friends"])
+    print(relationships)
     msg = ""
     el = relationships["money_friends"]
     for user in el:
         msg += user + "\n"
-
-    bot.send_message(message.chat.id, relationships)
+    print(msg)
+    # bot.send_message(message.chat.id, msg)
 
 
 @error_decorator
@@ -149,7 +150,8 @@ def add_user(message, bot):
         # money_friends.append(message.text)
         #
         # user_service.get_user_by_id(message.from_user.id).relationships = json.dumps({"money_friends": ["hjsadkjh"]})
-        bot.send_message(message.chat.id, "ADDUSER")
+
+        # bot.send_message(message.chat.id, "ADDUSER")
 
 
 @error_decorator
