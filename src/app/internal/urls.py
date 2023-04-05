@@ -4,6 +4,5 @@ from django.urls import include, path
 from app.internal.transport.rest import handlers
 
 urlpatterns = [
-    url(r"^", include("django_telegrambot.urls")),
     path("users/<int:user_id>/me", handlers.me_http_inf_handler),
 ]
