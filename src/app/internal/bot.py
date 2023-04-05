@@ -42,7 +42,7 @@ class Bot:
         self.application.remove_webhook()
         self.application.set_webhook(
             url="https://" + env("MY_DOMEN") + "/" + env("BOT_KEY"),
-            certificate=open("/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem"),
+            # certificate=open("/etc/letsencrypt/live/" + env("MY_DOMEN") + "/fullchain.pem"),
         )
         # self.application.infinity_polling()
 
