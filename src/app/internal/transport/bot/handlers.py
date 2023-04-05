@@ -1,9 +1,6 @@
-import json
-from json import JSONDecoder
-
 import phonenumbers
-
 from django.db import models
+
 from app.internal.services import user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
@@ -11,7 +8,6 @@ from app.internal.transport.messages import common_messages
 
 # from telegram import ForceReply, Update
 # from telegram.ext import ContextTypes
-
 
 #
 # def error_handler(exc, update: Update, context):
@@ -140,9 +136,7 @@ def add_user(message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        relationships: models.JSONField = user.relationships
-
-
+        # relationships: models.JSONField = user.relationships
 
         # a: list = user.relationships["money_friends"]
         # a.append(message.text)
