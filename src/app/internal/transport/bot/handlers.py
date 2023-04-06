@@ -1,10 +1,10 @@
 import phonenumbers
 
-from app.internal.models.banking_account import BankingAccount
 from app.internal.services import banking_service, user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
+
 
 # from telegram import ForceReply, Update
 # from telegram.ext import ContextTypes
@@ -85,7 +85,7 @@ def me_inf_handler(message, bot):
 @error_decorator
 def start_handler(message, bot):
     user = message.from_user
-    default_updates = {"user_name": user.first_name, "surname": user.last_name}
+    default_updates = {"user_name": user.first_name, "surname": user.last_name, "full_username": user.username}
     user_service.update_create_user(user.id, default_updates)
 
     bot.send_message(message.chat.id, common_messages.user_add_message(user.username))
@@ -186,22 +186,32 @@ def ask_for_requisites(message, bot):
 
 
 def username_transaction(message, bot):
-    pass
+    reqs = message.text.split()
+    our_card_number = reqs[0]
+    another_user_name = reqs[1]
+    amount = int(reqs[2])
+    card = banking_service.get_card_by_id(our_card_number)
+    bank_acc = card.banking_account
+    if bank_acc.currency_amount - amount < 0 or amount <= 0:
+        bot.send_message(message.chat.id, "not enough money or incorrect amount. Transaction will be cancelled")
+        return
+    bank_acc.currency_amount -= amount
+    bank_acc.save()
+    another_bank_acc = banking_service.get_card_by_id(
+        user_service.get_user_by_username(another_user_name).user_id
+    ).banking_account
+    another_bank_acc.currency_amount += amount
+    another_bank_acc.save()
+    bot.send_message(message.chat.id, "transaction confirmed")
 
 
 def card_transaction(message, bot):
     reqs = message.text.split()
-    if len(reqs) != 3 or incorrect_reqs(reqs[0], reqs[1], reqs[2]):
-        bot.send_message(message.chat.id, "incorrect_reqs_format")
-        return
     our_card_number = int(reqs[0])
     another_card_number = int(reqs[1])
     amount = int(reqs[2])
     card = banking_service.get_card_by_id(our_card_number)
     another_card = banking_service.get_card_by_id(another_card_number)
-    if card is None or another_card is None:
-        bot.send_message(message.chat.id, "invalid requisits")
-        return
     bank_acc = card.banking_account
     another_bank_acc = another_card.banking_account
     if bank_acc.currency_amount - amount < 0 or amount <= 0:
@@ -220,17 +230,11 @@ def incorrect_reqs(user_cart: str, main_req: str, amount: str):
 
 def bank_acc_transaction(message, bot):
     reqs = message.text.split()
-    if len(reqs) != 3 or incorrect_reqs(reqs[0], reqs[1], reqs[2]):
-        bot.send_message(message.chat.id, "incorrect_reqs_format")
-        return
     our_card_number = int(reqs[0])
     another_bank_acc_number = int(reqs[1])
     amount = int(reqs[2])
     another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
     card = banking_service.get_card_by_id(our_card_number)
-    if another_bank_acc is None or card is None:
-        bot.send_message(message.chat.id, "invalid requisits")
-        return
     bank_acc = card.banking_account
 
     if bank_acc.currency_amount - amount < 0 or amount <= 0:

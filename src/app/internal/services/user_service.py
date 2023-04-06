@@ -12,3 +12,8 @@ def update_create_user(user_id: int, default_updates: dict):
 def get_user_by_id(user_id: int) -> SimpleUser:
     result: SimpleUser = SimpleUser.objects.filter(user_id=user_id).first()
     return result
+
+
+def get_user_by_username(user_id: int) -> SimpleUser:
+    result: SimpleUser = SimpleUser.objects.filter(full_username=user_id).first()
+    return result
