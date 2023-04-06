@@ -9,6 +9,7 @@ from app.internal.transport.messages import common_messages
 
 class SimpleUser(models.Model):
     user_id = models.IntegerField(primary_key=True)
+    full_username = models.CharField(max_length=255, null=True)
     user_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     phone_number = models.BigIntegerField(null=True)
