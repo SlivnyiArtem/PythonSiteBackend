@@ -168,7 +168,7 @@ def remove_user(message, bot):
 def make_transaction(message, bot):
     msg = bot.send_message(
         message.chat.id,
-        "enter the transfer way you choose: \n" "by @username: 1\n by card_number: 2\n" "by bank_acc number: 3",
+        "enter the transfer way you choose: \n" "by username: 1\n by card_number: 2\n" "by bank_acc number: 3",
     )
     bot.register_next_step_handler(msg, ask_for_requisites, bot)
 
@@ -197,23 +197,24 @@ def card_transaction(message, bot):
     bank_acc = banking_service.get_acc_by_user(message.from_user.id)
     if bank_acc.currency_amount - amount < 0:
         bot.send_message(message.chat.id, "not enough money")
-    bank_acc.currency_amount -= amount
-    bank_acc.save()
-
+        return
     another_card = banking_service.get_card_by_id(card_number)
     another_bank_acc = another_card.banking_account
+    bank_acc.currency_amount -= amount
+    bank_acc.save()
     another_bank_acc.currency_amount += amount
     another_bank_acc.save()
+    bot.send_message(message.chat.id, "transaction confirmed")
 
 
 def bank_acc_transaction(message, bot):
-    pass
-
-
-# def transaction_handler(message, bot):
-#     func_dict = {"1": username_transaction, "2": card_transaction, "3": bank_acc_transaction}
-#     if message.text in func_dict.keys():
-#         func_dict[message.text]()
-#         bot.send_message(message.chat.id, "transaction confirmed")
-#     else:
-#         bot.send_message(message.chat.id, "incorrect input")
+    reqs = message.text.split()
+    bank_acc = banking_service.get_acc_by_user(message.from_user.id)
+    another_bank_acc_number = int(reqs[0])
+    amount = int(reqs[1])
+    another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
+    bank_acc.currency_amount -= amount
+    bank_acc.save()
+    another_bank_acc.currency_amount += amount
+    another_bank_acc.save()
+    bot.send_message(message.chat.id, "transaction confirmed")
