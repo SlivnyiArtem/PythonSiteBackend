@@ -1,4 +1,5 @@
 import phonenumbers
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from rest_framework import serializers
 
@@ -112,7 +113,7 @@ def get_phone_number(message, bot):
 
 @error_decorator
 def my_relationships(message, bot):
-    relationships: models.JSONField = user_service.get_user_by_id(message.from_user.id).relationships
+    relationships = user_service.get_user_by_id(message.from_user.id).relationships
     bot.send_message(message.chat.id, relationships)
     # print(relationships)
     # msg = ""
@@ -137,11 +138,13 @@ def add_user(message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        relationships: models.JSONField = user.relationships
-        bot.send_message(message.chat.id, relationships)
-
-        user.relationships["smth"] = "anth"
+        user.relationships.append(message.text)
         user.save()
+        # relationships = user.relationships
+        # bot.send_message(message.chat.id, relationships)
+        #
+        # user.relationships["smth"] = "anth"
+        # user.save()
 
         # a: list = user.relationships["money_friends"]
         # a.append(message.text)
@@ -171,8 +174,10 @@ def remove_user(message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        a: list = user.relationships["money_friends"]
-        a.remove(message.text)
-        user.relationships = a
+        user.relationships.remove(message.text)
         user.save()
-        bot.send_message(message.chat.id, "REMOVEUSER")
+        # a: list = user.relationships["money_friends"]
+        # a.remove(message.text)
+        # user.relationships = a
+        # user.save()
+        # bot.send_message(message.chat.id, "REMOVEUSER")
