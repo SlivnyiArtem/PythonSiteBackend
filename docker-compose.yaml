@@ -12,8 +12,6 @@ services:
       - db
     ports:
       - "0.0.0.0:8000:8000"
-    depends_on:
-      - db
     env_file: ./src/config/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -22,8 +20,8 @@ services:
   db:
     container_name: python-django-db-1
     image: postgres:12.0-alpine
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432"
     env_file: ./src/config/.env
