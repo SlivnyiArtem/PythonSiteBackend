@@ -117,7 +117,7 @@ def my_money_recipient(message, bot):
     if user is None:
         bot.send_message(message.chat.id, common_messages.no_information_in_db_message)
         return
-    spec_users = user.money_users
+    spec_users = user.friends
     msg = ""
     for user in spec_users:
         msg += user + "\n"
@@ -138,7 +138,7 @@ def add_user(message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        user.money_users.append(message.text)
+        user.friends.append(message.text)
         user.save()
 
 
