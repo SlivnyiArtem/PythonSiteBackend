@@ -11,6 +11,9 @@ makemigrations:
 createsuperuser:
 	python src/manage.py createsuperuser --settings=config.settings_local
 
+createsuperuser_server:
+	python src/manage.py createsuperuser
+
 collectstatic:
 	python src/manage.py collectstatic --no-input
 
