@@ -173,6 +173,9 @@ def make_transaction(message, bot):
 
 
 def username_transaction(message, bot):
+    user = message.from_user
+    # default_updates = {"user_name": user.first_name, "surname": user.last_name}
+    # user_service.update_create_user(user.id, default_updates)
     pass
 
 
