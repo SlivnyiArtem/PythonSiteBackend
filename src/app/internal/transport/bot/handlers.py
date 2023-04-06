@@ -176,7 +176,7 @@ def make_transaction(message, bot):
 def ask_for_requisites(message, bot):
     msg = bot.send_message(
         message.chat.id,
-        "enter the card or bank account number or name of telegram user " "then space and amount of money to transfer ",
+        "enter your card number, then card number/bank acc/ username of another user and amount of money to transfer",
     )
     func_dict = {"1": username_transaction, "2": card_transaction, "3": bank_acc_transaction}
     if message.text in func_dict.keys():
@@ -191,15 +191,16 @@ def username_transaction(message, bot):
 
 def card_transaction(message, bot):
     reqs = message.text.split()
-    card_number = int(reqs[0])
-    amount = int(reqs[1])
-    # our_user = form_information_handlers.get_user_information(message.from_user.id)
-    bank_acc = banking_service.get_acc_by_user(message.from_user.id)
+    our_card_number = int(reqs[0])
+    another_card_number = int(reqs[1])
+    amount = int(reqs[2])
+    bank_acc = banking_service.get_card_by_id(our_card_number).banking_account
+    # bank_acc = banking_service.get_acc_by_user(message.from_user.id)
     if bank_acc.currency_amount - amount < 0:
         bot.send_message(message.chat.id, "not enough money")
         return
-    another_card = banking_service.get_card_by_id(card_number)
-    another_bank_acc = another_card.banking_account
+    # another_card = banking_service.get_card_by_id(another_card_number)
+    another_bank_acc = banking_service.get_card_by_id(another_card_number).banking_account
     bank_acc.currency_amount -= amount
     bank_acc.save()
     another_bank_acc.currency_amount += amount
@@ -209,9 +210,11 @@ def card_transaction(message, bot):
 
 def bank_acc_transaction(message, bot):
     reqs = message.text.split()
-    bank_acc = banking_service.get_acc_by_user(message.from_user.id)
-    another_bank_acc_number = int(reqs[0])
-    amount = int(reqs[1])
+    # bank_acc = banking_service.get_acc_by_user(message.from_user.id)
+    our_card_number = int(reqs[0])
+    another_bank_acc_number = int(reqs[1])
+    amount = int(reqs[2])
+    bank_acc = banking_service.get_card_by_id(our_card_number).banking_account
     another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
     bank_acc.currency_amount -= amount
     bank_acc.save()
