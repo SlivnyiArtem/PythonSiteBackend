@@ -12,8 +12,9 @@ class SimpleUser(models.Model):
     user_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     phone_number = models.BigIntegerField(null=True)
-    money_users = ArrayField(models.CharField(max_length=50, blank=True), size=10, default=list, blank=True)
-    relationships = ArrayField(models.CharField(max_length=50, blank=True), size=10, default=["sldkfj"], blank=True)
+    friends = ArrayField(models.CharField(max_length=50, blank=True), size=10, default=list, blank=True)
+    # money_users = ArrayField(models.CharField(max_length=50, blank=True), size=10, default=list, blank=True)
+    # relationships = ArrayField(models.CharField(max_length=50, blank=True), size=10, default=["sldkfj"], blank=True)
 
     def __str__(self):
         return str(self.user_id)
