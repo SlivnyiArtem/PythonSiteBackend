@@ -5,7 +5,6 @@ from app.internal.transport.bot.text_serialization_handlers import convert_dict_
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
-
 # from telegram import ForceReply, Update
 # from telegram.ext import ContextTypes
 
