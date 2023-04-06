@@ -87,7 +87,7 @@ def me_inf_handler(message, bot):
 @error_decorator
 def start_handler(message, bot):
     user = message.from_user
-    default_updates = {"name": user.first_name, "surname": user.last_name}
+    default_updates = {"user_name": user.first_name, "surname": user.last_name}
     user_service.update_create_user(user.id, default_updates)
 
     bot.send_message(message.chat.id, common_messages.user_add_message(user.username))
