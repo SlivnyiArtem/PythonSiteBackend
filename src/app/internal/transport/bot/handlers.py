@@ -194,13 +194,19 @@ def card_transaction(message, bot):
     our_card_number = int(reqs[0])
     another_card_number = int(reqs[1])
     amount = int(reqs[2])
-    bank_acc = banking_service.get_card_by_id(our_card_number).banking_account
-    # bank_acc = banking_service.get_acc_by_user(message.from_user.id)
-    if bank_acc.currency_amount - amount < 0:
-        bot.send_message(message.chat.id, "not enough money")
+    if incorrect_reqs(our_card_number, another_card_number, amount):
+        bot.send_message(message.chat.id, "incorrect_reqs_format")
         return
-    # another_card = banking_service.get_card_by_id(another_card_number)
-    another_bank_acc = banking_service.get_card_by_id(another_card_number).banking_account
+    card = banking_service.get_card_by_id(our_card_number)
+    another_card = banking_service.get_card_by_id(another_card_number)
+    if card is None or another_card is None:
+        bot.send_message(message.chat.id, "invalid requisits")
+        return
+    bank_acc = card.banking_account
+    another_bank_acc = another_card.banking_account
+    if bank_acc.currency_amount - amount < 0 or amount <= 0:
+        bot.send_message(message.chat.id, "not enough money or incorrect amount. Transaction will be cancelled")
+        return
     bank_acc.currency_amount -= amount
     bank_acc.save()
     another_bank_acc.currency_amount += amount
@@ -208,14 +214,28 @@ def card_transaction(message, bot):
     bot.send_message(message.chat.id, "transaction confirmed")
 
 
+def incorrect_reqs(user_cart, main_req, amount):
+    pass
+
+
 def bank_acc_transaction(message, bot):
     reqs = message.text.split()
-    # bank_acc = banking_service.get_acc_by_user(message.from_user.id)
     our_card_number = int(reqs[0])
     another_bank_acc_number = int(reqs[1])
     amount = int(reqs[2])
-    bank_acc = banking_service.get_card_by_id(our_card_number).banking_account
+    if incorrect_reqs(our_card_number, another_bank_acc_number, amount):
+        bot.send_message(message.chat.id, "incorrect_reqs_format")
+        return
     another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
+    card = banking_service.get_card_by_id(our_card_number)
+    if another_bank_acc is None or card is None:
+        bot.send_message(message.chat.id, "invalid requisits")
+        return
+    bank_acc = card.banking_account
+
+    if bank_acc.currency_amount - amount < 0 or amount <= 0:
+        bot.send_message(message.chat.id, "not enough money or incorrect amount. Transaction will be cancelled")
+        return
     bank_acc.currency_amount -= amount
     bank_acc.save()
     another_bank_acc.currency_amount += amount
