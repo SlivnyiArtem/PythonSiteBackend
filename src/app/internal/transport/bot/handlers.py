@@ -112,19 +112,15 @@ def get_phone_number(message, bot):
 
 
 @error_decorator
-def my_relationships(message, bot):
+def my_money_recipient(message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
     if user is None:
         bot.send_message(message.chat.id, common_messages.no_information_in_db_message)
         return
-    relationships = user.money_users
-    # bot.send_message(message.chat.id, relationships)
-    # print(relationships)
+    spec_users = user.money_users
     msg = ""
-    # el = relationships["money_friends"]
-    for user in relationships:
+    for user in spec_users:
         msg += user + "\n"
-    # print(msg)
     bot.send_message(message.chat.id, msg)
 
 
@@ -144,24 +140,6 @@ def add_user(message, bot):
             return
         user.money_users.append(message.text)
         user.save()
-        # relationships = user.relationships
-        # bot.send_message(message.chat.id, relationships)
-        #
-        # user.relationships["smth"] = "anth"
-        # user.save()
-
-        # a: list = user.relationships["money_friends"]
-        # a.append(message.text)
-        # user.relationships = a
-        # user.save()
-
-        # data = json.load(relationships)
-        # money_friends: list = data["money_friends"]
-        # money_friends.append(message.text)
-        #
-        # user_service.get_user_by_id(message.from_user.id).relationships = json.dumps({"money_friends": ["hjsadkjh"]})
-
-        # bot.send_message(message.chat.id, "ADDUSER")
 
 
 @error_decorator
@@ -180,8 +158,3 @@ def remove_user(message, bot):
             return
         user.money_users.remove(message.text)
         user.save()
-        # a: list = user.relationships["money_friends"]
-        # a.remove(message.text)
-        # user.relationships = a
-        # user.save()
-        # bot.send_message(message.chat.id, "REMOVEUSER")

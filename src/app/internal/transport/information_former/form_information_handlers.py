@@ -25,8 +25,3 @@ def get_user_information(user_id: int) -> dict:
     elif user.phone_number is None:
         code = status.HTTP_403_FORBIDDEN
     return SimpleUser.get_dictionary_deserialize(user, code)
-
-
-# def get_user_relationships(user_id: int) -> dict:
-#     user = user_service.get_user_by_id(user_id)
-#     return user.relationships
