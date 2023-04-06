@@ -140,6 +140,9 @@ def add_user(message, bot):
         relationships: models.JSONField = user.relationships
         bot.send_message(message.chat.id, relationships)
 
+        user.relationships['smth'] = 'anth'
+        user.save()
+
         # a: list = user.relationships["money_friends"]
         # a.append(message.text)
         # user.relationships = a
