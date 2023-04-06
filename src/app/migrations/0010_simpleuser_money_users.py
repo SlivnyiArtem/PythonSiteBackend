@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
             model_name="simpleuser",
             name="money_users",
             field=django.contrib.postgres.fields.ArrayField(
-                base_field=models.CharField(blank=True, max_length=50), default={"sdfsdf"}, size=10
+                base_field=models.CharField(blank=True, max_length=50), default=["sdfsdf"], size=10
             ),
             preserve_default=False,
         ),
