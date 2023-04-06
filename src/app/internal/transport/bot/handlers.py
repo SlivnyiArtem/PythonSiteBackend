@@ -119,12 +119,12 @@ def my_money_recipient(message, bot):
         return
     spec_users = user.friends
     if len(spec_users) == 0:
-        bot.send_message(message.chat.id, "¬ вашем списке избранного нет пользователей")
+        bot.send_message(message.chat.id, "No users in money-friends_list")
         return
     msg = ""
     for user in spec_users:
         msg += user + "\n"
-    bot.send_message(message.chat.id, "¬аш список избранных пользователей:")
+    bot.send_message(message.chat.id, "This is your money-friends list:")
     bot.send_message(message.chat.id, msg)
 
 
@@ -144,7 +144,7 @@ def add_user(message, bot):
             return
         user.friends.append(message.text)
         user.save()
-        bot.send_message(message.chat.id, "ѕользователь был успешно добавлен в избранное")
+        bot.send_message(message.chat.id, "Successful add user to money-friends")
 
 
 @error_decorator
@@ -163,4 +163,4 @@ def remove_user(message, bot):
             return
         user.friends.remove(message.text)
         user.save()
-        bot.send_message(message.chat.id, "ѕользователь был успешно удален из избранных")
+        bot.send_message(message.chat.id, "Successful delete user from money-friends")
