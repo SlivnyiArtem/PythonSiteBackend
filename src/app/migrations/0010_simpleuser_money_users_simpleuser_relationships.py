@@ -12,13 +12,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name="simpleuser",
-            name="money_users",
-            field=django.contrib.postgres.fields.ArrayField(
-                base_field=models.CharField(blank=True, max_length=50), blank=True, default=list, size=10
-            ),
-        ),
-        migrations.AddField(
-            model_name="simpleuser",
             name="relationships",
             field=django.contrib.postgres.fields.ArrayField(
                 base_field=models.CharField(blank=True, max_length=50), blank=True, default=["sldkfj"], size=10
