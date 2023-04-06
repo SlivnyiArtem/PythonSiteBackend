@@ -1,12 +1,10 @@
 import phonenumbers
-from django.contrib.postgres.fields import ArrayField
-from django.db import models
-from rest_framework import serializers
 
 from app.internal.services import user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
+
 
 # from telegram import ForceReply, Update
 # from telegram.ext import ContextTypes
@@ -136,7 +134,7 @@ def add_money_recipient(message, bot):
 
 def add_user(message, bot):
     if message.text[0] != "@" or len(message.text.split()) != 1:
-        answer = bot.send_message(message.chat.id, common_messages.incorrect_user_name)
+        answer = bot.send_message(message.chat.id, common_messages.incorrect_user_name())
         bot.register_next_step_handler(answer, add_user, bot)
     else:
         user = user_service.get_user_by_id(message.from_user.id)
@@ -155,7 +153,7 @@ def delete_money_recipient(message, bot):
 
 def remove_user(message, bot):
     if message.text[0] != "@" or len(message.text.split()) != 1:
-        answer = bot.send_message(message.chat.id, common_messages.incorrect_user_name)
+        answer = bot.send_message(message.chat.id, common_messages.incorrect_user_name())
         bot.register_next_step_handler(answer, remove_user, bot)
     else:
         user = user_service.get_user_by_id(message.from_user.id)
@@ -164,3 +162,34 @@ def remove_user(message, bot):
         user.friends.remove(message.text)
         user.save()
         bot.send_message(message.chat.id, "Successful delete user from money-friends")
+
+
+@error_decorator
+def make_transaction(message, bot):
+    msg = bot.send_message(message.chat.id, "enter the transfer way you choose: \n"
+                                            "by @username: 1\n by card_number: 2\n"
+                                            "by bank_acc number: 3")
+    bot.register_next_step_handler(msg, transaction_handler, bot)
+
+
+def username_transaction(message, bot):
+    pass
+
+
+def card_transaction(message, bot):
+    pass
+
+
+def bank_acc_transaction(message, bot):
+    pass
+
+
+def transaction_handler(message, bot):
+    func_dict = {"1": username_transaction,
+                 "2": card_transaction,
+                 "3": bank_acc_transaction}
+    if message.text in func_dict.keys():
+        func_dict[message.text]()
+        bot.send_message(message.chat.id, "transaction confirmed")
+    else:
+        bot.send_message(message.chat.id, "incorrect input")

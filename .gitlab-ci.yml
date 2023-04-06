@@ -7,14 +7,16 @@ stages:
   - deploy
 
 before_script:
+  - apk add make
   - docker login registry.gitlab.com -u "$CI_REGISTRY_USER" -p "$CI_GITLAB_TOKEN"
   - cp $DOT_ENV $(pwd)/src/config/.env
 
 build:
   stage: build
   script:
-    - docker-compose build
-    - docker-compose push
+    - make ci_build
+#    - docker-compose build
+#    - docker-compose push
   tags:
     - job:build
   only:
@@ -25,10 +27,11 @@ build:
 lint:
   stage: lint
   script:
-    - apk add make
-    - apk add --no-cache py3-pip
-    - pip install flake8 isort black #запуллить конотейнер и там прогнать
-    - make check_lint
+    - make ci_lint
+    #- apk add make
+    # - apk add --no-cache py3-pip
+    # - pip install flake8 isort black #запуллить конотейнер и там прогнать
+    # - make check_lint
   tags:
     - job:lint
   only:
@@ -39,8 +42,9 @@ lint:
 test:
   stage: test
   script:
-    - apk add make
     - make docker_test
+#    - apk add make
+#    - make docker_test
   tags:
     - job:test
   only:
