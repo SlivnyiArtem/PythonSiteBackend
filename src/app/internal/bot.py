@@ -37,8 +37,8 @@ class Bot:
             lambda message: handlers.delete_money_recipient(message, self.application)
         )
 
-        self.application.message_handler(commands=["my_relationships"])(
-            lambda message: handlers.my_relationships(message, self.application)
+        self.application.message_handler(commands=["my_money_recipient"])(
+            lambda message: handlers.my_money_recipient(message, self.application)
         )
 
     def start(self):

@@ -14,8 +14,6 @@ class SimpleUser(models.Model):
     phone_number = models.BigIntegerField(null=True)
     money_users = ArrayField(models.CharField(max_length=50, blank=True), size=10, default=list, blank=True)
 
-    # relationships = models.JSONField(default=json.dumps({"money_friends": []}))
-
     def __str__(self):
         return str(self.user_id)
 
