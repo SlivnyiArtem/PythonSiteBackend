@@ -1,6 +1,7 @@
 import phonenumbers
 
-from app.internal.services import user_service
+from app.internal.models.banking_account import BankingAccount
+from app.internal.services import banking_service, user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
@@ -169,45 +170,50 @@ def make_transaction(message, bot):
         message.chat.id,
         "enter the transfer way you choose: \n" "by @username: 1\n by card_number: 2\n" "by bank_acc number: 3",
     )
-    bot.register_next_step_handler(msg, transaction_handler, bot)
+    bot.register_next_step_handler(msg, ask_for_requisites, bot)
+
+
+def ask_for_requisites(message, bot):
+    msg = bot.send_message(
+        message.chat.id,
+        "enter the card or bank account number or name of telegram user " "then space and amount of money to transfer ",
+    )
+    func_dict = {"1": username_transaction, "2": card_transaction, "3": bank_acc_transaction}
+    if message.text in func_dict.keys():
+        bot.register_next_step_handler(msg, func_dict[message.text], bot)
+    else:
+        bot.send_message(message.chat.id, "incorrect input")
 
 
 def username_transaction(message, bot):
-    # user = message.from_user
-    # default_updates = {"friends": l}
-    # user_service.update_create_user(user.id, default_updates)
-
-    user_inf = form_information_handlers.get_user_information(message.from_user.id)
-    if user_inf is None:
-        bot.send_message(message.chat.id, common_messages.no_information_in_db_message)
-        return
-    try:
-        amount = form_information_handlers.get_currency_information(user_inf, int(message.text))
-    except PermissionError:
-        bot.send_message(message.chat.id, common_messages.access_denied())
-        return
-    if amount is not None:
-        bot.send_message(message.chat.id, amount)
-    else:
-        bot.register_next_step_handler(
-            bot.send_message(message.chat.id, common_messages.no_card_or_acc()), send_amount_inf, bot
-        )
-
     pass
 
 
 def card_transaction(message, bot):
-    pass
+    reqs = message.text.split()
+    card_number = int(reqs[0])
+    amount = int(reqs[1])
+    # our_user = form_information_handlers.get_user_information(message.from_user.id)
+    bank_acc = banking_service.get_acc_by_user(message.from_user.id)
+    if bank_acc.currency_amount - amount < 0:
+        bot.send_message(message.chat.id, "not enough money")
+    bank_acc.currency_amount -= amount
+    bank_acc.save()
+
+    another_card = banking_service.get_card_by_id(card_number)
+    another_bank_acc = another_card.banking_account
+    another_bank_acc.currency_amount += amount
+    another_bank_acc.save()
 
 
 def bank_acc_transaction(message, bot):
     pass
 
 
-def transaction_handler(message, bot):
-    func_dict = {"1": username_transaction, "2": card_transaction, "3": bank_acc_transaction}
-    if message.text in func_dict.keys():
-        func_dict[message.text]()
-        bot.send_message(message.chat.id, "transaction confirmed")
-    else:
-        bot.send_message(message.chat.id, "incorrect input")
+# def transaction_handler(message, bot):
+#     func_dict = {"1": username_transaction, "2": card_transaction, "3": bank_acc_transaction}
+#     if message.text in func_dict.keys():
+#         func_dict[message.text]()
+#         bot.send_message(message.chat.id, "transaction confirmed")
+#     else:
+#         bot.send_message(message.chat.id, "incorrect input")

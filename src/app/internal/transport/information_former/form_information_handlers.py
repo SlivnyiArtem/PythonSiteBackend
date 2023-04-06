@@ -5,8 +5,8 @@ from app.internal.services import banking_service, user_service
 
 
 def get_currency_information(user_inf: dict, requisite_id: int) -> int:
-    acc_inf = banking_service.get_acc_by_id_and_user(requisite_id)
-    card_inf = banking_service.get_card_by_id_and_user(requisite_id)
+    acc_inf = banking_service.get_acc_by_id(requisite_id)
+    card_inf = banking_service.get_card_by_id(requisite_id)
     if card_inf is not None:
         if card_inf.banking_account.account_owner.user_id != user_inf["user_id"]:
             raise PermissionError("Доступ запрещен")
