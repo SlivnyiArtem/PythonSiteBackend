@@ -118,9 +118,13 @@ def my_money_recipient(message, bot):
         bot.send_message(message.chat.id, common_messages.no_information_in_db_message)
         return
     spec_users = user.friends
+    if len(spec_users) == 0:
+        bot.send_message(message.chat.id, "¬ вашем списке избранного нет пользователей")
+        return
     msg = ""
     for user in spec_users:
         msg += user + "\n"
+    bot.send_message(message.chat.id, "¬аш список избранных пользователей:")
     bot.send_message(message.chat.id, msg)
 
 
@@ -140,6 +144,7 @@ def add_user(message, bot):
             return
         user.friends.append(message.text)
         user.save()
+        bot.send_message(message.chat.id, "ѕользователь был успешно добавлен в избранное")
 
 
 @error_decorator
@@ -156,5 +161,6 @@ def remove_user(message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        user.money_users.remove(message.text)
+        user.friends.remove(message.text)
         user.save()
+        bot.send_message(message.chat.id, "ѕользователь был успешно удален из избранных")
