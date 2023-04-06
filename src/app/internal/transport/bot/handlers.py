@@ -113,7 +113,7 @@ def get_phone_number(message, bot):
 
 @error_decorator
 def my_relationships(message, bot):
-    relationships = user_service.get_user_by_id(message.from_user.id).relationships
+    relationships = user_service.get_user_by_id(message.from_user.id).money_friends
     bot.send_message(message.chat.id, relationships)
     # print(relationships)
     # msg = ""
@@ -138,7 +138,7 @@ def add_user(message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        user.relationships.append(message.text)
+        user.money_friends.append(message.text)
         user.save()
         # relationships = user.relationships
         # bot.send_message(message.chat.id, relationships)
@@ -174,7 +174,7 @@ def remove_user(message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        user.relationships.remove(message.text)
+        user.money_friends.remove(message.text)
         user.save()
         # a: list = user.relationships["money_friends"]
         # a.remove(message.text)
