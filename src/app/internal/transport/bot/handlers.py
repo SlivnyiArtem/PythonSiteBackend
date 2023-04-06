@@ -191,12 +191,12 @@ def username_transaction(message, bot):
 
 def card_transaction(message, bot):
     reqs = message.text.split()
+    if len(reqs) != 3 or incorrect_reqs(reqs[0], reqs[1], reqs[2]):
+        bot.send_message(message.chat.id, "incorrect_reqs_format")
+        return
     our_card_number = int(reqs[0])
     another_card_number = int(reqs[1])
     amount = int(reqs[2])
-    if incorrect_reqs(our_card_number, another_card_number, amount):
-        bot.send_message(message.chat.id, "incorrect_reqs_format")
-        return
     card = banking_service.get_card_by_id(our_card_number)
     another_card = banking_service.get_card_by_id(another_card_number)
     if card is None or another_card is None:
@@ -214,18 +214,18 @@ def card_transaction(message, bot):
     bot.send_message(message.chat.id, "transaction confirmed")
 
 
-def incorrect_reqs(user_cart, main_req, amount):
-    pass
+def incorrect_reqs(user_cart: str, main_req: str, amount: str):
+    return user_cart.isdigit() and main_req.isdigit() and amount.isdigit()
 
 
 def bank_acc_transaction(message, bot):
     reqs = message.text.split()
+    if len(reqs) != 3 or incorrect_reqs(reqs[0], reqs[1], reqs[2]):
+        bot.send_message(message.chat.id, "incorrect_reqs_format")
+        return
     our_card_number = int(reqs[0])
     another_bank_acc_number = int(reqs[1])
     amount = int(reqs[2])
-    if incorrect_reqs(our_card_number, another_bank_acc_number, amount):
-        bot.send_message(message.chat.id, "incorrect_reqs_format")
-        return
     another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
     card = banking_service.get_card_by_id(our_card_number)
     if another_bank_acc is None or card is None:
