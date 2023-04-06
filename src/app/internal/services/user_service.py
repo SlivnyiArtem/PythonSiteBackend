@@ -14,6 +14,6 @@ def get_user_by_id(user_id: int) -> SimpleUser:
     return result
 
 
-def get_user_by_username(user_id: int) -> SimpleUser:
-    result: SimpleUser = SimpleUser.objects.filter(full_username=user_id).first()
+def get_user_by_username(username) -> SimpleUser:
+    result: SimpleUser = SimpleUser.objects.filter(full_username=username).first()
     return result
