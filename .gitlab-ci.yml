@@ -54,7 +54,7 @@ deployment:
     - docker pull $CI_REGISTRY_IMAGE:latest
     - docker-compose down
     # - docker-compose run app-service python src/manage.py makemigrations      #// в процессе дейплоя лишнее
-    # - docker-compose run app-service python src/manage.py migrate --fake-initial
+    - docker-compose run app-service python src/manage.py migrate --fake-initial
     - docker-compose up -d
   tags:
     - job:deploy
