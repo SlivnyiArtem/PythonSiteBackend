@@ -69,7 +69,7 @@ ci_lint:
 	make check_lint
 
 ci_deploy:
-	docker pull $CI_REGISTRY_IMAGE:latest
+	docker pull ${CI_REGISTRY_IMAGE}:latest
 	docker-compose down
 	docker-compose run app-service python src/manage.py migrate
 	docker-compose up -d
