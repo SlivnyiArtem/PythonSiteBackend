@@ -114,14 +114,14 @@ def get_phone_number(message, bot):
 @error_decorator
 def my_relationships(message, bot):
     relationships = user_service.get_user_by_id(message.from_user.id).money_users
-    bot.send_message(message.chat.id, relationships)
+    # bot.send_message(message.chat.id, relationships)
     # print(relationships)
-    # msg = ""
-    # el = relationships["money_friends"]
-    # for user in el:
-    #     msg += user + "\n"
+    msg = ""
+    el = relationships["money_friends"]
+    for user in el:
+        msg += user + "\n"
     # print(msg)
-    # bot.send_message(message.chat.id, msg)
+    bot.send_message(message.chat.id, msg)
 
 
 @error_decorator
