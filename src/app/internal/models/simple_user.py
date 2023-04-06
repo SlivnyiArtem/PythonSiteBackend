@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from rest_framework import status
 
@@ -11,7 +12,9 @@ class SimpleUser(models.Model):
     user_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     phone_number = models.BigIntegerField(null=True)
-    relationships = models.JSONField(default=json.dumps({"money_friends": []}))
+    relationships = ArrayField(models.CharField(max_length=50, blank=True), size=10)
+
+    # relationships = models.JSONField(default=json.dumps({"money_friends": []}))
 
     def __str__(self):
         return str(self.user_id)
