@@ -7,7 +7,7 @@ MESSAGE_DICT = {
 }
 
 
-def user_add_message(name):
+def user_add_message(name: str):
     return f"пользователь {name} успешно " f"добавлен в базу данных, либо данные о нём обновлены"
 
 
@@ -15,7 +15,7 @@ def ask_for_phone_number_message():
     return "Укажите номер телефона, " "который вы хотите добавить в базу"
 
 
-def add_phone_number_message(name):
+def add_phone_number_message(name: str):
     return f"Телефонный номер успешно " f"добавлен к данным пользователя {name}"
 
 
