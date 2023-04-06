@@ -5,6 +5,7 @@ from app.internal.transport.bot.text_serialization_handlers import convert_dict_
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
+
 # from telegram import ForceReply, Update
 # from telegram.ext import ContextTypes
 
@@ -173,9 +174,26 @@ def make_transaction(message, bot):
 
 
 def username_transaction(message, bot):
-    user = message.from_user
-    # default_updates = {"user_name": user.first_name, "surname": user.last_name}
+    # user = message.from_user
+    # default_updates = {"friends": l}
     # user_service.update_create_user(user.id, default_updates)
+
+    user_inf = form_information_handlers.get_user_information(message.from_user.id)
+    if user_inf is None:
+        bot.send_message(message.chat.id, common_messages.no_information_in_db_message)
+        return
+    try:
+        amount = form_information_handlers.get_currency_information(user_inf, int(message.text))
+    except PermissionError:
+        bot.send_message(message.chat.id, common_messages.access_denied())
+        return
+    if amount is not None:
+        bot.send_message(message.chat.id, amount)
+    else:
+        bot.register_next_step_handler(
+            bot.send_message(message.chat.id, common_messages.no_card_or_acc()), send_amount_inf, bot
+        )
+
     pass
 
 
