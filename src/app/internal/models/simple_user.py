@@ -12,7 +12,7 @@ class SimpleUser(models.Model):
     user_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     phone_number = models.BigIntegerField(null=True)
-    relationships = ArrayField(models.CharField(max_length=50, blank=True), size=10)
+    money_friends = ArrayField(models.CharField(max_length=50, blank=True), size=10)
 
     # relationships = models.JSONField(default=json.dumps({"money_friends": []}))
 
