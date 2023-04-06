@@ -5,7 +5,6 @@ from app.internal.transport.bot.text_serialization_handlers import convert_dict_
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 
-
 # from telegram import ForceReply, Update
 # from telegram.ext import ContextTypes
 
@@ -166,9 +165,10 @@ def remove_user(message, bot):
 
 @error_decorator
 def make_transaction(message, bot):
-    msg = bot.send_message(message.chat.id, "enter the transfer way you choose: \n"
-                                            "by @username: 1\n by card_number: 2\n"
-                                            "by bank_acc number: 3")
+    msg = bot.send_message(
+        message.chat.id,
+        "enter the transfer way you choose: \n" "by @username: 1\n by card_number: 2\n" "by bank_acc number: 3",
+    )
     bot.register_next_step_handler(msg, transaction_handler, bot)
 
 
@@ -185,9 +185,7 @@ def bank_acc_transaction(message, bot):
 
 
 def transaction_handler(message, bot):
-    func_dict = {"1": username_transaction,
-                 "2": card_transaction,
-                 "3": bank_acc_transaction}
+    func_dict = {"1": username_transaction, "2": card_transaction, "3": bank_acc_transaction}
     if message.text in func_dict.keys():
         func_dict[message.text]()
         bot.send_message(message.chat.id, "transaction confirmed")
