@@ -28,10 +28,6 @@ lint:
   stage: lint
   script:
     - make ci_lint
-    #- apk add make
-    # - apk add --no-cache py3-pip
-    # - pip install flake8 isort black #запуллить конотейнер и там прогнать
-    # - make check_lint
   tags:
     - job:lint
   only:
@@ -43,8 +39,6 @@ test:
   stage: test
   script:
     - make docker_test
-#    - apk add make
-#    - make docker_test
   tags:
     - job:test
   only:
@@ -56,11 +50,6 @@ deployment:
   stage: deploy
   script:
     - make ci_deploy
-#    - docker pull $CI_REGISTRY_IMAGE:latest
-#    - docker-compose down
-#    # - docker-compose run app-service python src/manage.py makemigrations      #// в процессе дейплоя лишнее
-#    - docker-compose run app-service python src/manage.py migrate
-#    - docker-compose up -d
   tags:
     - job:deploy
   only:
