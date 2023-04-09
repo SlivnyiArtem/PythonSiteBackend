@@ -29,14 +29,31 @@ class Bot:
             lambda message: handlers.currency_amount_handler(message, self.application)
         )
 
+        self.application.message_handler(commands=["add_money_recipient"])(
+            lambda message: handlers.add_money_recipient(message, self.application)
+        )
+
+        self.application.message_handler(commands=["delete_money_recipient"])(
+            lambda message: handlers.delete_money_recipient(message, self.application)
+        )
+
+        self.application.message_handler(commands=["make_transaction"])(
+            lambda message: handlers.make_transaction(message, self.application)
+        )
+
+        self.application.message_handler(commands=["my_money_recipient"])(
+            lambda message: handlers.my_money_recipient(message, self.application)
+        )
+
     def start(self):
+        self.application.remove_webhook()
+        # self.application.run_webhooks()
+        # self.application.set_webhook(
+        # )
+
         self.application.infinity_polling()
 
 
-def start_bot():
+if __name__ == "__main__":
     bot = Bot()
     bot.start()
-
-
-if __name__ == "__main__":
-    start_bot()

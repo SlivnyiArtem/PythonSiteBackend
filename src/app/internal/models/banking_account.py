@@ -11,6 +11,6 @@ class BankingAccount(models.Model):
     def __str__(self):
         return str(self.account_number)
 
-    def get_dictionary_deserialize(self):
+    def get_dictionary_deserialize(self) -> dict:
         serialize_dict = {"card_number": self.account_number}
         return serialize_dict
