@@ -11,9 +11,6 @@ makemigrations:
 createsuperuser:
 	python src/manage.py createsuperuser --settings=config.settings_local
 
-createsuperuserserver:
-	python src/manage.py createsuperuser
-
 collectstatic:
 	python src/manage.py collectstatic --no-input
 
@@ -39,6 +36,8 @@ lint:
 	black --config pyproject.toml .
 
 check_lint:
+	# apk add py3-isort
+	# apk add py3-flake8
 	isort --check --diff .
 	flake8 --config setup.cfg
 	black --check --config pyproject.toml .
@@ -60,20 +59,3 @@ push:
 
 docker_test:
 	echo "There will be tests"
-
-
-ci_build:
-	docker-compose build
-	docker-compose push
-
-ci_lint:
-	apk add --no-cache py3-pip
-	pip install flake8 isort black
-	make check_lint
-
-ci_deploy:
-	docker pull ${CI_REGISTRY_IMAGE}:latest
-	docker-compose down
-	docker-compose run app-service python src/manage.py migrate
-	docker-compose up -d
-

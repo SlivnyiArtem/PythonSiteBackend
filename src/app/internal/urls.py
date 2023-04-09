@@ -1,5 +1,4 @@
-from django.template.defaulttags import url
-from django.urls import include, path
+from django.urls import path
 
 from app.internal.transport.rest import handlers
 
