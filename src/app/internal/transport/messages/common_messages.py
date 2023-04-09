@@ -7,7 +7,7 @@ MESSAGE_DICT = {
 }
 
 
-def user_add_message(name: str):
+def user_add_message(name):
     return f"пользователь {name} успешно " f"добавлен в базу данных, либо данные о нём обновлены"
 
 
@@ -15,7 +15,7 @@ def ask_for_phone_number_message():
     return "Укажите номер телефона, " "который вы хотите добавить в базу"
 
 
-def add_phone_number_message(name: str):
+def add_phone_number_message(name):
     return f"Телефонный номер успешно " f"добавлен к данным пользователя {name}"
 
 
@@ -47,7 +47,7 @@ def help_command_message():
         "воспользовались) предоставит краткую справку."
         "Чтобы получить данные о количестве денег на счете,"
         " используйте команду /check_currency. "
-        "Слава Омниссии!!! Ave Deus Mechanicus!!! ##17"
+        "Слава Омниссии! Ave Deus Mechanicus!!!"
     )
 
 
@@ -67,11 +67,3 @@ def no_card_or_acc():
 
 def access_denied():
     return "Доступ к данному аккаунту запрещен, вы не являетесь его владельцем"
-
-
-def ask_for_user_name():
-    return "Введите имя пользователя"
-
-
-def incorrect_user_name():
-    return "Некорректное имя пользователя повторите ввод"

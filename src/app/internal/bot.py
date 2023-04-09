@@ -29,43 +29,14 @@ class Bot:
             lambda message: handlers.currency_amount_handler(message, self.application)
         )
 
-        self.application.message_handler(commands=["add_money_recipient"])(
-            lambda message: handlers.add_money_recipient(message, self.application)
-        )
-
-        self.application.message_handler(commands=["delete_money_recipient"])(
-            lambda message: handlers.delete_money_recipient(message, self.application)
-        )
-
-        self.application.message_handler(commands=["make_transaction"])(
-            lambda message: handlers.make_transaction(message, self.application)
-        )
-
-        self.application.message_handler(commands=["my_money_recipient"])(
-            lambda message: handlers.my_money_recipient(message, self.application)
-        )
-
     def start(self):
-        self.application.remove_webhook()
-        self.application.run_webhooks(
-            listen="0.0.0.0", port=5000, webhook_url="https://" + env("MY_DOMEN") + "/bot/" + env("BOT_KEY")
-        )
-        # bot.updater.start_webhook(
-        #     # listen="127.0.0.1",
-        #     # port=5000,
-        #     url_path=env("BOT_KEY"),
-        #     # cert=get_key(),
-        #     # key="/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem",
-        #     # cert="/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem",
-        #     cert ="pythonbackend2023/privkey.pem",
-        #
-        #     webhook_url="https://"+env("MY_DOMEN")+"/"+env("BOT_KEY"),
-        # )
-        # bot.updater.idle()
-        # bot.updater.start_polling()
-        # self.application.infinity_polling()
+        self.application.infinity_polling()
+
+
+def start_bot():
+    bot = Bot()
+    bot.start()
 
 
 if __name__ == "__main__":
-    bot = Bot()
-    bot.start()
+    start_bot()
