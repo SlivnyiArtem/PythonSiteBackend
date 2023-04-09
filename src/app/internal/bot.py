@@ -50,20 +50,6 @@ class Bot:
         self.application.run_webhooks(
             listen="0.0.0.0", port=5000, webhook_url="https://" + env("MY_DOMEN") + "/bot" + env("BOT_KEY")
         )
-        # bot.updater.start_webhook(
-        #     # listen="127.0.0.1",
-        #     # port=5000,
-        #     url_path=env("BOT_KEY"),
-        #     # cert=get_key(),
-        #     # key="/etc/letsencrypt/live/${MY_DOMEN}/privkey.pem",
-        #     # cert="/etc/letsencrypt/live/${MY_DOMEN}/fullchain.pem",
-        #     cert ="pythonbackend2023/privkey.pem",
-        #
-        #     webhook_url="https://"+env("MY_DOMEN")+"/"+env("BOT_KEY"),
-        # )
-        # bot.updater.idle()
-        # bot.updater.start_polling()
-        # self.application.infinity_polling()
 
 
 if __name__ == "__main__":
