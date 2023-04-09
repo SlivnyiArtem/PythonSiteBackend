@@ -5,6 +5,7 @@ environ==1.0
 phonenumbers==8.13.6
 pyTelegramBotAPI==4.10.0
 psycopg2-binary==2.9.5
+uvicorn==0.21.1
 fastapi==0.95.0
 isort==5.12.0
 flake8==6.0.0
