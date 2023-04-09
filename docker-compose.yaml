@@ -25,7 +25,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432"
+      - "5432:5432"
     env_file: ./src/config/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -38,6 +38,8 @@ services:
     command: bash -c "python src/manage.py migrate & python src/manage.py start_bot"
     volumes:
       - /etc/letsencrypt:/cert
+    ports:
+      - "0.0.0.0:5000:5000"
     depends_on:
       - db
     env_file: ./src/config/.env
