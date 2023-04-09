@@ -25,7 +25,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5432"
     env_file: ./src/config/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
