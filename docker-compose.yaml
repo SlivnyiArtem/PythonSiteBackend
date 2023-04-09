@@ -39,7 +39,7 @@ services:
     volumes:
       - /etc/letsencrypt:/cert
     ports:
-      - "0.0.0.0:8000:8000"
+      - "0.0.0.0:5000:5000"
     depends_on:
       - db
     env_file: ./src/config/.env
