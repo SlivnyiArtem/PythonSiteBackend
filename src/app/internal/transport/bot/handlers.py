@@ -179,11 +179,13 @@ def username_transaction(message: telebot.types.Message, bot):
 
     another_user = user_service.get_user_by_username(another_user_name)
     bot.send_message(message.chat.id, another_user)
-    another_card = banking_service.get_card_by_id(another_user.user_id)
-    bot.send_message(message.chat.id, another_card)
-    another_bank_acc = another_card.banking_account
-    # not bot.send_messa
+    another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
     bot.send_message(message.chat.id, another_bank_acc)
+    # another_card = banking_service.get_card_by_id(another_user.user_id)
+    # bot.send_message(message.chat.id, another_card)
+    # another_bank_acc = another_card.banking_account
+    # not bot.send_messa
+
     # another_bank_acc = banking_service.get_card_by_id(
     #     user_service.get_user_by_username(another_user_name).user_id
     # ).banking_account
