@@ -162,88 +162,55 @@ def ask_for_requisites(message: telebot.types.Message, bot):
 
 def username_transaction(message: telebot.types.Message, bot):
     reqs = message.text.split()
-    # our_card_number = reqs[0]
-    # another_user_name = reqs[1]
-    # amount = int(reqs[2])
     our_card_number, another_user_name, amount = reqs[0], reqs[1], int(reqs[2])
     card = banking_service.get_card_by_id(int(our_card_number))
     bank_acc = card.banking_account
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
-    # if bank_acc.currency_amount - amount < 0 or amount <= 0:
-    #     bot.send_message(message.chat.id, "not enough money or incorrect amount. Transaction will be cancelled")
-    #     return
-    # bot.send_message(message.chat.id, card.banking_account)
-
-    # another_card = banking_service.get_card_by_id(user_service.get_user_by_username(another_user_name).user_id)
 
     another_user = user_service.get_user_by_username(another_user_name)
     bot.send_message(message.chat.id, another_user)
     another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
     bot.send_message(message.chat.id, another_bank_acc)
-    # another_card = banking_service.get_card_by_id(another_user.user_id)
-    # bot.send_message(message.chat.id, another_card)
-    # another_bank_acc = another_card.banking_account
-    # not bot.send_messa
-
-    # another_bank_acc = banking_service.get_card_by_id(
-    #     user_service.get_user_by_username(another_user_name).user_id
-    # ).banking_account
-    #
-    # bot.send_message(message.chat.id, another_bank_acc)
-    # bot.send_message(message.chat.id, another_bank_acc.currency_amount)
 
     bank_acc.currency_amount -= amount
     bank_acc.save()
     another_bank_acc.currency_amount += amount
     another_bank_acc.save()
     confirm_transaction(bot, message.chat.id)
-    # bot.send_message(message.chat.id, "transaction confirmed")
 
 
 def card_transaction(message: telebot.types.Message, bot):
     reqs = message.text.split()
     our_card_number, another_card_number, amount = int(reqs[0]), int(reqs[1]), int(reqs[2])
-    # our_card_number = int(reqs[0])
-    # another_card_number = int(reqs[1])
-    # amount = int(reqs[2])
     card = banking_service.get_card_by_id(our_card_number)
     another_card = banking_service.get_card_by_id(another_card_number)
     bank_acc = card.banking_account
     another_bank_acc = another_card.banking_account
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
-    # if bank_acc.currency_amount - amount < 0 or amount <= 0:
-    #     bot.send_message(message.chat.id, "not enough money or incorrect amount. Transaction will be cancelled")
-    #     return
+
     bank_acc.currency_amount -= amount
     bank_acc.save()
     another_bank_acc.currency_amount += amount
     another_bank_acc.save()
     confirm_transaction(bot, message.chat.id)
-    # bot.send_message(message.chat.id, "transaction confirmed")
 
 
 def bank_acc_transaction(message: telebot.types.Message, bot):
     reqs = message.text.split()
     our_card_number, another_bank_acc_number, amount = int(reqs[0]), int(reqs[1]), int(reqs[2])
-    # our_card_number = int(reqs[0])
-    # another_bank_acc_number = int(reqs[1])
-    # amount = int(reqs[2])
     another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
     card = banking_service.get_card_by_id(our_card_number)
     bank_acc = card.banking_account
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
-    # if bank_acc.currency_amount - amount < 0 or amount <= 0:
-    #     bot.send_message(message.chat.id, "not enough money or incorrect amount. Transaction will be cancelled")
-    #     return
+
     bank_acc.currency_amount -= amount
     bank_acc.save()
     another_bank_acc.currency_amount += amount
     another_bank_acc.save()
     confirm_transaction(bot, message.chat.id)
-    # bot.send_message(message.chat.id, "transaction confirmed")
 
 
 def incorrect_reqs(user_cart: str, main_req: str, amount: str):
