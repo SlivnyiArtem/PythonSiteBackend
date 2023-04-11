@@ -175,9 +175,15 @@ def username_transaction(message: telebot.types.Message, bot):
     #     return
     # bot.send_message(message.chat.id, card.banking_account)
 
-    another_card = banking_service.get_card_by_id(user_service.get_user_by_username(another_user_name).user_id)
+    # another_card = banking_service.get_card_by_id(user_service.get_user_by_username(another_user_name).user_id)
+
+    another_user = user_service.get_user_by_username(another_user_name)
+    bot.send_message(message.chat.id, another_user)
+    another_card = banking_service.get_card_by_id(another_user.user_id)
+    bot.send_message(message.chat.id, another_card)
     another_bank_acc = another_card.banking_account
-    # bot.send_message(message.chat.id, user_service.get_user_by_username(another_user_name).user_id)
+    # not bot.send_messa
+    bot.send_message(message.chat.id, another_bank_acc)
     # another_bank_acc = banking_service.get_card_by_id(
     #     user_service.get_user_by_username(another_user_name).user_id
     # ).banking_account
