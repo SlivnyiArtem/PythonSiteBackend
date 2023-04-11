@@ -175,13 +175,15 @@ def username_transaction(message: telebot.types.Message, bot):
     #     return
     # bot.send_message(message.chat.id, card.banking_account)
 
-    bot.send_message(message.chat.id, user_service.get_user_by_username(another_user_name).user_id)
-    another_bank_acc = banking_service.get_card_by_id(
-        user_service.get_user_by_username(another_user_name).user_id
-    ).banking_account
-
-    bot.send_message(message.chat.id, another_bank_acc)
-    bot.send_message(message.chat.id, another_bank_acc.currency_amount)
+    another_card = banking_service.get_card_by_id(user_service.get_user_by_username(another_user_name).user_id)
+    another_bank_acc = another_card.banking_account
+    # bot.send_message(message.chat.id, user_service.get_user_by_username(another_user_name).user_id)
+    # another_bank_acc = banking_service.get_card_by_id(
+    #     user_service.get_user_by_username(another_user_name).user_id
+    # ).banking_account
+    #
+    # bot.send_message(message.chat.id, another_bank_acc)
+    # bot.send_message(message.chat.id, another_bank_acc.currency_amount)
 
     bank_acc.currency_amount -= amount
     bank_acc.save()
