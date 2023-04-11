@@ -1,12 +1,8 @@
 from unittest.mock import MagicMock
+
 import pytest
 from django.test.client import Client
 from rest_framework import status
-
-
-# @pytest.mark.smoke
-def test_start_bot():
-    pass
 
 
 @pytest.mark.smoke
