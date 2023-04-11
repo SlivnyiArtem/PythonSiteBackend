@@ -61,6 +61,8 @@ push:
 docker_test:
 	echo "There will be tests"
 
+ci_test:
+	pytest -v src/tests/smoke_tests.py
 
 ci_build:
 	docker-compose build
