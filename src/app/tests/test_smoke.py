@@ -8,7 +8,7 @@ from rest_framework import status
 @pytest.mark.smoke
 def test_start_app():
     app_page = Client(enforce_csrf_checks=False).get("/admin/")
-    assert app_page.status_code == status.HTTP_200_OK
+    assert app_page.status_code == status.HTTP_302_FOUND # СМ nginx file
 
 
 # Запускается ли бот и не падает
