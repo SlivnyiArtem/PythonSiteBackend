@@ -167,8 +167,6 @@ def username_transaction(message: telebot.types.Message, bot):
     # amount = int(reqs[2])
     our_card_number, another_user_name, amount = reqs[0], reqs[1], int(reqs[2])
     card = banking_service.get_card_by_id(int(our_card_number))
-    bot.send_message(message.chat.id, card.card_number)
-    bot.send_message(message.chat.id, card.MM)
     bank_acc = card.banking_account
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
@@ -176,11 +174,12 @@ def username_transaction(message: telebot.types.Message, bot):
     #     bot.send_message(message.chat.id, "not enough money or incorrect amount. Transaction will be cancelled")
     #     return
     # bot.send_message(message.chat.id, card.banking_account)
+
+    bot.send_message(message.chat.id, user_service.get_user_by_username(another_user_name).user_id)
     another_bank_acc = banking_service.get_card_by_id(
         user_service.get_user_by_username(another_user_name).user_id
     ).banking_account
 
-    bot.send_message(message.chat.id, card.banking_account)
     bot.send_message(message.chat.id, another_bank_acc)
     bot.send_message(message.chat.id, another_bank_acc.currency_amount)
 
