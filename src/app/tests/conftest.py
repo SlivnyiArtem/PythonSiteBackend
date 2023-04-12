@@ -24,7 +24,8 @@ def test_banking_account() -> BankingAccount:
 
 @pytest.fixture(scope="function")
 def test_card() -> Card:
-    card = Card.objects.create(card_number=7777, MM=5, YY=2020, system="VISA", banking_account=test_banking_account())
+    acc = BankingAccount.objects.create(account_number=3, account_owner=389, currency_amount=500)
+    card = Card.objects.create(card_number=7777, MM=5, YY=2020, system="VISA", banking_account=acc)
     return card
 
 
