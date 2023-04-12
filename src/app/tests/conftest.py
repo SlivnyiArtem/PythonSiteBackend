@@ -13,20 +13,17 @@ def test_card_number():
 
 @pytest.fixture(scope="function")
 def test_banking_account() -> BankingAccount:
-    acc = BankingAccount.objects \
-        .create(account_number=7, account_owner=789, currency_amount=500)
+    acc = BankingAccount.objects.create(account_number=7, account_owner=789, currency_amount=500)
     return acc
 
 
 @pytest.fixture(scope="function")
 def test_card() -> Card:
-    card = Card.objects.create(card_number=7777, MM=5, YY=2020,
-                               system="VISA", banking_account=get_test_bank_acc())
+    card = Card.objects.create(card_number=7777, MM=5, YY=2020, system="VISA", banking_account=get_test_bank_acc())
     return card
 
 
 def get_test_bank_acc():
     simple_user_1 = SimpleUser.objects.create(user_id=123, full_username="tzinch")
-    acc = BankingAccount.objects \
-        .create(account_number=1, account_owner=simple_user_1, currency_amount=500)
+    acc = BankingAccount.objects.create(account_number=1, account_owner=simple_user_1, currency_amount=500)
     return acc

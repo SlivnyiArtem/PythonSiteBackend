@@ -2,7 +2,6 @@ import pytest
 
 from app.internal.services.banking_service import get_card_by_id
 
-
 # Создать тестового юзера и тестоую карту
 
 # Получение карты по номеру карты
@@ -22,5 +21,3 @@ from app.internal.services.banking_service import get_card_by_id
 def test_get_card_by_number_ok(test_card_number, test_card):
     card = get_card_by_id(test_card_number)
     assert card == test_card
-
-
