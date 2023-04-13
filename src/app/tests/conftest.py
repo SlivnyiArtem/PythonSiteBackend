@@ -1,4 +1,6 @@
 # место для фикстур
+from unittest.mock import MagicMock
+
 import pytest
 
 from app.internal.models.banking_account import BankingAccount
@@ -35,3 +37,19 @@ def test_bank_acc():
     simple_user_1 = SimpleUser.objects.create(user_id=123, full_username="tzinch")
     acc = BankingAccount.objects.create(account_number=1, account_owner=simple_user_1, currency_amount=500)
     return acc
+
+
+@pytest.fixture(scope="function")
+def test_mock_message():
+    user = SimpleUser.objects.create(
+        user_id=112,
+        full_username="vortex2",
+        user_name="John",
+        surname="Doe",
+        phone_number=79506376666,
+        friends=["Krigg"],
+    )
+    message = MagicMock()
+    message.from_user = user
+    message.from_user.id = 112
+    return message

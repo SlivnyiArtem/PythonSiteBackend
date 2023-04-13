@@ -22,22 +22,6 @@ def test_bank_acc() -> BankingAccount:
 
 
 @pytest.fixture(scope="function")
-def test_mock_message():
-    user = SimpleUser.objects.create(
-        user_id=112,
-        full_username="vortex2",
-        user_name="John",
-        surname="Doe",
-        phone_number=79506376666,
-        friends=["Krigg"],
-    )
-    message = MagicMock()
-    message.from_user = user
-    message.from_user.id = 112
-    return message
-
-
-@pytest.fixture(scope="function")
 def test_new_friend_message():
     user = SimpleUser.objects.create(
         user_id=112,
@@ -46,6 +30,23 @@ def test_new_friend_message():
         surname="Doe",
         phone_number=79506376666,
         friends=["Krigg"],
+    )
+    message = MagicMock()
+    message.from_user = user
+    message.from_user.id = 112
+    message.text = "@Solanum"
+    return message
+
+
+@pytest.fixture(scope="function")
+def test_new_friend_message_2():
+    user = SimpleUser.objects.create(
+        user_id=112,
+        full_username="vortex",
+        user_name="John",
+        surname="Doe",
+        phone_number=79506376666,
+        friends=["Krigg", "Solanum"],
     )
     message = MagicMock()
     message.from_user = user
