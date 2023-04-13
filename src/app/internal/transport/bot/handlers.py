@@ -1,6 +1,7 @@
 import phonenumbers
 import telebot
 
+from app.internal.models.banking_account import BankingAccount
 from app.internal.services import banking_service, user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
@@ -64,6 +65,9 @@ def start_handler(message: telebot.types.Message, bot):
     user_service.update_create_user(user.id, default_updates)
 
     bot.send_message(message.chat.id, common_messages.user_add_message(user.username))
+
+
+# ------
 
 
 @error_decorator
@@ -160,24 +164,38 @@ def ask_for_requisites(message: telebot.types.Message, bot):
         bot.send_message(message.chat.id, "incorrect input")
 
 
+def transaction(
+    bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
+):
+    if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
+        return
+    bank_acc.currency_amount -= amount
+    bank_acc.save()
+    another_bank_acc.currency_amount += amount
+    another_bank_acc.save()
+    confirm_transaction(bot, message.chat.id)
+
+
 def username_transaction(message: telebot.types.Message, bot):
     reqs = message.text.split()
     our_card_number, another_user_name, amount = reqs[0], reqs[1], int(reqs[2])
     card = banking_service.get_card_by_id(int(our_card_number))
     bank_acc = card.banking_account
-    if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
-        return
+    # if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
+    #     return
 
     another_user = user_service.get_user_by_username(another_user_name)
     bot.send_message(message.chat.id, another_user)
     another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
     bot.send_message(message.chat.id, another_bank_acc)
 
-    bank_acc.currency_amount -= amount
-    bank_acc.save()
-    another_bank_acc.currency_amount += amount
-    another_bank_acc.save()
-    confirm_transaction(bot, message.chat.id)
+    transaction(bot, message, amount, bank_acc, another_bank_acc)
+    # bank_acc.currency_amount -= amount
+    # bank_acc.save()
+    # another_bank_acc.currency_amount += amount
+    # another_bank_acc.save()
+
+    # confirm_transaction(bot, message.chat.id)
 
 
 def card_transaction(message: telebot.types.Message, bot):
