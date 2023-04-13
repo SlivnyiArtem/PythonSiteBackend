@@ -20,8 +20,9 @@ services:
 
   tank:
     container_name: yandex-tank
-    command: bash -c "yandex-tank -c load.ini"
     image: direvius/yandex-tank
+    # command: bash -c "yandex-tank -c load.ini"
+
 
   db:
     container_name: python-django-db-1
