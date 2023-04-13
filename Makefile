@@ -63,7 +63,7 @@ docker_test:
 
 ci_test:
 	echo "There will be tests"
-	docker-compose run app-service pytest -v src/app/tests/ --ds=config.settings
+	docker-compose run app-service pytest -cov=src -v src/app/tests/ --ds=config.settings
 
 ci_build:
 	docker-compose build
