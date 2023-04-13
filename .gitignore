@@ -16,4 +16,3 @@ db.sqlite3
 /env.local
 .env.local
 /src/config/.env.local
-load.yaml
