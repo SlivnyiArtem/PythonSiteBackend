@@ -49,8 +49,9 @@ def test_start_handler(test_mock_message, test_mock_bot, test_simple_user_for_ha
 @pytest.mark.django_db
 def test_add_fav_handler(test_new_friend_message, test_mock_bot, test_simple_user_for_handlers_2):
     handlers.add_user(test_new_friend_message, test_mock_bot)
-    test_mock_bot.send_message.assert_called_once_with(test_new_friend_message.chat.id,
-                                                       "Successful add user to money-friends")
+    test_mock_bot.send_message.assert_called_once_with(
+        test_new_friend_message.chat.id, "Successful add user to money-friends"
+    )
     user = SimpleUser.objects.filter(user_id=test_simple_user_for_handlers_2.user_id).first()
     assert user.friends == ["Krigg", "Solanum"]
 
