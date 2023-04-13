@@ -1,4 +1,6 @@
 # место для фикстур
+from unittest.mock import MagicMock
+
 import pytest
 
 from app.internal.models.banking_account import BankingAccount
@@ -7,30 +9,9 @@ from app.internal.models.simple_user import SimpleUser
 
 
 @pytest.fixture(scope="function")
-def test_card_number_p():  # !!!
-    return 7777
-
-
-@pytest.fixture(scope="function")
-def test_acc_number_p():  # !!!
-    return 1
-
-
-@pytest.fixture(scope="function")
-def test_user_id_p():  # !!!
-    return 123
-
-
-# @pytest.fixture(scope="function")
-# def test_banking_account() -> BankingAccount:
-#     acc = BankingAccount.objects.create(account_number=7, account_owner=789, currency_amount=500)
-#     return acc
-
-
-# @pytest.fixture(scope="function")
-# def test_card() -> Card:
-#     card = Card.objects.create(card_number=7777, MM=5, YY=2020, system="VISA", banking_account=test_bank_acc)
-#     return card
+def test_mock_bot():
+    bot = MagicMock()
+    return bot
 
 
 @pytest.fixture(scope="function")

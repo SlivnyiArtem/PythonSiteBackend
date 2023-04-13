@@ -119,7 +119,7 @@ def add_user(message: telebot.types.Message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        user.friends.append(message.text)
+        user.friends.append(message.text[1:])
         user.save()
         bot.send_message(message.chat.id, "Successful add user to money-friends")
 
@@ -138,7 +138,7 @@ def remove_user(message: telebot.types.Message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        user.friends.remove(message.text)
+        user.friends.remove(message.text[1:])
         user.save()
         bot.send_message(message.chat.id, "Successful delete user from money-friends")
 
@@ -181,21 +181,10 @@ def username_transaction(message: telebot.types.Message, bot):
     our_card_number, another_user_name, amount = reqs[0], reqs[1], int(reqs[2])
     card = banking_service.get_card_by_id(int(our_card_number))
     bank_acc = card.banking_account
-    # if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
-    #     return
 
     another_user = user_service.get_user_by_username(another_user_name)
-    bot.send_message(message.chat.id, another_user)
     another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
-    bot.send_message(message.chat.id, another_bank_acc)
-
     transaction(bot, message, amount, bank_acc, another_bank_acc)
-    # bank_acc.currency_amount -= amount
-    # bank_acc.save()
-    # another_bank_acc.currency_amount += amount
-    # another_bank_acc.save()
-
-    # confirm_transaction(bot, message.chat.id)
 
 
 def card_transaction(message: telebot.types.Message, bot):
@@ -205,14 +194,7 @@ def card_transaction(message: telebot.types.Message, bot):
     another_card = banking_service.get_card_by_id(another_card_number)
     bank_acc = card.banking_account
     another_bank_acc = another_card.banking_account
-    if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
-        return
-
-    bank_acc.currency_amount -= amount
-    bank_acc.save()
-    another_bank_acc.currency_amount += amount
-    another_bank_acc.save()
-    confirm_transaction(bot, message.chat.id)
+    transaction(bot, message, amount, bank_acc, another_bank_acc)
 
 
 def bank_acc_transaction(message: telebot.types.Message, bot):
@@ -221,14 +203,7 @@ def bank_acc_transaction(message: telebot.types.Message, bot):
     another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
     card = banking_service.get_card_by_id(our_card_number)
     bank_acc = card.banking_account
-    if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
-        return
-
-    bank_acc.currency_amount -= amount
-    bank_acc.save()
-    another_bank_acc.currency_amount += amount
-    another_bank_acc.save()
-    confirm_transaction(bot, message.chat.id)
+    transaction(bot, message, amount, bank_acc, another_bank_acc)
 
 
 def incorrect_reqs(user_cart: str, main_req: str, amount: str):

@@ -15,14 +15,14 @@ def test_get_card_by_number_ok(test_card):
 
 
 @pytest.mark.django_db
-def test_get_acc_by_acc_number_ok(test_acc_number_p, test_bank_acc):
-    acc = get_acc_by_id(test_acc_number_p)
+def test_get_acc_by_acc_number_ok(test_bank_acc):
+    acc = get_acc_by_id(1)
     assert acc == test_bank_acc
 
 
 @pytest.mark.django_db
-def test_get_acc_by_user_id_ok(test_user_id_p, test_bank_acc):
-    acc = get_acc_by_user(test_user_id_p)
+def test_get_acc_by_user_id_ok(test_bank_acc):
+    acc = get_acc_by_user(123)
     assert acc == test_bank_acc
 
 
