@@ -1,5 +1,5 @@
 overload:
-  enabled: true
+  enabled: false
   package: yandextank.plugins.DataUploader
   # token_file: "yan_token.txt"
 phantom:
