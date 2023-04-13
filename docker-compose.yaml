@@ -18,6 +18,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  tank:
+    container_name: yandex-tank
+    image: direvius/yandex-tank
 
   db:
     container_name: python-django-db-1
