@@ -6,7 +6,7 @@ phantom:
   address: http://flamberg.backend23.2tapp.cc
   header_http: "1.1"
   headers:
-    - "[Host: http://flamberg.backend23.2tapp.cc]"
+    - "[Host: flamberg.backend23.2tapp.cc]"
     - "[Connection: close]"
   uris:
     - /
