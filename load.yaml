@@ -1,7 +1,7 @@
 overload:
   enabled: true
   package: yandextank.plugins.DataUploader
-  token_file: "token.txt"
+  # token_file: "yan_token.txt"
 phantom:
   address: http://flamberg.backend23.2tapp.cc
   header_http: "1.1"
