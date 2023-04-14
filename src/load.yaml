@@ -3,10 +3,10 @@ overload:
   package: yandextank.plugins.DataUploader
   # token_file: "yan_token.txt"
 phantom:
-  address: "https://flamberg.backend23.2tapp.cc:8001"
+  address: "flamberg.backend23.2tapp.cc:8000"
   header_http: "1.1"
   headers:
-    - "[Host: https://flamberg.backend23.2tapp.cc]"
+    - "[Host: flamberg.backend23.2tapp.cc]"
     - "[Connection: close]"
   uris:
     - /
