@@ -13,7 +13,7 @@ phantom:
   load_profile:
     load_type: rps
     schedule: line(5,30,1m)
-  ssl: true
+  ssl: false
   instances: 1000
 autostop:
   autostop:
