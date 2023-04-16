@@ -8,5 +8,5 @@ def me_http_inf_handler(_, user_id: int):
     return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
 
 
-def test_page():
+def test_page(_):
     return HttpResponse("<h1>connection established</h1>")

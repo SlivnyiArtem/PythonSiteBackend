@@ -9,7 +9,7 @@ phantom:
     - "[Connection: close]"
   uris:
     - /admin/login/?next=/admin/
-    - /testpage
+    - /testpage/
   load_profile:
     load_type: rps
     schedule: line(5,30,1m)
