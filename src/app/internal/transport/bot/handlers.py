@@ -67,9 +67,6 @@ def start_handler(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, common_messages.user_add_message(user.username))
 
 
-# ------
-
-
 @error_decorator
 def phone_number_handler(message: telebot.types.Message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_phone_number_message())
@@ -79,9 +76,7 @@ def phone_number_handler(message: telebot.types.Message, bot):
 def get_phone_number(message: telebot.types.Message, bot):
     if phonenumbers.is_valid_number(phonenumbers.parse(message.text, "IN")):
         number = int(message.text)
-
         user_service.update_user_number(message.from_user.id, number)
-
         bot.send_message(message.chat.id, common_messages.add_phone_number_message(message.from_user.username))
     else:
         msg = bot.send_message(message.chat.id, common_messages.incorrect_phone_number_message())
@@ -157,15 +152,17 @@ def ask_for_requisites(message: telebot.types.Message, bot):
         message.chat.id,
         "enter your card number, then card number/bank acc/ username of another user and amount of money to transfer",
     )
-    func_dict = {"1": username_transaction, "2": card_transaction, "3": bank_acc_transaction}
+    func_dict = {"1": "username_transaction", "2": "card_transaction", "3": "bank_acc_transaction"}
     if message.text in func_dict.keys():
-        bot.register_next_step_handler(msg, func_dict[message.text], bot)
+        bot.register_next_step_handler(msg, get_data_and_transact, bot, message.text)
+        # bot.register_next_step_handlers(msg, lambda l: t(message.text, ), bot)
+        # bot.register_next_step_handler(msg, func_dict[message.text], bot)
     else:
         bot.send_message(message.chat.id, "incorrect input")
 
 
 def transaction(
-    bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
+        bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
 ):
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
@@ -176,34 +173,55 @@ def transaction(
     confirm_transaction(bot, message.chat.id)
 
 
-def username_transaction(message: telebot.types.Message, bot):
+def get_data_and_transact(message: telebot.types.Message, bot, text: str):
     reqs = message.text.split()
-    our_card_number, another_user_name, amount = reqs[0], reqs[1], int(reqs[2])
-    card = banking_service.get_card_by_id(int(our_card_number))
-    bank_acc = card.banking_account
+    amount = int(reqs[2])
+    bank_acc = banking_service.get_card_by_id(int(reqs[0])).banking_account
+    if text == "1":
+        another_user_name = reqs[1]
+        another_user = user_service.get_user_by_username(another_user_name)
+        another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
+    elif text == "2":
+        another_card_number = int(reqs[1])
+        another_card = banking_service.get_card_by_id(another_card_number)
+        another_bank_acc = another_card.banking_account
+    elif text == "3":
+        another_bank_acc_number = int(reqs[1])
+        another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
+    else:
+        another_bank_acc = bank_acc
 
-    another_user = user_service.get_user_by_username(another_user_name)
-    another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
     transaction(bot, message, amount, bank_acc, another_bank_acc)
 
 
-def card_transaction(message: telebot.types.Message, bot):
-    reqs = message.text.split()
-    our_card_number, another_card_number, amount = int(reqs[0]), int(reqs[1]), int(reqs[2])
-    card = banking_service.get_card_by_id(our_card_number)
-    another_card = banking_service.get_card_by_id(another_card_number)
-    bank_acc = card.banking_account
-    another_bank_acc = another_card.banking_account
-    transaction(bot, message, amount, bank_acc, another_bank_acc)
-
-
-def bank_acc_transaction(message: telebot.types.Message, bot):
-    reqs = message.text.split()
-    our_card_number, another_bank_acc_number, amount = int(reqs[0]), int(reqs[1]), int(reqs[2])
-    another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
-    card = banking_service.get_card_by_id(our_card_number)
-    bank_acc = card.banking_account
-    transaction(bot, message, amount, bank_acc, another_bank_acc)
+# def username_transaction(message: telebot.types.Message, bot):
+#     reqs = message.text.split()
+#     our_card_number, another_user_name, amount = reqs[0], reqs[1], int(reqs[2])
+#     card = banking_service.get_card_by_id(int(our_card_number))
+#     bank_acc = card.banking_account
+#
+#     another_user = user_service.get_user_by_username(another_user_name)
+#     another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
+#     transaction(bot, message, amount, bank_acc, another_bank_acc)
+#
+#
+# def card_transaction(message: telebot.types.Message, bot):
+#     reqs = message.text.split()
+#     our_card_number, another_card_number, amount = int(reqs[0]), int(reqs[1]), int(reqs[2])
+#     card = banking_service.get_card_by_id(our_card_number)
+#     another_card = banking_service.get_card_by_id(another_card_number)
+#     bank_acc = card.banking_account
+#     another_bank_acc = another_card.banking_account
+#     transaction(bot, message, amount, bank_acc, another_bank_acc)
+#
+#
+# def bank_acc_transaction(message: telebot.types.Message, bot):
+#     reqs = message.text.split()
+#     our_card_number, another_bank_acc_number, amount = int(reqs[0]), int(reqs[1]), int(reqs[2])
+#     another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
+#     card = banking_service.get_card_by_id(our_card_number)
+#     bank_acc = card.banking_account
+#     transaction(bot, message, amount, bank_acc, another_bank_acc)
 
 
 def incorrect_reqs(user_cart: str, main_req: str, amount: str):
