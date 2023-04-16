@@ -11,4 +11,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("app.internal.urls")),
     path("testpage/", handlers.test_page),
+    path("users/<int:user_id>/me", handlers.me_http_inf_handler),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
