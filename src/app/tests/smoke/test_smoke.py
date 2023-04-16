@@ -11,9 +11,15 @@ environ.Env.read_env()
 
 
 @pytest.mark.smoke
-def test_start_app():
+def test_app_redirect_registration():
     app_page = Client(enforce_csrf_checks=False).get("/admin/")
-    assert app_page.status_code == status.HTTP_302_FOUND  # СМ nginx file
+    assert app_page.status_code == status.HTTP_302_FOUND
+
+
+@pytest.mark.smoke
+def test_app_start():
+    app_page = Client(enforce_csrf_checks=False).get("/admin/login/?next=/admin/")
+    assert app_page.status_code == status.HTTP_200_OK
 
 
 @pytest.mark.smoke
