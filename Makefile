@@ -80,3 +80,5 @@ ci_deploy:
 	docker-compose run app-service python src/manage.py migrate
 	docker-compose up -d
 
+tank_it:
+	docker run --rm -v $(pwd):/var/loadtest -v $SSH_AUTH_SOCK:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent --net host -it direvius/yandex-tank
