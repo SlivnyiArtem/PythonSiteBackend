@@ -1,5 +1,6 @@
 overload:
-  enabled: false
+  enabled: true
+  token_file: "token.txt"
   package: yandextank.plugins.DataUploader
 phantom:
   address: "flamberg.backend23.2tapp.cc:443"

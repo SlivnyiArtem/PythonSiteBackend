@@ -23,6 +23,12 @@ def test_app_start():
 
 
 @pytest.mark.smoke
+def test_app_page():
+    app_page = Client(enforce_csrf_checks=False).get("/testpage/")
+    assert app_page.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.smoke
 def test_bot_start():
     bot = telebot.TeleBot(env("BOT_KEY"))
     assert bot.get_me() is not None
