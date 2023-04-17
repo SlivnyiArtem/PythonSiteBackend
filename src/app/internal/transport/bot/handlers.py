@@ -162,7 +162,7 @@ def ask_for_requisites(message: telebot.types.Message, bot):
 
 
 def transaction(
-        bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
+    bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
 ):
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
