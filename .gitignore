@@ -16,4 +16,4 @@ db.sqlite3
 /env.local
 .env.local
 /src/config/.env.local
-/yan_token.txt
+/token.txt
