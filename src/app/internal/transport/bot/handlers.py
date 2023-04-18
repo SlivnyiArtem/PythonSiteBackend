@@ -1,4 +1,5 @@
 import phonenumbers
+import pytest
 import telebot
 
 from app.internal.models.banking_account import BankingAccount
@@ -162,7 +163,7 @@ def ask_for_requisites(message: telebot.types.Message, bot):
 
 
 def transaction(
-    bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
+        bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
 ):
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
@@ -173,6 +174,7 @@ def transaction(
     confirm_transaction(bot, message.chat.id)
 
 
+# %%%%%%%%%
 def get_data_and_transact(message: telebot.types.Message, bot, text: str):
     reqs = message.text.split()
     amount = int(reqs[2])
@@ -224,6 +226,7 @@ def get_data_and_transact(message: telebot.types.Message, bot, text: str):
 #     transaction(bot, message, amount, bank_acc, another_bank_acc)
 
 
+# %%%%
 def incorrect_reqs(user_cart: str, main_req: str, amount: str):
     return user_cart.isdigit() and main_req.isdigit() and amount.isdigit()
 
