@@ -8,9 +8,9 @@ from app.tests.conftest import test_simple_user_for_handlers
 
 @pytest.fixture(scope="function")
 def test_simple_bank_acc_with_user(test_simple_user_for_handlers) -> BankingAccount:
-    acc = BankingAccount.objects.get_or_create(
+    acc = BankingAccount.objects.create(
         account_number=10, account_owner=test_simple_user_for_handlers, currency_amount="250"
-    )[0]
+    )
     return acc
 
 
