@@ -1,4 +1,5 @@
 import decimal
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -22,7 +23,7 @@ def test_me_handler(test_mock_message, test_mock_bot):
     test_mock_bot.send_message.assert_called_with(
         test_mock_message.chat.id,
         "user_id : 112\n"
-        "full_username : vortex2\n"
+        "full_username : vortex\n"
         "user_name : John\n"
         "surname : Doe\n"
         "phone_number : 79506376666\n"
@@ -30,13 +31,22 @@ def test_me_handler(test_mock_message, test_mock_bot):
     )
 
 
+@pytest.fixture(scope="function")
+def test_mock_message(test_simple_user_for_handlers):
+    message = MagicMock()
+    message.from_user = test_simple_user_for_handlers
+    message.from_user.id = 112
+    message.text = "@Solanum"
+    return message
+
+
 @pytest.mark.django_db
 def test_currency_amount_handler_ok(
-    test_mock_message_2, test_mock_bot, test_simple_user_for_handlers, test_simple_bank_acc_for_handlers
+    test_mock_get_currency_message, test_mock_bot, test_simple_user_for_handlers, test_simple_bank_acc_with_user
 ):
-    handlers.send_amount_inf(test_mock_message_2, test_mock_bot)
+    handlers.send_amount_inf(test_mock_get_currency_message, test_mock_bot)
     test_mock_bot.send_message.assert_called_once_with(
-        test_mock_message_2.chat.id, decimal.Decimal(test_simple_bank_acc_for_handlers.currency_amount)
+        test_mock_get_currency_message.chat.id, decimal.Decimal(test_simple_bank_acc_with_user.currency_amount)
     )
 
 
@@ -47,38 +57,38 @@ def test_start_handler(test_mock_message, test_mock_bot, test_simple_user_for_ha
 
 
 @pytest.mark.django_db
-def test_add_fav_handler(test_new_friend_message, test_mock_bot, test_simple_user_for_handlers_2):
-    handlers.add_user(test_new_friend_message, test_mock_bot)
+def test_add_fav_handler(test_mock_message, test_mock_bot, test_simple_user_for_handlers):
+    handlers.add_user(test_mock_message, test_mock_bot)
     test_mock_bot.send_message.assert_called_once_with(
-        test_new_friend_message.chat.id, "Successful add user to money-friends"
+        test_mock_message.chat.id, "Successful add user to money-friends"
     )
-    user = SimpleUser.objects.filter(user_id=test_simple_user_for_handlers_2.user_id).first()
+    user = SimpleUser.objects.filter(user_id=test_simple_user_for_handlers.user_id).first()
     assert user.friends == ["Krigg", "Solanum"]
 
 
 @pytest.mark.django_db
-def test_ls_fav_handler(test_mock_message, test_mock_bot):
+def test_show_fav_handler(test_mock_message, test_mock_bot):
     handlers.my_money_recipient(test_mock_message, test_mock_bot)
     test_mock_bot.send_message.assert_called_with(test_mock_message.chat.id, "Krigg\n")
 
 
 @pytest.mark.django_db
-def test_transaction_ok(test_mock_message, test_mock_bot, test_bank_acc, test_bank_acc_rec):
-    start_amount_1 = test_bank_acc.currency_amount
-    start_amount_2 = test_bank_acc_rec.currency_amount
-    handlers.transaction(test_mock_bot, test_mock_message, 5, test_bank_acc, test_bank_acc_rec)
+def test_transaction_ok(test_mock_message, test_mock_bot, test_bank_acc_1, test_bank_acc_2):
+    start_amount_1 = test_bank_acc_1.currency_amount
+    start_amount_2 = test_bank_acc_2.currency_amount
+    handlers.transaction(test_mock_bot, test_mock_message, 5, test_bank_acc_1, test_bank_acc_2)
     assert (
-        test_bank_acc.currency_amount + 5 == start_amount_1 and test_bank_acc_rec.currency_amount - 5 == start_amount_2
+        test_bank_acc_1.currency_amount + 5 == start_amount_1 and test_bank_acc_2.currency_amount - 5 == start_amount_2
     )
     test_mock_bot.send_message.assert_called_once_with(test_mock_message.chat.id, "transaction confirmed")
 
 
 @pytest.mark.django_db
-def test_not_enough_money_transaction(test_mock_message, test_mock_bot, test_bank_acc, test_bank_acc_rec):
-    start_amount_1 = test_bank_acc.currency_amount
-    start_amount_2 = test_bank_acc_rec.currency_amount
-    handlers.transaction(test_mock_bot, test_mock_message, 1000, test_bank_acc, test_bank_acc_rec)
-    assert test_bank_acc.currency_amount == start_amount_1 and test_bank_acc_rec.currency_amount == start_amount_2
+def test_not_enough_money_transaction(test_mock_message, test_mock_bot, test_bank_acc_1, test_bank_acc_2):
+    start_amount_1 = test_bank_acc_1.currency_amount
+    start_amount_2 = test_bank_acc_2.currency_amount
+    handlers.transaction(test_mock_bot, test_mock_message, 1000, test_bank_acc_1, test_bank_acc_2)
+    assert test_bank_acc_1.currency_amount == start_amount_1 and test_bank_acc_2.currency_amount == start_amount_2
     test_mock_bot.send_message.assert_called_once_with(
         test_mock_message.chat.id, "not enough money or incorrect amount. Transaction will be cancelled"
     )
