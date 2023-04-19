@@ -55,7 +55,6 @@ def test_add_money_recipient(test_mock_bot, mocker):
     handlers.add_money_recipient.assert_called_once_with(message, test_mock_bot)
 
 
-#
 @pytest.mark.django_db
 def test_transaction_by_username(mocker, test_bank_acc_2, test_card_1, test_bank_acc_1):
     mocker.patch.object(banking_service, "get_acc_by_user", return_value=MagicMock())

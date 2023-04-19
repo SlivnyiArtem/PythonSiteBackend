@@ -13,7 +13,7 @@ phantom:
     - /testpage/
   load_profile:
     load_type: rps
-    schedule: line(5,30,1m)
+    schedule: line(5,100,1m)
   ssl: true
 autostop:
   autostop:

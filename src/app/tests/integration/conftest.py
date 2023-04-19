@@ -21,3 +21,12 @@ def test_mock_get_currency_message():
     message.from_user.id = 112
     message.text = "10"
     return message
+
+
+@pytest.fixture(scope="function")
+def test_mock_message(test_simple_user_for_handlers):
+    message = MagicMock()
+    message.from_user = test_simple_user_for_handlers
+    message.from_user.id = 112
+    message.text = "@Solanum"
+    return message

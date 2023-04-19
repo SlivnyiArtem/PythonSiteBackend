@@ -14,7 +14,7 @@ def test_bank_acc_1() -> BankingAccount:
 
 @pytest.fixture(scope="function")
 def test_bank_acc_2() -> BankingAccount:
-    user = SimpleUser.objects.get_or_create(user_id=232, full_username="tzinch")[0]
+    user = SimpleUser.objects.get_or_create(user_id=232, full_username="tzinch")[0] # убрать
     acc = BankingAccount.objects.get_or_create(account_number=9, account_owner=user, currency_amount=500)[0]
     return acc
 
