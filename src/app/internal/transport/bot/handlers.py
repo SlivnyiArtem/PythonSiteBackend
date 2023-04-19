@@ -1,5 +1,4 @@
 import phonenumbers
-import pytest
 import telebot
 
 from app.internal.models.banking_account import BankingAccount
@@ -156,14 +155,12 @@ def ask_for_requisites(message: telebot.types.Message, bot):
     func_dict = {"1": "username_transaction", "2": "card_transaction", "3": "bank_acc_transaction"}
     if message.text in func_dict.keys():
         bot.register_next_step_handler(msg, get_data_and_transact, bot, message.text)
-        # bot.register_next_step_handlers(msg, lambda l: t(message.text, ), bot)
-        # bot.register_next_step_handler(msg, func_dict[message.text], bot)
     else:
         bot.send_message(message.chat.id, "incorrect input")
 
 
 def transaction(
-        bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
+    bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
 ):
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
@@ -174,9 +171,11 @@ def transaction(
     confirm_transaction(bot, message.chat.id)
 
 
-# %%%%%%%%%
 def get_data_and_transact(message: telebot.types.Message, bot, text: str):
     reqs = message.text.split()
+    if not incorrect_reqs(reqs[0], reqs[1], reqs[2], text) or len(reqs) != 3:
+        bot.send_message(message.chat.id, "incorrect data")
+        return
     amount = int(reqs[2])
     bank_acc = banking_service.get_card_by_id(int(reqs[0])).banking_account
     if text == "1":
@@ -196,39 +195,8 @@ def get_data_and_transact(message: telebot.types.Message, bot, text: str):
     transaction(bot, message, amount, bank_acc, another_bank_acc)
 
 
-# def username_transaction(message: telebot.types.Message, bot):
-#     reqs = message.text.split()
-#     our_card_number, another_user_name, amount = reqs[0], reqs[1], int(reqs[2])
-#     card = banking_service.get_card_by_id(int(our_card_number))
-#     bank_acc = card.banking_account
-#
-#     another_user = user_service.get_user_by_username(another_user_name)
-#     another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
-#     transaction(bot, message, amount, bank_acc, another_bank_acc)
-#
-#
-# def card_transaction(message: telebot.types.Message, bot):
-#     reqs = message.text.split()
-#     our_card_number, another_card_number, amount = int(reqs[0]), int(reqs[1]), int(reqs[2])
-#     card = banking_service.get_card_by_id(our_card_number)
-#     another_card = banking_service.get_card_by_id(another_card_number)
-#     bank_acc = card.banking_account
-#     another_bank_acc = another_card.banking_account
-#     transaction(bot, message, amount, bank_acc, another_bank_acc)
-#
-#
-# def bank_acc_transaction(message: telebot.types.Message, bot):
-#     reqs = message.text.split()
-#     our_card_number, another_bank_acc_number, amount = int(reqs[0]), int(reqs[1]), int(reqs[2])
-#     another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
-#     card = banking_service.get_card_by_id(our_card_number)
-#     bank_acc = card.banking_account
-#     transaction(bot, message, amount, bank_acc, another_bank_acc)
-
-
-# %%%%
-def incorrect_reqs(user_cart: str, main_req: str, amount: str):
-    return user_cart.isdigit() and main_req.isdigit() and amount.isdigit()
+def incorrect_reqs(user_cart: str, main_req: str, amount: str, code: str):
+    return user_cart.isdigit() and amount.isdigit() and (main_req.isdigit() or (not main_req.isdigit() and code == "1"))
 
 
 def send_msg_if_not_enough_money(bot, msg_id, transaction_amount, acc_amount):
