@@ -160,7 +160,7 @@ def ask_for_requisites(message: telebot.types.Message, bot):
 
 
 def transaction(
-    bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
+        bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
 ):
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
@@ -171,28 +171,43 @@ def transaction(
     confirm_transaction(bot, message.chat.id)
 
 
-def get_data_and_transact(message: telebot.types.Message, bot, text: str):
+def get_data_and_transact(message: telebot.types.Message, bot, message_text: str):
     reqs = message.text.split()
-    if not incorrect_reqs(reqs[0], reqs[1], reqs[2], text) or len(reqs) != 3:
+    if not incorrect_reqs(reqs[0], reqs[1], reqs[2], message_text) or len(reqs) != 3:
         bot.send_message(message.chat.id, "incorrect data")
         return
     amount = int(reqs[2])
+    try:
+        bank_acc, another_bank_acc = get_bank_accounts(reqs, message_text)
+        transaction(bot, message, amount, bank_acc, another_bank_acc)
+    except ValueError as error:
+        bot.send_message(message.chat.id, "Handle: " + error)
+
+
+def get_bank_accounts(reqs, message_text):
     bank_acc = banking_service.get_card_by_id(int(reqs[0])).banking_account
-    if text == "1":
+    if message_text == "1":
         another_user_name = reqs[1]
         another_user = user_service.get_user_by_username(another_user_name)
+        if another_user is None:
+            raise ValueError("пользователь не найден в БД")
         another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
-    elif text == "2":
+    elif message_text == "2":
         another_card_number = int(reqs[1])
         another_card = banking_service.get_card_by_id(another_card_number)
+        if another_card is None:
+            raise ValueError("карта с таким номером не найдена в БД")
         another_bank_acc = another_card.banking_account
-    elif text == "3":
+    elif message_text == "3":
         another_bank_acc_number = int(reqs[1])
         another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
     else:
         another_bank_acc = bank_acc
-
-    transaction(bot, message, amount, bank_acc, another_bank_acc)
+    if another_bank_acc is None:
+        raise ValueError("банковский счет получателя с такими реквизитами отсутствует")
+    if bank_acc is None:
+        raise ValueError("номер вашей карты введен неправильно")
+    return bank_acc, another_bank_acc
 
 
 def incorrect_reqs(user_cart: str, main_req: str, amount: str, code: str):

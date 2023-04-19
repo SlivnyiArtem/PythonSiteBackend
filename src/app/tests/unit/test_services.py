@@ -11,7 +11,6 @@ from app.internal.transport.bot.handlers import transaction
 def test_get_card_by_number_ok(test_card_1):
     card = get_card_by_id(test_card_1.card_number)
     assert card == test_card_1
-    pass
 
 
 @pytest.mark.django_db
