@@ -8,14 +8,14 @@ from app.internal.models.simple_user import SimpleUser
 
 @pytest.fixture(scope="function")
 def test_bank_acc_1() -> BankingAccount:
-    simple_user_1 = SimpleUser.objects.get_or_create(user_id=123, full_username="khorn")[0]
-    return BankingAccount.objects.get_or_create(account_number=100, account_owner=simple_user_1, currency_amount=500)[0]
+    user = SimpleUser.objects.get_or_create(user_id=123, full_username="khorn")[0]
+    return BankingAccount.objects.get_or_create(account_number=100, account_owner=user, currency_amount=500)[0]
 
 
 @pytest.fixture(scope="function")
 def test_bank_acc_2() -> BankingAccount:
-    simple_user_2 = SimpleUser.objects.get_or_create(user_id=232, full_username="tzinch")[0]
-    acc = BankingAccount.objects.get_or_create(account_number=9, account_owner=simple_user_2, currency_amount=500)[0]
+    user = SimpleUser.objects.get_or_create(user_id=232, full_username="tzinch")[0]
+    acc = BankingAccount.objects.get_or_create(account_number=9, account_owner=user, currency_amount=500)[0]
     return acc
 
 
