@@ -33,7 +33,7 @@ def test_me_handler(test_mock_message, test_mock_bot):
 
 @pytest.mark.django_db
 def test_currency_amount_handler_ok(
-        test_mock_get_currency_message, test_mock_bot, test_simple_user_for_handlers, test_simple_bank_acc_with_user
+    test_mock_get_currency_message, test_mock_bot, test_simple_user_for_handlers, test_simple_bank_acc_with_user
 ):
     handlers.send_amount_inf(test_mock_get_currency_message, test_mock_bot)
     test_mock_bot.send_message.assert_called_once_with(
@@ -69,7 +69,7 @@ def test_transaction_ok(test_mock_message, test_mock_bot, test_bank_acc_1, test_
     start_amount_2 = test_bank_acc_2.currency_amount
     handlers.transaction(test_mock_bot, test_mock_message, 5, test_bank_acc_1, test_bank_acc_2)
     assert (
-            test_bank_acc_1.currency_amount + 5 == start_amount_1 and test_bank_acc_2.currency_amount - 5 == start_amount_2
+        test_bank_acc_1.currency_amount + 5 == start_amount_1 and test_bank_acc_2.currency_amount - 5 == start_amount_2
     )
     test_mock_bot.send_message.assert_called_once_with(test_mock_message.chat.id, "transaction confirmed")
 
