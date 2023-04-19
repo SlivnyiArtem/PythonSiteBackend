@@ -59,20 +59,20 @@ def test_add_money_recipient(test_mock_bot, mocker):
     handlers.add_money_recipient.assert_called_once_with(message, test_mock_bot)
 #
 @pytest.mark.django_db
-def test_case_1(mocker, test_bank_acc_3_get, test_card, test_bank_acc):
+def test_transaction_by_username(mocker, another_test_bank_acc, test_card, test_bank_acc):
     # mocker.patch.object(banking_service, 'get_card_by_id', return_value=MagicMock(banking_account=MagicMock()))
     # mocker.patch.object(user_service, 'get_user_by_username', return_value=MagicMock(user_id=1))
     mocker.patch.object(banking_service, 'get_acc_by_user', return_value=MagicMock())
     mocker.patch.object(handlers, 'transaction')
-    message = MagicMock(text='7777 khorn 100')
+    message = MagicMock(text='7777 tzinch 100')
     bot = MagicMock()
     get_data_and_transact(message, bot, "1")
     # banking_service.get_card_by_id.assert_called_once_with(1)
     # user_service.get_user_by_username.assert_called_once_with('username')
     # banking_service.get_acc_by_user.assert_called_once_with(1)
-    handlers.transaction.assert_called_once_with(bot, message, 100, test_bank_acc_3_get, ANY)
+    handlers.transaction.assert_called_once_with(bot, message, 100, test_bank_acc, ANY)
 @pytest.mark.django_db
-def test_case_2(mocker, test_bank_acc_3_get,  test_card, test_bank_acc, another_test_card):
+def test_transaction_by_card(mocker, another_test_bank_acc, test_card, test_bank_acc, another_test_card):
     # mocker.patch.object(banking_service, 'get_card_by_id', return_value=MagicMock(banking_account=MagicMock()))
     mocker.patch.object(banking_service, 'get_acc_by_id', return_value=MagicMock())
     mocker.patch.object(handlers, 'transaction')
@@ -81,10 +81,10 @@ def test_case_2(mocker, test_bank_acc_3_get,  test_card, test_bank_acc, another_
     get_data_and_transact(message, bot, "2")
     #banking_service.get_card_by_id.assert_called_with(123456)
     #banking_service.get_acc_by_id.assert_not_called()
-    handlers.transaction.assert_called_once_with(bot, message, 100, test_bank_acc_3_get, ANY)
+    handlers.transaction.assert_called_once_with(bot, message, 100, another_test_bank_acc, ANY)
 
 @pytest.mark.django_db
-def test_case_3(mocker, test_card, test_bank_acc, test_bank_acc_3_get):
+def test_transaction_by_bank_acc(mocker, test_card, test_bank_acc, another_test_bank_acc):
     mocker.patch.object(banking_service, 'get_acc_by_id', return_value=MagicMock())
     mocker.patch.object(handlers, 'transaction')
     message = MagicMock(text='7777 1 100')
@@ -92,7 +92,7 @@ def test_case_3(mocker, test_card, test_bank_acc, test_bank_acc_3_get):
     get_data_and_transact(message, bot, '3')
     # banking_service.get_acc_by_id.assert_called_once_with(123456)
     handlers.transaction.assert_called_once_with(bot, message, 100,
-                                                 test_bank_acc_3_get, ANY)
+                                                 another_test_bank_acc, ANY)
 
 def test_case_4(mocker):
     mocker.patch.object(banking_service, 'get_card_by_id', return_value=MagicMock(banking_account=MagicMock()))

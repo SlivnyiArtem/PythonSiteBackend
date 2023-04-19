@@ -16,7 +16,7 @@ def test_get_card_by_number_ok(test_card):
 
 @pytest.mark.django_db
 def test_get_acc_by_acc_number_ok(test_bank_acc):
-    acc = get_acc_by_id(1)
+    acc = get_acc_by_id(100)
     assert acc == test_bank_acc
 
 
@@ -27,33 +27,33 @@ def test_get_acc_by_user_id_ok(test_bank_acc):
 
 
 @pytest.mark.django_db
-def test_get_user_username_ok(test_simple_user):  # Все
-    user = get_user_by_username("bloodgod")
-    assert user == test_simple_user
+def test_get_user_username_ok(test_simple_user_for_handlers):  # Все
+    user = get_user_by_username("vortex")
+    assert user == test_simple_user_for_handlers
 
 
 @pytest.mark.django_db
-def test_get_user_id_ok(test_simple_user):
-    user = get_user_by_id(789)
-    assert user == test_simple_user
+def test_get_user_id_ok(test_simple_user_for_handlers):
+    user = get_user_by_id(115)
+    assert user == test_simple_user_for_handlers
 
 
 @pytest.mark.django_db
-def test_update_user_telephone_ok(test_simple_user):
-    user_start = test_simple_user
-    update_user_number(test_simple_user.user_id, 79506372222)
-    user = get_user_by_id(test_simple_user.user_id)
-    assert user_start.phone_number is None
+def test_update_user_telephone_ok(test_simple_user_for_handlers):
+    user_start = test_simple_user_for_handlers
+    update_user_number(test_simple_user_for_handlers.user_id, 79506372222)
+    user = get_user_by_id(test_simple_user_for_handlers.user_id)
+    assert user_start.phone_number == test_simple_user_for_handlers.phone_number
     assert user.phone_number == 79506372222
 
 
 @pytest.mark.django_db
-def test_transact_ok(test_bank_acc, test_bank_acc_rec):
+def test_transact_ok(test_bank_acc, another_test_bank_acc):
     bot = MagicMock()
     message = MagicMock()
     amount = 2
     amount_1 = test_bank_acc.currency_amount
-    amount_2 = test_bank_acc_rec.currency_amount
-    transaction(bot, message, amount, test_bank_acc, test_bank_acc_rec)
+    amount_2 = another_test_bank_acc.currency_amount
+    transaction(bot, message, amount, test_bank_acc, another_test_bank_acc)
     assert amount_1 - test_bank_acc.currency_amount == amount
-    assert test_bank_acc_rec.currency_amount - amount_2 == amount
+    assert another_test_bank_acc.currency_amount - amount_2 == amount
