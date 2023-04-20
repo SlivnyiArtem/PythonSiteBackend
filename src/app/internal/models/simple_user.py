@@ -15,7 +15,7 @@ class SimpleUser(models.Model):
     full_username = models.CharField(max_length=255, null=True)
     user_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
-    phone_number = models.BigIntegerField(null=True)
+    phone_number = models.BigIntegerField(null=True, blank=True)
     friends = models.ManyToManyField(to="self", related_name="f", symmetrical=False, blank=True)
     transactions_history = models.ManyToManyField(TransactionLog, blank=True)
 
