@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from app.internal.models.banking_account import BankingAccount
-from app.internal.models.simple_user import CustomUser, SimpleUser
+from app.internal.models.simple_user import SimpleUser
 from app.internal.services.user_service import get_user_by_id
 
 

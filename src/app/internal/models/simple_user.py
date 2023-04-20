@@ -1,15 +1,15 @@
-import json
-
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from rest_framework import status
 
+from app.internal.models.transaction_log import TransactionLog
 from app.internal.transport.messages import common_messages
 
 
-class CustomUser(models.Model):
-    user_id = models.IntegerField(primary_key=True)
-    followers = models.ManyToManyField(to="self", related_name="followees", symmetrical=False)
+#
+# class CustomUser(models.Model):
+#     user_id = models.IntegerField(primary_key=True)
+#     followers = models.ManyToManyField(to="self", related_name="followees", symmetrical=False)
+
 
 
 class SimpleUser(models.Model):
@@ -19,6 +19,7 @@ class SimpleUser(models.Model):
     surname = models.CharField(max_length=255)
     phone_number = models.BigIntegerField(null=True)
     friends = models.ManyToManyField(to="self", related_name="f", symmetrical=False)
+    transactions_history = models.ManyToManyField(TransactionLog)
 
     # friends = models.ManyToManyField("SimpleUser", symmetrical=False, blank=True)
     # friends = models.ManyToManyField('self', through='FriendBackLoop',
@@ -76,13 +77,16 @@ class SimpleUser(models.Model):
 #     # model will not validate.
 
 
-class FriendBackLoop(models.Model):
-    person = models.ForeignKey(SimpleUser, related_name="a", on_delete=models.CASCADE)
-    friend = models.ForeignKey(SimpleUser, related_name="b", on_delete=models.CASCADE)
-    # source = models.ForeignKey(SimpleUser, related_name = 's', on_delete=models.CASCADE)
-    # #                                  ^^^^^^^^^^^^
-    # # You need different `related_name` for each when you have
-    # # multiple foreign keys to the same table.
-    #
-    # target = models.ForeignKey(SimpleUser, related_name = 't', on_delete=models.CASCADE)
-    # comment = models.CharField(max_length = 255)
+# class FriendBackLoop(models.Model):
+#     person = models.ForeignKey(SimpleUser, related_name="a", on_delete=models.CASCADE)
+#     friend = models.ForeignKey(SimpleUser, related_name="b", on_delete=models.CASCADE)
+#     # source = models.ForeignKey(SimpleUser, related_name = 's', on_delete=models.CASCADE)
+#     # #                                  ^^^^^^^^^^^^
+#     # # You need different `related_name` for each when you have
+#     # # multiple foreign keys to the same table.
+#     #
+#     # target = models.ForeignKey(SimpleUser, related_name = 't', on_delete=models.CASCADE)
+#     # comment = models.CharField(max_length = 255)
+
+
+

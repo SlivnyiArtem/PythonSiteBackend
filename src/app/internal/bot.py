@@ -45,6 +45,14 @@ class Bot:
             lambda message: handlers.my_money_recipient(message, self.application)
         )
 
+        self.application.message_handler(commands=["get_full_log"])(
+            lambda message: handlers.get_full_log(message, self.application)
+        )
+
+        self.application.message_handler(commands=["all_transaction_recipients"])(
+            lambda message: handlers.all_transaction_recipients(message, self.application)
+        )
+
     def start(self):
         self.application.remove_webhook()
         self.application.run_webhooks(
