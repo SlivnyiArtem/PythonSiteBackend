@@ -1,3 +1,5 @@
+import datetime
+
 import phonenumbers
 import telebot
 
@@ -7,6 +9,7 @@ from app.internal.services.user_service import get_user_by_username
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
+from app.internal.models.transaction_log import TransactionLog
 
 
 def error_handler(exc, message, bot):
@@ -172,7 +175,8 @@ def ask_for_requisites(message: telebot.types.Message, bot):
 
 
 def transaction(
-    bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
+        bot, message: telebot.types.Message, amount: int,
+        bank_acc: BankingAccount, another_bank_acc: BankingAccount
 ):
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
@@ -181,6 +185,17 @@ def transaction(
     another_bank_acc.currency_amount += amount
     another_bank_acc.save()
     confirm_transaction(bot, message.chat.id)
+    recipient = another_bank_acc.account_owner
+    sender = bank_acc.account_owner
+    transaction_date = datetime.date.today()
+    new_transaction_sender = TransactionLog.objects.create(transaction_recipient=recipient,
+                                                           amount=amount, transaction_date=transaction_date,
+                                                           is_outgoing_transaction=True)
+    new_transaction_recipient = TransactionLog.objects.create(transaction_recipient=sender,
+                                                              amount=amount, transaction_date=transaction_date,
+                                                              is_outgoing_transaction=False)
+    sender.transactions_history.add(new_transaction_sender)
+    recipient.transactions_history.add(new_transaction_recipient)
 
 
 def get_data_and_transact(message: telebot.types.Message, bot, message_text: str):
@@ -190,6 +205,7 @@ def get_data_and_transact(message: telebot.types.Message, bot, message_text: str
         return
     amount = int(reqs[2])
     try:
+        # user = user_service.get_user_by_id(message.from_user.id)
         bank_acc, another_bank_acc = get_bank_accounts(reqs, message_text)
         transaction(bot, message, amount, bank_acc, another_bank_acc)
     except ValueError as error:
@@ -235,3 +251,13 @@ def send_msg_if_not_enough_money(bot, msg_id, transaction_amount, acc_amount):
 
 def confirm_transaction(bot, msg_id):
     bot.send_message(msg_id, "transaction confirmed")
+
+
+@error_decorator
+def get_full_log(message: telebot.types.Message, bot):
+    return None
+
+
+@error_decorator
+def all_transaction_recipients(message: telebot.types.Message, bot):
+    return None
