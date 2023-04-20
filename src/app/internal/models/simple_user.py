@@ -51,6 +51,7 @@ class SimpleUser(models.Model):
             if (user is not None and code == status.HTTP_200_OK)
             else {"error_message": common_messages.MESSAGE_DICT.get(code)}
         )
+        serialize_dict["friends"] = list(map(lambda f: f.full_username, user.friends.all()))
         serialize_dict.update(error_code=code)
         if code == status.HTTP_200_OK:
             serialize_dict.pop("_state")
