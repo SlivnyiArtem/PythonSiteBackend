@@ -282,7 +282,7 @@ def get_full_log(message: telebot.types.Message, bot):
             f"######\n"
         )
 
-    bot.send_message(message.chat.id, "".join(res_list))
+    bot.send_message(message.chat.id, result_handler(res_list))
 
 
 @error_decorator
@@ -305,5 +305,10 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
         res_list.append(f"получатель: {uniq_user}\n")
     # for el in logs:
     #     res_list.append(f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n")
-    bot.send_message(message.chat.id, "".join(res_list))
+    bot.send_message(message.chat.id, result_handler(res_list))
     # return "".join(res_list)
+
+
+def result_handler(res_list):
+    res = "".join(res_list)
+    return res if len(res) > 0 else "your transaction history is empty"
