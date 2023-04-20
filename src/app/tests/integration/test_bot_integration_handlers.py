@@ -47,8 +47,13 @@ def test_start_handler(test_mock_message, test_mock_bot, test_simple_user_for_ha
 
 
 @pytest.mark.django_db
-def test_add_fav_handler(test_simple_user_for_handlers_0, test_mock_message, test_mock_bot,
-                         test_simple_user_for_handlers, test_simple_user_for_handlers_2):
+def test_add_fav_handler(
+    test_simple_user_for_handlers_0,
+    test_mock_message,
+    test_mock_bot,
+    test_simple_user_for_handlers,
+    test_simple_user_for_handlers_2,
+):
     handlers.add_user(test_mock_message, test_mock_bot)
     test_mock_bot.send_message.assert_called_once_with(
         test_mock_message.chat.id, "Successful add user to money-friends"
@@ -61,8 +66,9 @@ def test_add_fav_handler(test_simple_user_for_handlers_0, test_mock_message, tes
 @pytest.mark.django_db
 def test_show_fav_handler(test_mock_message, test_mock_bot, test_simple_user_for_handlers_0):
     handlers.my_money_recipient(test_mock_message, test_mock_bot)
-    test_mock_bot.send_message.assert_called_with(test_mock_message.chat.id,
-                                                  f"{test_simple_user_for_handlers_0.full_username}\n")
+    test_mock_bot.send_message.assert_called_with(
+        test_mock_message.chat.id, f"{test_simple_user_for_handlers_0.full_username}\n"
+    )
 
 
 @pytest.mark.django_db

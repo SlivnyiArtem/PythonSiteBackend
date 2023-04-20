@@ -7,18 +7,9 @@ from rest_framework import status
 from app.internal.transport.messages import common_messages
 
 
-
-
 class CustomUser(models.Model):
     user_id = models.IntegerField(primary_key=True)
-    followers = models.ManyToManyField(
-        to='self',
-        related_name='followees',
-        symmetrical=False
-    )
-
-
-
+    followers = models.ManyToManyField(to="self", related_name="followees", symmetrical=False)
 
 
 class SimpleUser(models.Model):
@@ -27,7 +18,8 @@ class SimpleUser(models.Model):
     user_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     phone_number = models.BigIntegerField(null=True)
-    friends = models.ManyToManyField(to='self', related_name='f', symmetrical=False)
+    friends = models.ManyToManyField(to="self", related_name="f", symmetrical=False)
+
     # friends = models.ManyToManyField("SimpleUser", symmetrical=False, blank=True)
     # friends = models.ManyToManyField('self', through='FriendBackLoop',
     #                                  symmetrical=False)
@@ -73,7 +65,6 @@ class SimpleUser(models.Model):
 #     friend = models.ForeignKey(SimpleUser, on_delete=models.CASCADE)
 
 
-
 # class Person(models.Model):
 #     name = models.CharField(max_length = 255)
 #     occupation = models.CharField(max_length = 255)
@@ -83,9 +74,10 @@ class SimpleUser(models.Model):
 #     # This has to be false when using `through` models. Or else your
 #     # model will not validate.
 
+
 class FriendBackLoop(models.Model):
-    person = models.ForeignKey(SimpleUser,related_name = 'a',  on_delete=models.CASCADE)
-    friend = models.ForeignKey(SimpleUser,related_name = 'b', on_delete=models.CASCADE)
+    person = models.ForeignKey(SimpleUser, related_name="a", on_delete=models.CASCADE)
+    friend = models.ForeignKey(SimpleUser, related_name="b", on_delete=models.CASCADE)
     # source = models.ForeignKey(SimpleUser, related_name = 's', on_delete=models.CASCADE)
     # #                                  ^^^^^^^^^^^^
     # # You need different `related_name` for each when you have

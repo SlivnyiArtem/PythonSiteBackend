@@ -3,10 +3,10 @@ import telebot
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.services import banking_service, user_service
+from app.internal.services.user_service import get_user_by_username
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
-from app.internal.services.user_service import get_user_by_username
 
 
 def error_handler(exc, message, bot):

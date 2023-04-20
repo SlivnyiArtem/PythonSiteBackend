@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from app.internal.models.banking_account import BankingAccount
-from app.internal.models.simple_user import SimpleUser, CustomUser
+from app.internal.models.simple_user import CustomUser, SimpleUser
 from app.internal.services.user_service import get_user_by_id
 
 
@@ -47,6 +47,8 @@ def test_simple_user_for_handlers(test_simple_user_for_handlers_0) -> SimpleUser
     # print()
     user.save()
     return user
+
+
 @pytest.fixture(scope="function")
 def test_simple_user_for_handlers_0() -> SimpleUser:
     user = SimpleUser.objects.create(
@@ -57,6 +59,7 @@ def test_simple_user_for_handlers_0() -> SimpleUser:
         phone_number=79506372223,
     )
     return user
+
 
 @pytest.fixture(scope="function")
 def test_simple_user_for_handlers_2() -> SimpleUser:
