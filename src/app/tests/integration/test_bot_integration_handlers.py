@@ -1,5 +1,4 @@
 import decimal
-from unittest.mock import MagicMock
 
 import pytest
 
@@ -48,19 +47,22 @@ def test_start_handler(test_mock_message, test_mock_bot, test_simple_user_for_ha
 
 
 @pytest.mark.django_db
-def test_add_fav_handler(test_mock_message, test_mock_bot, test_simple_user_for_handlers):
+def test_add_fav_handler(test_simple_user_for_handlers_0, test_mock_message, test_mock_bot,
+                         test_simple_user_for_handlers, test_simple_user_for_handlers_2):
     handlers.add_user(test_mock_message, test_mock_bot)
     test_mock_bot.send_message.assert_called_once_with(
         test_mock_message.chat.id, "Successful add user to money-friends"
     )
     user = SimpleUser.objects.filter(user_id=test_simple_user_for_handlers.user_id).first()
-    assert user.friends == ["Krigg", "Solanum"]
+    # assert user.friends.all() == ["Krigg", "Solanum"]
+    assert list(user.friends.all()) == [test_simple_user_for_handlers_0, test_simple_user_for_handlers_2]
 
 
 @pytest.mark.django_db
-def test_show_fav_handler(test_mock_message, test_mock_bot):
+def test_show_fav_handler(test_mock_message, test_mock_bot, test_simple_user_for_handlers_0):
     handlers.my_money_recipient(test_mock_message, test_mock_bot)
-    test_mock_bot.send_message.assert_called_with(test_mock_message.chat.id, "Krigg\n")
+    test_mock_bot.send_message.assert_called_with(test_mock_message.chat.id,
+                                                  f"{test_simple_user_for_handlers_0.full_username}\n")
 
 
 @pytest.mark.django_db

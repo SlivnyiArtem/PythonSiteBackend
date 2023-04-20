@@ -6,6 +6,7 @@ from app.internal.services import banking_service, user_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
+from app.internal.services.user_service import get_user_by_username
 
 
 def error_handler(exc, message, bot):
@@ -89,13 +90,13 @@ def my_money_recipient(message: telebot.types.Message, bot):
     if user is None:
         bot.send_message(message.chat.id, common_messages.no_information_in_db_message)
         return
-    spec_users = user.friends
+    spec_users = list(user.friends.all())
     if len(spec_users) == 0:
         bot.send_message(message.chat.id, "No users in money-friends_list")
         return
     msg = ""
     for user in spec_users:
-        msg += user + "\n"
+        msg += user.full_username + "\n"
     bot.send_message(message.chat.id, "This is your money-friends list:")
     bot.send_message(message.chat.id, msg)
 
@@ -114,9 +115,14 @@ def add_user(message: telebot.types.Message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        user.friends.append(message.text[1:])
-        user.save()
-        bot.send_message(message.chat.id, "Successful add user to money-friends")
+        another_user = get_user_by_username(message.text[1:])
+        if another_user is None:
+            pass
+        else:
+            user.friends.add(another_user)
+            # user.friends.append(message.text[1:])
+            # user.save()
+            bot.send_message(message.chat.id, "Successful add user to money-friends")
 
 
 @error_decorator
@@ -133,9 +139,15 @@ def remove_user(message: telebot.types.Message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        user.friends.remove(message.text[1:])
-        user.save()
-        bot.send_message(message.chat.id, "Successful delete user from money-friends")
+        another_user = get_user_by_username(message.text[1:])
+        if another_user is None:
+            pass
+        else:
+            user.friends.remove(another_user)
+            bot.send_message(message.chat.id, "Successful delete user from money-friends")
+        # user.friends.remove(message.text[1:])
+        # user.save()
+        # bot.send_message(message.chat.id, "Successful delete user from money-friends")
 
 
 @error_decorator
@@ -181,7 +193,7 @@ def get_data_and_transact(message: telebot.types.Message, bot, message_text: str
         bank_acc, another_bank_acc = get_bank_accounts(reqs, message_text)
         transaction(bot, message, amount, bank_acc, another_bank_acc)
     except ValueError as error:
-        bot.send_message(message.chat.id, "Handle: " + error)
+        bot.send_message(message.chat.id, error)
 
 
 def get_bank_accounts(reqs, message_text):

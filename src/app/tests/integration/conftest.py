@@ -28,5 +28,5 @@ def test_mock_message(test_simple_user_for_handlers):
     message = MagicMock()
     message.from_user = test_simple_user_for_handlers
     message.from_user.id = 112
-    message.text = "@Solanum"
+    message.text = "@Krigg"
     return message
