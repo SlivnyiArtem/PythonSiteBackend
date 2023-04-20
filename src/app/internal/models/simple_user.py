@@ -17,7 +17,7 @@ class SimpleUser(models.Model):
     surname = models.CharField(max_length=255)
     phone_number = models.BigIntegerField(null=True, blank=True)
     friends = models.ManyToManyField(to="self", related_name="f", symmetrical=False, blank=True)
-    transactions_history = models.ForeignKey(TransactionLog, on_delete=models.CASCADE, blank=True)
+    transactions_history = models.ManyToManyField(TransactionLog, blank=True)
 
     # friends = models.ManyToManyField("SimpleUser", symmetrical=False, blank=True)
     # friends = models.ManyToManyField('self', through='FriendBackLoop',
