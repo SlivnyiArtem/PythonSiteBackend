@@ -124,8 +124,6 @@ def add_user(message: telebot.types.Message, bot):
             pass
         else:
             user.friends.add(another_user)
-            # user.friends.append(message.text[1:])
-            # user.save()
             bot.send_message(message.chat.id, "Successful add user to money-friends")
 
 
@@ -149,9 +147,6 @@ def remove_user(message: telebot.types.Message, bot):
         else:
             user.friends.remove(another_user)
             bot.send_message(message.chat.id, "Successful delete user from money-friends")
-        # user.friends.remove(message.text[1:])
-        # user.save()
-        # bot.send_message(message.chat.id, "Successful delete user from money-friends")
 
 
 @error_decorator
@@ -215,7 +210,6 @@ def get_data_and_transact(message: telebot.types.Message, bot, message_text: str
         return
     amount = int(reqs[2])
     try:
-        # user = user_service.get_user_by_id(message.from_user.id)
         bank_acc, another_bank_acc = get_bank_accounts(reqs, message_text)
         transaction(bot, message, amount, bank_acc, another_bank_acc)
     except ValueError as error:
@@ -269,10 +263,6 @@ def get_full_log(message: telebot.types.Message, bot):
     logs = list(user.transactions_history.all())
     res_list = []
 
-    # result_list = []
-    # for key, value in input_dict.items():
-    #     result_list.append(f"{str(key)} : {str(value)}\n")
-
     for el in logs:
         res_list.append(
             f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n"
@@ -288,7 +278,6 @@ def get_full_log(message: telebot.types.Message, bot):
 @error_decorator
 def all_transaction_recipients(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
-    # logs = list(user.transactions_history.all())
     users = set(
         map(
             lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
@@ -297,16 +286,9 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
     )
     res_list = []
 
-    # result_list = []
-    # for key, value in input_dict.items():
-    #     result_list.append(f"{str(key)} : {str(value)}\n")
-
     for uniq_user in users:
-        res_list.append(f"получатель: {uniq_user}\n")
-    # for el in logs:
-    #     res_list.append(f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n")
+        res_list.append(f"получатель/отправитель: {uniq_user}\n")
     bot.send_message(message.chat.id, result_handler(res_list))
-    # return "".join(res_list)
 
 
 def result_handler(res_list):

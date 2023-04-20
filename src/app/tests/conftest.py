@@ -4,7 +4,6 @@ import pytest
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.simple_user import SimpleUser
-from app.internal.services.user_service import get_user_by_id
 
 
 @pytest.fixture(scope="function")
@@ -29,22 +28,8 @@ def test_simple_user_for_handlers(test_simple_user_for_handlers_0) -> SimpleUser
         user_name="John",
         surname="Doe",
         phone_number=79506376666,
-        # friends=test_simple_user_for_handlers_2
     )
-    # user.save()
-    # user_2 = SimpleUser.objects.create(
-    #     user_id=122340,
-    #     full_username="Rogue",
-    #     user_name="John",
-    #     surname="Johnovich",
-    #     phone_number=79506372223,
-    # )
-    # user_2.save()
-    # user.friends = []
     user.friends.add(test_simple_user_for_handlers_0)
-    # s = user.friends.all()
-    # print(s)
-    # print()
     user.save()
     return user
 
