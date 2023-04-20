@@ -2,7 +2,7 @@ import datetime
 
 import phonenumbers
 import telebot
-from django.db import transaction as transaction_locker
+from django.db import transaction as blocking_transaction, transaction as transaction_locker
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.transaction_log import TransactionLog
@@ -178,33 +178,34 @@ def ask_for_requisites(message: telebot.types.Message, bot):
 def transaction(
     bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
 ):
-    if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
-        return
-    with transaction_locker.atomic():
-        bank_acc.currency_amount -= amount
-        bank_acc.save()
-        another_bank_acc.currency_amount += amount
-        another_bank_acc.save()
-        transaction_date = datetime.date.today()
+    with blocking_transaction.atomic():
+        if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
+            return
+        with transaction_locker.atomic():
+            bank_acc.currency_amount -= amount
+            bank_acc.save()
+            another_bank_acc.currency_amount += amount
+            another_bank_acc.save()
+            transaction_date = datetime.date.today()
 
-    recipient = another_bank_acc.account_owner
-    sender = bank_acc.account_owner
+        recipient = another_bank_acc.account_owner
+        sender = bank_acc.account_owner
 
-    new_transaction_sender = TransactionLog.objects.create(
-        transaction_recipient_id=recipient.user_id,
-        amount=amount,
-        transaction_date=transaction_date,
-        is_outgoing_transaction=True,
-    )
-    new_transaction_recipient = TransactionLog.objects.create(
-        transaction_recipient_id=sender.user_id,
-        amount=amount,
-        transaction_date=transaction_date,
-        is_outgoing_transaction=False,
-    )
-    sender.transactions_history.add(new_transaction_sender)
-    recipient.transactions_history.add(new_transaction_recipient)
-    confirm_transaction(bot, message.chat.id)
+        new_transaction_sender = TransactionLog.objects.create(
+            transaction_recipient_id=recipient.user_id,
+            amount=amount,
+            transaction_date=transaction_date,
+            is_outgoing_transaction=True,
+        )
+        new_transaction_recipient = TransactionLog.objects.create(
+            transaction_recipient_id=sender.user_id,
+            amount=amount,
+            transaction_date=transaction_date,
+            is_outgoing_transaction=False,
+        )
+        sender.transactions_history.add(new_transaction_sender)
+        recipient.transactions_history.add(new_transaction_recipient)
+        confirm_transaction(bot, message.chat.id)
 
 
 def get_data_and_transact(message: telebot.types.Message, bot, message_text: str):
@@ -287,14 +288,22 @@ def get_full_log(message: telebot.types.Message, bot):
 @error_decorator
 def all_transaction_recipients(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
-    logs = list(user.transactions_history.all())
+    # logs = list(user.transactions_history.all())
+    users = set(
+        map(
+            lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
+            list(user.transactions_history.all()),
+        )
+    )
     res_list = []
 
     # result_list = []
     # for key, value in input_dict.items():
     #     result_list.append(f"{str(key)} : {str(value)}\n")
 
-    for el in logs:
-        res_list.append(f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n")
+    for uniq_user in users:
+        res_list.append(f"получатель: {uniq_user}\n")
+    # for el in logs:
+    #     res_list.append(f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n")
     bot.send_message(message.chat.id, "".join(res_list))
     # return "".join(res_list)
