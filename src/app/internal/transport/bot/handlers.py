@@ -264,9 +264,37 @@ def confirm_transaction(bot, msg_id):
 
 @error_decorator
 def get_full_log(message: telebot.types.Message, bot):
-    return None
+    user = user_service.get_user_by_id(message.from_user.id)
+    logs = list(user.transactions_history.all())
+    res_list = []
+
+    # result_list = []
+    # for key, value in input_dict.items():
+    #     result_list.append(f"{str(key)} : {str(value)}\n")
+
+    for el in logs:
+        res_list.append(
+            f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n"
+            f"сумма: {el.amount}\n"
+            f"дата: {el.transaction_date}\n"
+            f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
+            f"######\n"
+        )
+
+    bot.send_message(message.chat.id, "".join(res_list))
 
 
 @error_decorator
 def all_transaction_recipients(message: telebot.types.Message, bot):
-    return None
+    user = user_service.get_user_by_id(message.from_user.id)
+    logs = list(user.transactions_history.all())
+    res_list = []
+
+    # result_list = []
+    # for key, value in input_dict.items():
+    #     result_list.append(f"{str(key)} : {str(value)}\n")
+
+    for el in logs:
+        res_list.append(f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n")
+    bot.send_message(message.chat.id, "".join(res_list))
+    # return "".join(res_list)
