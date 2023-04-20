@@ -10,6 +10,8 @@ from app.internal.transport.bot.text_serialization_handlers import convert_dict_
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 from app.internal.models.transaction_log import TransactionLog
+from django.db import transaction as transaction_locker
+
 
 
 def error_handler(exc, message, bot):
@@ -180,22 +182,25 @@ def transaction(
 ):
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
         return
-    bank_acc.currency_amount -= amount
-    bank_acc.save()
-    another_bank_acc.currency_amount += amount
-    another_bank_acc.save()
-    confirm_transaction(bot, message.chat.id)
+    with transaction_locker.atomic():
+        bank_acc.currency_amount -= amount
+        bank_acc.save()
+        another_bank_acc.currency_amount += amount
+        another_bank_acc.save()
+        transaction_date = datetime.date.today()
+
     recipient = another_bank_acc.account_owner
     sender = bank_acc.account_owner
-    transaction_date = datetime.date.today()
-    new_transaction_sender = TransactionLog.objects.create(transaction_recipient=recipient,
+
+    new_transaction_sender = TransactionLog.objects.create(transaction_recipient_id=recipient.user_id,
                                                            amount=amount, transaction_date=transaction_date,
                                                            is_outgoing_transaction=True)
-    new_transaction_recipient = TransactionLog.objects.create(transaction_recipient=sender,
+    new_transaction_recipient = TransactionLog.objects.create(transaction_recipient_id=sender.user_id,
                                                               amount=amount, transaction_date=transaction_date,
                                                               is_outgoing_transaction=False)
     sender.transactions_history.add(new_transaction_sender)
     recipient.transactions_history.add(new_transaction_recipient)
+    confirm_transaction(bot, message.chat.id)
 
 
 def get_data_and_transact(message: telebot.types.Message, bot, message_text: str):

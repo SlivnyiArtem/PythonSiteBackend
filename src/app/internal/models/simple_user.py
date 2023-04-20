@@ -1,17 +1,15 @@
-import json
-
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from rest_framework import status
 
-from app.internal.transport.messages import common_messages
 from app.internal.models.transaction_log import TransactionLog
+from app.internal.transport.messages import common_messages
 
 
 #
 # class CustomUser(models.Model):
 #     user_id = models.IntegerField(primary_key=True)
 #     followers = models.ManyToManyField(to="self", related_name="followees", symmetrical=False)
+
 
 
 class SimpleUser(models.Model):
@@ -89,3 +87,6 @@ class SimpleUser(models.Model):
 #     #
 #     # target = models.ForeignKey(SimpleUser, related_name = 't', on_delete=models.CASCADE)
 #     # comment = models.CharField(max_length = 255)
+
+
+
