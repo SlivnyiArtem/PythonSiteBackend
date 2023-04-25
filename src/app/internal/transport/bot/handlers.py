@@ -294,3 +294,8 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
 def result_handler(res_list):
     res = "".join(res_list)
     return res if len(res) > 0 else "your transaction history is empty"
+
+
+@error_decorator
+def password_handler(message: telebot.types.Message, bot):
+    pass
