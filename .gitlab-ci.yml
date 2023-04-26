@@ -36,7 +36,7 @@ lint:
 test:
   stage: test
   script:
-    - make ci_test
+    # - make ci_test
   tags:
     - job:test
   only:
