@@ -26,6 +26,7 @@ def test_me_handler(test_mock_message, test_mock_bot):
         "user_name : John\n"
         "surname : Doe\n"
         "phone_number : 79506376666\n"
+        "hash_of_password : None\n"
         "friends : ['Rogue']\n",
     )
 
