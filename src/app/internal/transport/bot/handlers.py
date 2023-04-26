@@ -3,6 +3,7 @@ import datetime
 import phonenumbers
 import telebot
 from django.db import transaction as blocking_transaction, transaction as transaction_locker
+from internal.services import password_service
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.transaction_log import TransactionLog
@@ -294,3 +295,29 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
 def result_handler(res_list):
     res = "".join(res_list)
     return res if len(res) > 0 else "your transaction history is empty"
+
+
+@error_decorator
+def new_password_handler(message: telebot.types.Message, bot):
+    if user_service.get_user_by_id(message.from_user.id).hash_of_password is None:
+        msg = bot.send_message(message.chat.id, "У вас отсутствует пароль. Введите новый пароль")
+        bot.register_next_step_handler(msg, change_password, bot)
+    else:
+        msg = bot.send_message(message.chat.id, "Введите текущий пароль")
+        bot.register_next_step_handler(msg, verify_current_password, bot)
+
+
+def verify_current_password(message: telebot.types.Message, bot):
+    if (
+        password_service.get_hash_from_password(message.text)
+        == user_service.get_user_by_id(message.from_user.id).hash_of_password
+    ):
+        msg = bot.send_message(message.chat.id, "Введите новый пароль")
+        bot.register_next_step_handler(msg, change_password, bot)
+    else:
+        bot.send_message(message.chat.id, "Пароль неверный. Отказано в доступе.")
+
+
+def change_password(message: telebot.types.Message, bot):
+    user_service.update_user_password(message.from_user.id, message.text)
+    bot.send_message(message.chat.id, "Пароль успешно изменён.")

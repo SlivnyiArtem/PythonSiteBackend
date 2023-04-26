@@ -53,6 +53,10 @@ class Bot:
             lambda message: handlers.all_transaction_recipients(message, self.application)
         )
 
+        self.application.message_handler(commands=["new_password"])(
+            lambda message: handlers.new_password_handler(message, self.application)
+        )
+
     def start(self):
         self.application.remove_webhook()
         self.application.run_webhooks(
