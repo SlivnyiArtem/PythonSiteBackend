@@ -3,7 +3,7 @@ image: docker/compose:alpine-1.28.0
 stages:
   - build
   - lint
-  # - test
+  - test
   - deploy
 
 before_script:
