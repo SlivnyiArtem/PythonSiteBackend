@@ -54,7 +54,7 @@ class Bot:
         )
 
         self.application.message_handler(commands=["new_password"])(
-            lambda message: handlers.password_handler(message, self.application)
+            lambda message: handlers.new_password_handler(message, self.application)
         )
 
     def start(self):

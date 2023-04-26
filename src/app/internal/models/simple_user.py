@@ -13,7 +13,7 @@ class SimpleUser(models.Model):
     phone_number = models.BigIntegerField(null=True, blank=True)
     friends = models.ManyToManyField(to="self", related_name="f", symmetrical=False, blank=True)
     transactions_history = models.ManyToManyField(TransactionLog, blank=True)
-    hash_of_password = models.CharField(max_length=255, null=True)
+    hash_of_password = models.CharField(max_length=255, null=True, default=None, editable=True)
 
     def __str__(self):
         return str(self.user_id)

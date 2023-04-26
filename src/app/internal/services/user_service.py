@@ -1,5 +1,5 @@
 from app.internal.models.simple_user import SimpleUser
-from internal.services.password_service import get_hash_from_password
+from app.internal.services.password_service import get_hash_from_password
 
 
 def update_user_number(user_id: int, phone_number: int):
