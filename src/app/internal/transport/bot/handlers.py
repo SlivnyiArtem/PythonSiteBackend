@@ -6,6 +6,7 @@ from django.db import transaction as blocking_transaction, transaction as transa
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.refresh_token import AuthToken
+from app.internal.models.simple_user import SimpleUser
 from app.internal.models.transaction_log import TransactionLog
 from app.internal.services import banking_service, password_service, token_service, user_service
 from app.internal.services.user_service import get_user_by_username
@@ -28,11 +29,24 @@ def error_decorator(orig_func):
     return wrapper
 
 
+def access_decorator(orig_func):
+    def wrapper(*args, **kwargs):
+        if True:
+            orig_func(*args, **kwargs)
+        else:
+            bot = args[1]
+            message = args[0]
+            bot.send_message(message.chat.id, "access restricted")
+
+    return wrapper
+
+
 @error_decorator
 def help_handler(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, common_messages.help_command_message())
 
 
+@access_decorator
 @error_decorator
 def currency_amount_handler(message: telebot.types.Message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_card_acc_number())
@@ -57,6 +71,7 @@ def send_amount_inf(message: telebot.types.Message, bot):
         )
 
 
+@access_decorator
 @error_decorator
 def me_inf_handler(message: telebot.types.Message, bot):
     bot.send_message(
@@ -73,6 +88,7 @@ def start_handler(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, common_messages.user_add_message(user.username))
 
 
+@access_decorator
 @error_decorator
 def phone_number_handler(message: telebot.types.Message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_phone_number_message())
@@ -89,6 +105,7 @@ def get_phone_number(message: telebot.types.Message, bot):
         bot.register_next_step_handler(msg, get_phone_number, bot)
 
 
+@access_decorator
 @error_decorator
 def my_money_recipient(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
@@ -106,6 +123,7 @@ def my_money_recipient(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, msg)
 
 
+@access_decorator
 @error_decorator
 def add_money_recipient(message: telebot.types.Message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_user_name())
@@ -128,6 +146,7 @@ def add_user(message: telebot.types.Message, bot):
             bot.send_message(message.chat.id, "Successful add user to money-friends")
 
 
+@access_decorator
 @error_decorator
 def delete_money_recipient(message: telebot.types.Message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_user_name())
@@ -150,6 +169,7 @@ def remove_user(message: telebot.types.Message, bot):
             bot.send_message(message.chat.id, "Successful delete user from money-friends")
 
 
+@access_decorator
 @error_decorator
 def make_transaction(message: telebot.types.Message, bot):
     msg = bot.send_message(
@@ -258,6 +278,7 @@ def confirm_transaction(bot, msg_id):
     bot.send_message(msg_id, "transaction confirmed")
 
 
+@access_decorator
 @error_decorator
 def get_full_log(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
@@ -276,6 +297,7 @@ def get_full_log(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, result_handler(res_list))
 
 
+@access_decorator
 @error_decorator
 def all_transaction_recipients(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
@@ -323,34 +345,53 @@ def change_password(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, "Пароль успешно изменён.")
 
 
+def get_rights(user: SimpleUser):
+    pass
+
+
 @error_decorator
 def login_handler(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
     if user.hash_of_password is None:
         bot.send_message(message.chat.id, "У вас отсутствует пароль. Воспользуйтесь командой /new_password")
+        return
     else:
         access_token = AuthToken.objects.filter(user=user, token_type="access")
         refresh_token = AuthToken.objects.filter(user=user, token_type="refresh")
-        if access_token is None or refresh_token is None:
-            # вводим пароль
-            # проверка правильности
-            # создаем токены
-            pass
+        if access_token is None and refresh_token is None:
+            msg = bot.send_message(message.chat.id, "Введите свой пароль")
+            bot.register_next_step_handler(msg, check_password, bot)
         elif token_service.check_is_expired(access_token):
-            if token_service.check_is_expired(refresh_token):
-                # отзываем оба токена
+            if refresh_token is None or token_service.check_is_expired(refresh_token):
+                # отзываем оба токена V
                 token_service.revoke_all_tokens_for_user(user)
+
                 return
                 pass
             else:
-                # отзываем оба токена
-                # создаем токены
+                # отзываем оба токена V
+                # создаем токены V
                 token_service.update_and_get_tokens(user)
                 pass
+            get_rights(user)
             # наделяем правами
-            pass
+        pass
+
+
+def check_password(message: telebot.types.Message, bot):
+    user = user_service.get_user_by_id(message.from_user.id)
+    if len(message.text) > 0 and password_service.get_hash_from_password(message.text) == user.hash_of_password:
+        token_service.update_and_get_tokens(user)
+        get_rights(user)
+    else:
+        bot.send_message(message.chat.id, "ваш пароль не верный")
+
+
+def remove_rights(user: SimpleUser):
+    pass
 
 
 @error_decorator
 def logout_handler(message: telebot.types.Message, bot):
-    return None
+    user = user_service.get_user_by_id(message.from_user.id)
+    remove_rights(user)
