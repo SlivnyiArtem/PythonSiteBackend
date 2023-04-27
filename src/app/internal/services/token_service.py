@@ -60,7 +60,7 @@ def create_refresh_token(device_id, user: SimpleUser):
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )
-    RefreshToken.objects.create(jti=refresh_token, device_id=device_id, user=user)
+    return RefreshToken.objects.create(jti=refresh_token, device_id=device_id, user=user)
     return refresh_token
 
 
