@@ -4,7 +4,7 @@ import environ
 import jwt
 from django.http import HttpRequest
 
-from app.internal.models.refresh_token import AuthToken
+from app.internal.models.auth_token import AuthToken
 from app.internal.models.simple_user import SimpleUser
 from app.internal.services import user_service
 
@@ -93,8 +93,8 @@ def create_refresh_token(user: SimpleUser):
 #     pass
 
 
-def update_and_get_tokens(user: SimpleUser):
-    old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").values_list("Jti").first()
+def update_and_get_tokens(user: SimpleUser): #######!!!!!!!!!!!!!!!!!!!!!!!!!!THERE
+    old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").values_list("Jtm").first()
     old_acc_token_jti = AuthToken.objects.filter(user=user, token_type="access").values_list("Jti").first()
     acc_token = create_access_token(user)
     ref_token = create_refresh_token(user)
@@ -106,7 +106,7 @@ def revoke_old_tokens(acc_jti, ref_jti):
     print(acc_jti)
     print(ref_jti)
     print("2@@#$@@@34")
-    AuthToken.objects.filter(RTL=acc_jti).delete()
+    AuthToken.objects.filter(Jti=acc_jti).delete()
     AuthToken.objects.filter(Jti=ref_jti).delete()
 
 
