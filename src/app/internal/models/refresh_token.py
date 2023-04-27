@@ -13,4 +13,7 @@ class AuthToken(models.Model):
 
 
 class Meta:
-    unique_together = ('user', 'token_type',)
+    unique_together = (
+        "user",
+        "token_type",
+    )
