@@ -61,7 +61,7 @@ def create_refresh_token(user: SimpleUser):
         algorithm="HS512",
     )
     RefreshToken.objects.update_or_create(jti=refresh_token, user=user)
-    return RefreshToken.objects.filter(jti=refresh_token).values_list("user")
+    return RefreshToken.objects.filter(jti=refresh_token).values_list("user"), refresh_token
 
 
 def revoke__access_token(user: SimpleUser):
