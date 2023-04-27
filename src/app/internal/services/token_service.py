@@ -34,8 +34,8 @@ def create_payload(time_to_expire, token_type, user_hash_password, user_id):
 # посмотреть как задается expired
 # после залогинивания, мы создаем accessToken на основе refresh
 # Создаём новый refrsh token?????
-def create_access_token(refresh_token: RefreshToken, user: SimpleUser) -> str:
-    if refresh_token.user == user:
+def create_access_token(refresh_token_user: SimpleUser, user: SimpleUser) -> str:
+    if refresh_token_user == user:
         access_token = jwt.encode(
             payload=create_payload(
                 datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
@@ -60,8 +60,8 @@ def create_refresh_token(user: SimpleUser):
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )
-    return RefreshToken.objects.update_or_create(jti=refresh_token, user=user)
-    return refresh_token
+    RefreshToken.objects.update_or_create(jti=refresh_token, user=user)
+    return RefreshToken.objects.filter(jti=refresh_token).values_list("user")
 
 
 def revoke__access_token(user: SimpleUser):
