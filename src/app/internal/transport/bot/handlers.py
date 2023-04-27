@@ -364,19 +364,11 @@ def login_handler(message: telebot.types.Message, bot):
             bot.register_next_step_handler(msg, check_password, bot)
         elif token_service.check_is_expired(access_token.first()):
             if refresh_token is None or token_service.check_is_expired(refresh_token.first()):
-                # отзываем оба токена V
                 token_service.revoke_all_tokens_for_user(user)
-
                 return
-                pass
             else:
-                # отзываем оба токена V
-                # создаем токены V
                 token_service.update_and_get_tokens(user)
-                pass
             add_rights(user)
-            # наделяем правами
-        pass
 
 
 def check_password(message: telebot.types.Message, bot):
