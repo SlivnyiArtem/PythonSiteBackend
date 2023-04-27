@@ -8,4 +8,4 @@ class RefreshToken(models.Model):
     user = models.ForeignKey(SimpleUser, related_name="refresh_token", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     is_revoked = models.BooleanField(default=False)
-    device_id = models.UUIDField(unique=True)
+    # device_id = models.UUIDField(unique=True)

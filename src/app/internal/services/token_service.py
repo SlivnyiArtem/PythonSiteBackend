@@ -49,7 +49,7 @@ def create_access_token(refresh_token: RefreshToken, user: SimpleUser) -> str:
         return access_token
 
 
-def create_refresh_token(device_id, user: SimpleUser):
+def create_refresh_token(user: SimpleUser):
     refresh_token = jwt.encode(
         payload=create_payload(
             datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
@@ -60,7 +60,7 @@ def create_refresh_token(device_id, user: SimpleUser):
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )
-    return RefreshToken.objects.update_or_create(jti=refresh_token, device_id=device_id, user=user)
+    return RefreshToken.objects.update_or_create(jti=refresh_token, user=user)
     return refresh_token
 
 
