@@ -20,7 +20,8 @@ class LoginView(APIView):
     def post(self, request: HttpRequest):
         json_data = json.loads(request.body.decode("utf-8"))
         user = user_service.get_user_by_id(json_data["user_id"])
-        refresh_token = token_service.create_refresh_token(user)
-        access_token = token_service.create_access_token(user)
+        access_token, refresh_token = token_service.update_tokens(user)
+        # refresh_token = token_service.create_refresh_token(user)
+        # access_token = token_service.create_access_token(user)
         return JsonResponse({"refresh_token": refresh_token, "access_token": access_token})
         # return JsonResponse({"test1": "test1_v", "test2": "test2_v"})

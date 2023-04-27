@@ -65,19 +65,21 @@ def create_refresh_token(user: SimpleUser):
     return refresh_token
 
 
-def revoke__access_token(user: SimpleUser):
-    pass
+# def revoke__access_token(user: SimpleUser):
+#     pass
+#
+#
+# def revoke__refresh_token(user: SimpleUser):
+#     pass
 
 
-def revoke__refresh_token(user: SimpleUser):
-    pass
-
-
-def update_tokens(user: SimpleUser, refresh_token):
-    create_access_token()
-    create_refresh_token()
+def update_tokens(user: SimpleUser):
+    old_ref_token_jti = RefreshToken.objects.filter(user=user).first().values_list("jti")
+    acc_token = create_access_token(user)
+    ref_token = create_refresh_token(user)
+    if old_ref_token_jti is not None:
+        revoke_refresh_token(old_ref_token_jti)
 
 
 def revoke_refresh_token(jti):
     RefreshToken.objects.filter(jti=jti).delete()
-    pass
