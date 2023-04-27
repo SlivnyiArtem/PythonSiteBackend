@@ -102,3 +102,7 @@ def update_and_get_tokens(user: SimpleUser):
 def revoke_old_tokens(acc_jti, ref_jti):
     AuthToken.objects.filter(jti=acc_jti).delete()
     AuthToken.objects.filter(jti=ref_jti).delete()
+
+def revoke_all_tokens_for_user(user: SimpleUser):
+    AuthToken.objects.filter(user=user, token_type="refresh").delete()
+    AuthToken.objects.filter(user=user, token_type="access").delete()

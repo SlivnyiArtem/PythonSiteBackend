@@ -333,20 +333,21 @@ def login_handler(message: telebot.types.Message, bot):
         refresh_token = AuthToken.objects.filter(user=user, token_type="refresh")
         if access_token is None or refresh_token is None:
             # вводим пароль
+            # проверка правильности
             # создаем токены
-            # наделяем правами
             pass
         elif token_service.check_is_expired(access_token):
             if token_service.check_is_expired(refresh_token):
                 # отзываем оба токена
+                token_service.revoke_all_tokens_for_user(user)
+                return
                 pass
             else:
                 # отзываем оба токена
                 # создаем токены
-                # наделяем правами
+                token_service.update_and_get_tokens(user)
                 pass
-        else:
-            # наделяем правами
+        # наделяем правами
             pass
 
 
