@@ -31,10 +31,13 @@ def get_token_data(token: str):
 def check_is_expired(auth_token: AuthToken):
     token_data = get_token_data(auth_token.jti)
 
-    return (auth_token.token_type == "access" and datetime.datetime.timestamp(
-        datetime.datetime.now() - token_data["start_time"] > env("EXPIRE_TIME_ACCESS"))) or \
-           (auth_token.token_type == "refresh" and datetime.datetime.timestamp(
-               datetime.datetime.now() - token_data["start_time"] > env("EXPIRE_TIME_REFRESH")))
+    return (
+        auth_token.token_type == "access"
+        and datetime.datetime.timestamp(datetime.datetime.now() - token_data["start_time"] > env("EXPIRE_TIME_ACCESS"))
+    ) or (
+        auth_token.token_type == "refresh"
+        and datetime.datetime.timestamp(datetime.datetime.now() - token_data["start_time"] > env("EXPIRE_TIME_REFRESH"))
+    )
 
 
 def create_payload(time_to_expire, token_type, user_hash_password, user_id):
@@ -102,6 +105,7 @@ def update_and_get_tokens(user: SimpleUser):
 def revoke_old_tokens(acc_jti, ref_jti):
     AuthToken.objects.filter(jti=acc_jti).delete()
     AuthToken.objects.filter(jti=ref_jti).delete()
+
 
 def revoke_all_tokens_for_user(user: SimpleUser):
     AuthToken.objects.filter(user=user, token_type="refresh").delete()
