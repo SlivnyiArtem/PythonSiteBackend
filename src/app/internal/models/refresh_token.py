@@ -10,3 +10,7 @@ class AuthToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_revoked = models.BooleanField(default=False)
     # device_id = models.UUIDField(unique=True)
+
+
+class Meta:
+    unique_together = ('user', 'token_type',)
