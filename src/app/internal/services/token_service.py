@@ -103,6 +103,9 @@ def update_and_get_tokens(user: SimpleUser):
 
 
 def revoke_old_tokens(acc_jti, ref_jti):
+    print(acc_jti)
+    print(ref_jti)
+    print("2@@#$@@@34")
     AuthToken.objects.filter(jti=acc_jti).delete()
     AuthToken.objects.filter(jti=ref_jti).delete()
 
