@@ -4,9 +4,11 @@ import environ
 import jwt
 from django.http import HttpRequest
 
+from app.internal.models.refresh_token import AuthToken
 from app.internal.models.simple_user import SimpleUser
-from app.internal.models.token import RefreshToken
 from app.internal.services import user_service
+
+# from internal.models.access_token import AccessToken
 
 env = environ.Env()
 environ.Env.read_env()
@@ -38,7 +40,7 @@ def create_access_token(user: SimpleUser) -> str:
     # if refresh_token_user == user:
     access_token = jwt.encode(
         payload=create_payload(
-            datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
+            datetime.datetime.now(),
             "access_token",
             user.hash_of_password,
             user.user_id,
@@ -46,13 +48,15 @@ def create_access_token(user: SimpleUser) -> str:
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )
+    AuthToken.objects.update_or_create(jti=access_token, user=user, token_type="access")
     return access_token
 
 
 def create_refresh_token(user: SimpleUser):
     refresh_token = jwt.encode(
         payload=create_payload(
-            datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
+            datetime.datetime.now(),
+            # datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
             "refresh_token",
             user.hash_of_password,
             user.user_id,
@@ -60,8 +64,8 @@ def create_refresh_token(user: SimpleUser):
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )
-    RefreshToken.objects.update_or_create(jti=refresh_token, user=user)
-    user = RefreshToken.objects.filter(jti=refresh_token).values_list("user")
+    AuthToken.objects.update_or_create(jti=refresh_token, user=user, token_type="refresh")
+    # user = AuthToken.objects.filter(jti=refresh_token).values_list("user")
     return refresh_token
 
 
@@ -74,13 +78,14 @@ def create_refresh_token(user: SimpleUser):
 
 
 def update_and_get_tokens(user: SimpleUser):
-    old_ref_token_jti = RefreshToken.objects.filter(user=user).first().values_list("jti")
+    old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").first().values_list("jti")
+    old_acc_token_jti = AuthToken.objects.filter(user=user, token_type="access").first().values_list("jti")
     acc_token = create_access_token(user)
     ref_token = create_refresh_token(user)
-    if old_ref_token_jti is not None:
-        revoke_refresh_token(old_ref_token_jti)
+    revoke_old_tokens(old_acc_token_jti, old_ref_token_jti)
     return acc_token, ref_token
 
 
-def revoke_refresh_token(jti):
-    RefreshToken.objects.filter(jti=jti).delete()
+def revoke_old_tokens(acc_jti, ref_jti):
+    AuthToken.objects.filter(jti=acc_jti).delete()
+    AuthToken.objects.filter(jti=ref_jti).delete()
