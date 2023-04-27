@@ -1,9 +1,9 @@
 from django.contrib import admin
-from internal.models.token import RefreshToken
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.banking_card import Card
 from app.internal.models.simple_user import SimpleUser
+from app.internal.models.token import RefreshToken
 
 admin.site.site_title = "Backend course"
 admin.site.site_header = "Backend course"
