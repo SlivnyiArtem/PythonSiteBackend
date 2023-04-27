@@ -106,7 +106,7 @@ def revoke_old_tokens(acc_jti, ref_jti):
     print(acc_jti)
     print(ref_jti)
     print("2@@#$@@@34")
-    AuthToken.objects.filter(Jti=acc_jti).delete()
+    AuthToken.objects.filter(RTL=acc_jti).delete()
     AuthToken.objects.filter(Jti=ref_jti).delete()
 
 
