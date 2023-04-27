@@ -48,7 +48,7 @@ def help_handler(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, common_messages.help_command_message())
 
 
-@login_required
+@access_decorator
 @error_decorator
 def currency_amount_handler(message: telebot.types.Message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_card_acc_number())
@@ -73,7 +73,7 @@ def send_amount_inf(message: telebot.types.Message, bot):
         )
 
 
-@login_required
+@access_decorator
 @error_decorator
 def me_inf_handler(message: telebot.types.Message, bot):
     bot.send_message(
@@ -90,7 +90,7 @@ def start_handler(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, common_messages.user_add_message(user.username))
 
 
-@login_required
+@access_decorator
 @error_decorator
 def phone_number_handler(message: telebot.types.Message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_phone_number_message())
@@ -107,7 +107,7 @@ def get_phone_number(message: telebot.types.Message, bot):
         bot.register_next_step_handler(msg, get_phone_number, bot)
 
 
-@login_required
+@access_decorator
 @error_decorator
 def my_money_recipient(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
@@ -125,7 +125,7 @@ def my_money_recipient(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, msg)
 
 
-@login_required
+@access_decorator
 @error_decorator
 def add_money_recipient(message: telebot.types.Message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_user_name())
@@ -148,7 +148,7 @@ def add_user(message: telebot.types.Message, bot):
             bot.send_message(message.chat.id, "Successful add user to money-friends")
 
 
-@login_required
+@access_decorator
 @error_decorator
 def delete_money_recipient(message: telebot.types.Message, bot):
     msg = bot.send_message(message.chat.id, common_messages.ask_for_user_name())
@@ -171,7 +171,7 @@ def remove_user(message: telebot.types.Message, bot):
             bot.send_message(message.chat.id, "Successful delete user from money-friends")
 
 
-@login_required
+@access_decorator
 @error_decorator
 def make_transaction(message: telebot.types.Message, bot):
     msg = bot.send_message(
@@ -280,7 +280,7 @@ def confirm_transaction(bot, msg_id):
     bot.send_message(msg_id, "transaction confirmed")
 
 
-@login_required
+@access_decorator
 @error_decorator
 def get_full_log(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
@@ -299,7 +299,7 @@ def get_full_log(message: telebot.types.Message, bot):
     bot.send_message(message.chat.id, result_handler(res_list))
 
 
-@login_required
+@access_decorator
 @error_decorator
 def all_transaction_recipients(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
