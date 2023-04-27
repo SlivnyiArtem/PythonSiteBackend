@@ -1,9 +1,12 @@
+import datetime
+
 import environ
 import jwt
 from django.http import HttpRequest
-from internal.models.simple_user import SimpleUser
-from internal.models.token import RefreshToken
-from internal.services import user_service
+
+from app.internal.models.simple_user import SimpleUser
+from app.internal.models.token import RefreshToken
+from app.internal.services import user_service
 
 env = environ.Env()
 environ.Env.read_env()
@@ -34,7 +37,12 @@ def create_payload(time_to_expire, token_type, user_hash_password, user_id):
 def create_access_token(refresh_token: RefreshToken, user: SimpleUser) -> str:
     if refresh_token.user == user:
         access_token = jwt.encode(
-            payload=create_payload(env("ACCESS_EXPIRE"), "access_token", user.hash_of_password, user.user_id),
+            payload=create_payload(
+                datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
+                "access_token",
+                user.hash_of_password,
+                user.user_id,
+            ),
             key=env("SECRET_FOR_TOKENS"),
             algorithm="HS512",
         )
@@ -43,7 +51,12 @@ def create_access_token(refresh_token: RefreshToken, user: SimpleUser) -> str:
 
 def create_refresh_token(device_id, user: SimpleUser):
     refresh_token = jwt.encode(
-        payload=create_payload(env("REFRESH_EXPIRE"), "refresh_token", user.hash_of_password, user.user_id),
+        payload=create_payload(
+            datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
+            "refresh_token",
+            user.hash_of_password,
+            user.user_id,
+        ),
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )

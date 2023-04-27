@@ -1,6 +1,9 @@
+import json
+
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from rest_framework.views import APIView
 
+from app.internal.services import token_service, user_service
 from app.internal.transport.information_former import form_information_handlers
 
 
@@ -15,4 +18,9 @@ def test_page(_):
 
 class LoginView(APIView):
     def post(self, request: HttpRequest):
-        return JsonResponse({"test1": "test1_v", "test2": "test2_v"})
+        json_data = json.load(request.body)
+        user = user_service.get_user_by_id(json_data["user_id"])
+        refresh_token = token_service.create_refresh_token(json_data["device_id"], user)
+        access_token = token_service.create_access_token(refresh_token, user)
+        return JsonResponse({"refresh_token": refresh_token, "access_token": access_token})
+        # return JsonResponse({"test1": "test1_v", "test2": "test2_v"})
