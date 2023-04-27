@@ -343,7 +343,7 @@ def verify_current_password(message: telebot.types.Message, bot):
 
 
 def change_password(message: telebot.types.Message, bot):
-    user_service.update_user_password(message.from_user.id, message.text)
+    user_service.update_user_password(message.chat.id, bot, message.from_user.id, message.text)
     bot.send_message(message.chat.id, "Пароль успешно изменён.")
 
 
