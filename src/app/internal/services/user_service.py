@@ -22,4 +22,5 @@ def get_user_by_username(username: str) -> SimpleUser:
 
 def update_user_password(user_id: int, password: str):
     hash_of_password = get_hash_from_password(password)
+    print(hash_of_password)
     SimpleUser.objects.filter(user_id=user_id).update(hash_of_password=hash_of_password)
