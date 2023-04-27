@@ -3,9 +3,9 @@ import datetime
 import phonenumbers
 import telebot
 from django.db import transaction as blocking_transaction, transaction as transaction_locker
-from internal.models.refresh_token import AuthToken
 
 from app.internal.models.banking_account import BankingAccount
+from app.internal.models.refresh_token import AuthToken
 from app.internal.models.transaction_log import TransactionLog
 from app.internal.services import banking_service, password_service, token_service, user_service
 from app.internal.services.user_service import get_user_by_username
