@@ -28,6 +28,7 @@ def test_simple_user_for_handlers(test_simple_user_for_handlers_0) -> SimpleUser
         user_name="John",
         surname="Doe",
         phone_number=79506376666,
+        login_access=True,
     )
     user.friends.add(test_simple_user_for_handlers_0)
     user.save()
@@ -42,6 +43,7 @@ def test_simple_user_for_handlers_0() -> SimpleUser:
         user_name="John",
         surname="Johnovich",
         phone_number=79506372223,
+        login_access=True,
     )
     return user
 
