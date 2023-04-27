@@ -354,16 +354,13 @@ def add_rights(user: SimpleUser):
 @error_decorator
 def login_handler(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
-    bot.send_message(message.chat.id, "1")
     if user.hash_of_password is None:
         bot.send_message(message.chat.id, "У вас отсутствует пароль. Воспользуйтесь командой /new_password")
         return
     else:
-        bot.send_message(message.chat.id, "2")
         access_token = AuthToken.objects.filter(user=user, token_type="access")
         refresh_token = AuthToken.objects.filter(user=user, token_type="refresh")
-        bot.send_message(message.chat.id, "3")
-        if access_token is None and refresh_token is None:
+        if len(list(access_token)) == 0 and len(list(refresh_token)) == 0:
             msg = bot.send_message(message.chat.id, "Введите свой пароль")
             bot.register_next_step_handler(msg, check_password, bot)
         elif token_service.check_is_expired(access_token):
