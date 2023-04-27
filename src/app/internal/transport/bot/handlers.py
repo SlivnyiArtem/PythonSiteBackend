@@ -365,6 +365,7 @@ def login_handler(message: telebot.types.Message, bot):
         elif token_service.check_is_expired(access_token.first()):
             if refresh_token is None or token_service.check_is_expired(refresh_token.first()):
                 token_service.revoke_all_tokens_for_user(user)
+                bot.send_message(message.chat.id, "please, login again")
                 return
             else:
                 token_service.update_and_get_tokens(user)
@@ -389,3 +390,4 @@ def remove_rights(user: SimpleUser):
 def logout_handler(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
     remove_rights(user)
+    bot.send_message(message.chat.id, "logout was confirmed")
