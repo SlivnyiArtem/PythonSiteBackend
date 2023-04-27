@@ -29,7 +29,7 @@ def get_token_data(token: str):
 
 
 def check_is_expired(auth_token: AuthToken):
-    token_data = get_token_data(auth_token.jti)
+    token_data = get_token_data(auth_token.Jti)
 
     return (
         auth_token.token_type == "access"
@@ -64,7 +64,7 @@ def create_access_token(user: SimpleUser) -> str:
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )
-    AuthToken.objects.update_or_create(jti=access_token, user=user, token_type="access")
+    AuthToken.objects.update_or_create(Jti=access_token, user=user, token_type="access")
     return access_token
 
 
@@ -80,7 +80,7 @@ def create_refresh_token(user: SimpleUser):
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )
-    AuthToken.objects.update_or_create(jti=refresh_token, user=user, token_type="refresh")
+    AuthToken.objects.update_or_create(Jti=refresh_token, user=user, token_type="refresh")
     # user = AuthToken.objects.filter(jti=refresh_token).values_list("user")
     return refresh_token
 
@@ -94,8 +94,8 @@ def create_refresh_token(user: SimpleUser):
 
 
 def update_and_get_tokens(user: SimpleUser):
-    old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").values_list("jti").first()
-    old_acc_token_jti = AuthToken.objects.filter(user=user, token_type="access").values_list("jti").first()
+    old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").values_list("Jti").first()
+    old_acc_token_jti = AuthToken.objects.filter(user=user, token_type="access").values_list("Jti").first()
     acc_token = create_access_token(user)
     ref_token = create_refresh_token(user)
     revoke_old_tokens(old_acc_token_jti, old_ref_token_jti)
@@ -106,8 +106,8 @@ def revoke_old_tokens(acc_jti, ref_jti):
     print(acc_jti)
     print(ref_jti)
     print("2@@#$@@@34")
-    AuthToken.objects.filter(jti=acc_jti).delete()
-    AuthToken.objects.filter(jti=ref_jti).delete()
+    AuthToken.objects.filter(Jti=acc_jti).delete()
+    AuthToken.objects.filter(Jti=ref_jti).delete()
 
 
 def revoke_all_tokens_for_user(user: SimpleUser):
