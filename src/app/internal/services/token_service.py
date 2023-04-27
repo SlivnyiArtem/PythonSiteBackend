@@ -15,7 +15,7 @@ environ.Env.read_env()
 
 
 def authentificate(token, http_request: HttpRequest):
-    payload = jwt.decode(token, env("JWT_SECRET"), algorithms=["HS512"])
+    payload = get_token_data(token)
     user_id = payload["user_id"]
     user = user_service.get_user_by_id(user_id)
     if user is not None:
@@ -24,9 +24,22 @@ def authentificate(token, http_request: HttpRequest):
         pass
 
 
+def get_token_data(token: str):
+    return jwt.decode(token, key=env("SECRET_FOR_TOKENS"), algorithms=["HS512"])
+
+
+def check_is_expired(auth_token: AuthToken):
+    token_data = get_token_data(auth_token.jti)
+
+    return (auth_token.token_type == "access" and datetime.datetime.timestamp(
+        datetime.datetime.now() - token_data["start_time"] > env("EXPIRE_TIME_ACCESS"))) or \
+           (auth_token.token_type == "refresh" and datetime.datetime.timestamp(
+               datetime.datetime.now() - token_data["start_time"] > env("EXPIRE_TIME_REFRESH")))
+
+
 def create_payload(time_to_expire, token_type, user_hash_password, user_id):
     return {
-        "time_to_expire": time_to_expire,
+        "start_time": time_to_expire,
         "token_type": token_type,
         "user_id": user_id,
         "user_hash_password": user_hash_password,
@@ -78,8 +91,8 @@ def create_refresh_token(user: SimpleUser):
 
 
 def update_and_get_tokens(user: SimpleUser):
-    old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").values_list("jti").first()
-    old_acc_token_jti = AuthToken.objects.filter(user=user, token_type="access").values_list("jti").first()
+    old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").values_list("Jti").first()
+    old_acc_token_jti = AuthToken.objects.filter(user=user, token_type="access").values_list("Jti").first()
     acc_token = create_access_token(user)
     ref_token = create_refresh_token(user)
     revoke_old_tokens(old_acc_token_jti, old_ref_token_jti)
