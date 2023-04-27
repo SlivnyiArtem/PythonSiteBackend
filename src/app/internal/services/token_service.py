@@ -34,7 +34,7 @@ def create_payload(time_to_expire, token_type, user_hash_password, user_id):
 # посмотреть как задается expired
 # после залогинивания, мы создаем accessToken на основе refresh
 # Создаём новый refrsh token?????
-def create_access_token(refresh_token_user: SimpleUser, user: SimpleUser) -> str:
+def create_access_token(user: SimpleUser) -> str:
     # if refresh_token_user == user:
     access_token = jwt.encode(
         payload=create_payload(
@@ -61,22 +61,26 @@ def create_refresh_token(user: SimpleUser):
         algorithm="HS512",
     )
     RefreshToken.objects.update_or_create(jti=refresh_token, user=user)
-    return RefreshToken.objects.filter(jti=refresh_token).values_list("user"), refresh_token
+    user = RefreshToken.objects.filter(jti=refresh_token).values_list("user")
+    return refresh_token
 
 
-def revoke__access_token(user: SimpleUser):
-    pass
+# def revoke__access_token(user: SimpleUser):
+#     pass
+#
+#
+# def revoke__refresh_token(user: SimpleUser):
+#     pass
 
 
-def revoke__refresh_token(user: SimpleUser):
-    pass
-
-
-def update_tokens(user: SimpleUser, refresh_token):
-    create_access_token()
-    create_refresh_token()
+def update_and_get_tokens(user: SimpleUser):
+    old_ref_token_jti = RefreshToken.objects.filter(user=user).first().values_list("jti")
+    acc_token = create_access_token(user)
+    ref_token = create_refresh_token(user)
+    if old_ref_token_jti is not None:
+        revoke_refresh_token(old_ref_token_jti)
+    return acc_token, ref_token
 
 
 def revoke_refresh_token(jti):
     RefreshToken.objects.filter(jti=jti).delete()
-    pass
