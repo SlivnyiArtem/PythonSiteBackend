@@ -364,7 +364,6 @@ def login_handler(message: telebot.types.Message, bot):
             msg = bot.send_message(message.chat.id, "Введите свой пароль")
             bot.register_next_step_handler(msg, check_password, bot)
         elif token_service.check_is_expired(access_token):
-            bot.send_message(message.chat.id, "pog")
             if refresh_token is None or token_service.check_is_expired(refresh_token):
                 # отзываем оба токена V
                 token_service.revoke_all_tokens_for_user(user)
@@ -383,10 +382,14 @@ def login_handler(message: telebot.types.Message, bot):
 
 def check_password(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
+    bot.send_message(message.chat.id, "pog")
     if len(message.text) > 0 and password_service.get_hash_from_password(message.text) == user.hash_of_password:
+        bot.send_message(message.chat.id, "pog2")
         token_service.update_and_get_tokens(user)
+        bot.send_message(message.chat.id, "pog3")
         add_rights(user)
     else:
+        bot.send_message(message.chat.id, "pog4")
         bot.send_message(message.chat.id, "ваш пароль не верный")
 
 
