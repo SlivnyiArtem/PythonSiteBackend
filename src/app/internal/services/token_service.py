@@ -19,10 +19,12 @@ def check_is_expired(auth_token: AuthToken):
 
     return (
         auth_token.token_type == "access"
-        and datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"] > env("EXPIRE_TIME_ACCESS")
+        and datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"]
+        > float(env("EXPIRE_TIME_ACCESS"))
     ) or (
         auth_token.token_type == "refresh"
-        and datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"] > env("EXPIRE_TIME_REFRESH")
+        and datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"]
+        > float(env("EXPIRE_TIME_REFRESH"))
     )
 
 
