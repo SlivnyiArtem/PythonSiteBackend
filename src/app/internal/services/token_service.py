@@ -35,18 +35,18 @@ def create_payload(time_to_expire, token_type, user_hash_password, user_id):
 # после залогинивания, мы создаем accessToken на основе refresh
 # Создаём новый refrsh token?????
 def create_access_token(refresh_token_user: SimpleUser, user: SimpleUser) -> str:
-    if refresh_token_user == user:
-        access_token = jwt.encode(
-            payload=create_payload(
-                datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
-                "access_token",
-                user.hash_of_password,
-                user.user_id,
-            ),
-            key=env("SECRET_FOR_TOKENS"),
-            algorithm="HS512",
-        )
-        return access_token
+    # if refresh_token_user == user:
+    access_token = jwt.encode(
+        payload=create_payload(
+            datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
+            "access_token",
+            user.hash_of_password,
+            user.user_id,
+        ),
+        key=env("SECRET_FOR_TOKENS"),
+        algorithm="HS512",
+    )
+    return access_token
 
 
 def create_refresh_token(user: SimpleUser):
