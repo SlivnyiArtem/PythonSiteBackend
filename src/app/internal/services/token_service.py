@@ -93,7 +93,7 @@ def create_refresh_token(user: SimpleUser):
 #     pass
 
 
-def update_and_get_tokens(user: SimpleUser): #######!!!!!!!!!!!!!!!!!!!!!!!!!!THERE
+def update_and_get_tokens(user: SimpleUser):  # THERE
     old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").values_list("Jtm").first()
     old_acc_token_jti = AuthToken.objects.filter(user=user, token_type="access").values_list("Jti").first()
     acc_token = create_access_token(user)
