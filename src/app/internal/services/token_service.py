@@ -94,8 +94,8 @@ def create_refresh_token(user: SimpleUser):
 
 
 def update_and_get_tokens(user: SimpleUser):
-    old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").values_list("Jti").first()
-    old_acc_token_jti = AuthToken.objects.filter(user=user, token_type="access").values_list("Jti").first()
+    old_ref_token_jti = AuthToken.objects.filter(user=user, token_type="refresh").values_list("jti").first()
+    old_acc_token_jti = AuthToken.objects.filter(user=user, token_type="access").values_list("jti").first()
     acc_token = create_access_token(user)
     ref_token = create_refresh_token(user)
     revoke_old_tokens(old_acc_token_jti, old_ref_token_jti)
