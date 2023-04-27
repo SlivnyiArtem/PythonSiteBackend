@@ -1,4 +1,4 @@
-from app.internal.models.auth_token import Card
+from app.internal.models.banking_card import Card
 from app.internal.models.banking_account import BankingAccount
 from app.internal.services import user_service
 
