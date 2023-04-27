@@ -48,7 +48,7 @@ def create_access_token(user: SimpleUser) -> str:
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )
-    AuthToken.objects.update_or_create(Jti=access_token, user=user, token_type="access")
+    AuthToken.objects.create(Jti=access_token, user=user, token_type="access")
     return access_token
 
 
@@ -63,17 +63,8 @@ def create_refresh_token(user: SimpleUser):
         key=env("SECRET_FOR_TOKENS"),
         algorithm="HS512",
     )
-    AuthToken.objects.update_or_create(Jti=refresh_token, user=user, token_type="refresh")
-    # user = AuthToken.objects.filter(jti=refresh_token).values_list("user")
+    AuthToken.objects.create(Jti=refresh_token, user=user, token_type="refresh")
     return refresh_token
-
-
-# def revoke__access_token(user: SimpleUser):
-#     pass
-#
-#
-# def revoke__refresh_token(user: SimpleUser):
-#     pass
 
 
 def update_and_get_tokens(user: SimpleUser):  # THERE
@@ -86,9 +77,6 @@ def update_and_get_tokens(user: SimpleUser):  # THERE
 
 
 def revoke_old_tokens(acc_jti, ref_jti):
-    print(acc_jti)
-    print(ref_jti)
-    print("2@@#$@@@34")
     AuthToken.objects.filter(Jti=acc_jti).delete()
     AuthToken.objects.filter(Jti=ref_jti).delete()
 

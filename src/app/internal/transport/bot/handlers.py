@@ -369,6 +369,7 @@ def login_handler(message: telebot.types.Message, bot):
             else:
                 token_service.update_and_get_tokens(user)
             add_rights(user)
+            bot.send_message(message.chat.id, "login was confirmed")
 
 
 def check_password(message: telebot.types.Message, bot):
