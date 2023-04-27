@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction as blocking_transaction, transaction as transaction_locker
 
 from app.internal.models.banking_account import BankingAccount
-from app.internal.models.refresh_token import AuthToken
+from app.internal.models.auth_token import AuthToken
 from app.internal.models.simple_user import SimpleUser
 from app.internal.models.transaction_log import TransactionLog
 from app.internal.services import banking_service, password_service, token_service, user_service
