@@ -1,5 +1,6 @@
 from django.db import models
-from internal.models.simple_user import SimpleUser
+
+from app.internal.models.simple_user import SimpleUser
 
 
 class RefreshToken(models.Model):
