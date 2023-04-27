@@ -40,7 +40,7 @@ def create_access_token(user: SimpleUser) -> str:
     # if refresh_token_user == user:
     access_token = jwt.encode(
         payload=create_payload(
-            datetime.datetime.now(),
+            datetime.datetime.timestamp(datetime.datetime.now()),
             "access_token",
             user.hash_of_password,
             user.user_id,
@@ -55,7 +55,7 @@ def create_access_token(user: SimpleUser) -> str:
 def create_refresh_token(user: SimpleUser):
     refresh_token = jwt.encode(
         payload=create_payload(
-            datetime.datetime.now(),
+            datetime.datetime.timestamp(datetime.datetime.now()),
             # datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
             "refresh_token",
             user.hash_of_password,
