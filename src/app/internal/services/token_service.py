@@ -2,26 +2,12 @@ import datetime
 
 import environ
 import jwt
-from django.http import HttpRequest
 
 from app.internal.models.auth_token import AuthToken
 from app.internal.models.simple_user import SimpleUser
-from app.internal.services import user_service
-
-# from internal.models.access_token import AccessToken
 
 env = environ.Env()
 environ.Env.read_env()
-
-
-def authentificate(token, http_request: HttpRequest):
-    payload = get_token_data(token)
-    user_id = payload["user_id"]
-    user = user_service.get_user_by_id(user_id)
-    if user is not None:
-        pass
-    else:
-        pass
 
 
 def get_token_data(token: str):
@@ -33,10 +19,10 @@ def check_is_expired(auth_token: AuthToken):
 
     return (
         auth_token.token_type == "access"
-        and datetime.datetime.timestamp(datetime.datetime.now() - token_data["start_time"] > env("EXPIRE_TIME_ACCESS"))
+        and datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"] > env("EXPIRE_TIME_ACCESS")
     ) or (
         auth_token.token_type == "refresh"
-        and datetime.datetime.timestamp(datetime.datetime.now() - token_data["start_time"] > env("EXPIRE_TIME_REFRESH"))
+        and datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"] > env("EXPIRE_TIME_REFRESH")
     )
 
 
@@ -49,11 +35,7 @@ def create_payload(time_to_expire, token_type, user_hash_password, user_id):
     }
 
 
-# посмотреть как задается expired
-# после залогинивания, мы создаем accessToken на основе refresh
-# Создаём новый refrsh token?????
 def create_access_token(user: SimpleUser) -> str:
-    # if refresh_token_user == user:
     access_token = jwt.encode(
         payload=create_payload(
             datetime.datetime.timestamp(datetime.datetime.now()),
@@ -72,7 +54,6 @@ def create_refresh_token(user: SimpleUser):
     refresh_token = jwt.encode(
         payload=create_payload(
             datetime.datetime.timestamp(datetime.datetime.now()),
-            # datetime.datetime.timestamp(datetime.datetime.now() + datetime.timedelta(hours=1)) * 1000,
             "refresh_token",
             user.hash_of_password,
             user.user_id,

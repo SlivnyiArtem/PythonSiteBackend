@@ -2,7 +2,6 @@ import datetime
 
 import phonenumbers
 import telebot
-from django.contrib.auth.decorators import login_required
 from django.db import transaction as blocking_transaction, transaction as transaction_locker
 
 from app.internal.models.auth_token import AuthToken
