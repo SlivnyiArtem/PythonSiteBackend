@@ -343,7 +343,7 @@ def verify_current_password(message: telebot.types.Message, bot):
 
 
 def change_password(message: telebot.types.Message, bot):
-    user_service.update_user_password(message.chat.id, bot, message.from_user.id, message.text)
+    user_service.update_user_password(message.from_user.id, message.text)
     bot.send_message(message.chat.id, "Пароль успешно изменён.")
 
 
@@ -354,16 +354,20 @@ def add_rights(user: SimpleUser):
 @error_decorator
 def login_handler(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
+    bot.send_message(message.chat.id, "1")
     if user.hash_of_password is None:
         bot.send_message(message.chat.id, "У вас отсутствует пароль. Воспользуйтесь командой /new_password")
         return
     else:
+        bot.send_message(message.chat.id, "2")
         access_token = AuthToken.objects.filter(user=user, token_type="access")
         refresh_token = AuthToken.objects.filter(user=user, token_type="refresh")
+        bot.send_message(message.chat.id, "3")
         if access_token is None and refresh_token is None:
             msg = bot.send_message(message.chat.id, "Введите свой пароль")
             bot.register_next_step_handler(msg, check_password, bot)
         elif token_service.check_is_expired(access_token):
+            bot.send_message(message.chat.id, "pog")
             if refresh_token is None or token_service.check_is_expired(refresh_token):
                 # отзываем оба токена V
                 token_service.revoke_all_tokens_for_user(user)
