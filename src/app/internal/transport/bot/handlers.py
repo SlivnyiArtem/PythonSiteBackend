@@ -205,23 +205,35 @@ def transaction(
             another_bank_acc.save()
             transaction_date = datetime.date.today()
 
-        recipient = another_bank_acc.account_owner
-        sender = bank_acc.account_owner
+        # amount = models.DecimalField(decimal_places=2, max_digits=20, null=False)
+        # transaction_date = models.DateField(null=True)
+        # transaction_recipient = models.ForeignKey(SimpleUser, on_delete=models.SET_NULL)
+        # transaction_sender = models.ForeignKey(SimpleUser, on_delete=models.SET_NULL)
 
-        new_transaction_sender = TransactionLog.objects.create(
-            transaction_recipient_id=recipient.user_id,
+        TransactionLog.create(
             amount=amount,
             transaction_date=transaction_date,
-            is_outgoing_transaction=True,
+            transaction_recipient=another_bank_acc.account_owner,
+            transaction_sender=bank_acc.account_owner,
         )
-        new_transaction_recipient = TransactionLog.objects.create(
-            transaction_recipient_id=sender.user_id,
-            amount=amount,
-            transaction_date=transaction_date,
-            is_outgoing_transaction=False,
-        )
-        sender.transactions_history.add(new_transaction_sender)
-        recipient.transactions_history.add(new_transaction_recipient)
+
+        # recipient = another_bank_acc.account_owner
+        # sender = bank_acc.account_owner
+
+        # new_transaction_sender = TransactionLog.objects.create(
+        #     transaction_recipient_id=recipient.user_id,
+        #     amount=amount,
+        #     transaction_date=transaction_date,
+        #     is_outgoing_transaction=True,
+        # )
+        # new_transaction_recipient = TransactionLog.objects.create(
+        #     transaction_recipient_id=sender.user_id,
+        #     amount=amount,
+        #     transaction_date=transaction_date,
+        #     is_outgoing_transaction=False,
+        # )
+        # sender.transactions_history.add(new_transaction_sender)
+        # recipient.transactions_history.add(new_transaction_recipient)
         confirm_transaction(bot, message.chat.id)
 
 
@@ -283,17 +295,31 @@ def confirm_transaction(bot, msg_id):
 @error_decorator
 def get_full_log(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
-    logs = list(user.transactions_history.all())
+    sender_logs = list(TransactionLog.get_all_transactions_as_sender(user))
+    recipient_logs = list(TransactionLog.get_all_transactions_as_recipient(user))
+    # logs = list(user.transactions_history.all())
     res_list = []
 
-    for el in logs:
+    res_list.append("исходящие переводы:\n")
+    for el in sender_logs:
         res_list.append(
-            f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n"
+            f"получатель: {el.transaction_recipient.full_username}\n"
             f"сумма: {el.amount}\n"
             f"дата: {el.transaction_date}\n"
-            f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
+            # f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
             f"######\n"
         )
+    res_list.append("$$$$$$")
+    res_list.append("входящие переводы:\n")
+    for el in recipient_logs:
+        res_list.append(
+            f"отправитель: {el.transaction_sender.full_username}\n"
+            f"сумма: {el.amount}\n"
+            f"дата: {el.transaction_date}\n"
+            # f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
+            f"######\n"
+        )
+    res_list.append("$$$$$$")
 
     bot.send_message(message.chat.id, result_handler(res_list))
 
@@ -302,16 +328,30 @@ def get_full_log(message: telebot.types.Message, bot):
 @error_decorator
 def all_transaction_recipients(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
-    users = set(
-        map(
-            lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
-            list(user.transactions_history.all()),
-        )
-    )
     res_list = []
+    senders = set()
+    recipients = set()
+    for el in user.get_all_transactions_as_recipient().values_list("transaction_sender"):
+        senders.add(el)
+    for el in user.get_all_transactions_as_sender().valuse_list("transaction_recipient"):
+        recipients.add(el)
 
-    for uniq_user in users:
-        res_list.append(f"получатель/отправитель: {uniq_user}\n")
+    for uniq_sender in senders:
+        res_list.append(f"отправитель: {uniq_sender.full_username}")
+    res_list.append("############")
+    for uniq_recipient in recipients:
+        res_list.append(f"получатель: {uniq_recipient.full_username}")
+
+    # users = set(
+    #     map(
+    #         lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
+    #         list(user.transactions_history.all()),
+    #     )
+    # )
+    #
+    # "".join(res_list)
+    # for uniq_user in users:
+    #     res_list.append(f"получатель/отправитель: {uniq_user}\n")
     bot.send_message(message.chat.id, result_handler(res_list))
 
 
@@ -350,46 +390,46 @@ def add_rights(user: SimpleUser):
     user.login_access = True
 
 
-@error_decorator
-def login_handler(message: telebot.types.Message, bot):
-    user = user_service.get_user_by_id(message.from_user.id)
-    if user.hash_of_password is None:
-        bot.send_message(message.chat.id, "У вас отсутствует пароль. Воспользуйтесь командой /new_password")
-        return
-    else:
-        access_token = AuthToken.objects.filter(user=user, token_type="access")
-        refresh_token = AuthToken.objects.filter(user=user, token_type="refresh")
-        if len(list(access_token)) == 0 and len(list(refresh_token)) == 0:
-            msg = bot.send_message(message.chat.id, "Введите свой пароль")
-            bot.register_next_step_handler(msg, check_password, bot)
-        elif token_service.check_is_expired(access_token.first()):
-            if refresh_token is None or token_service.check_is_expired(refresh_token.first()):
-                token_service.revoke_all_tokens_for_user(user)
-                bot.send_message(message.chat.id, "please, login again")
-                return
-            else:
-                token_service.update_and_get_tokens(user)
-        add_rights(user)
-        user.save()
-        bot.send_message(message.chat.id, "login was confirmed")
-
-
-def check_password(message: telebot.types.Message, bot):
-    user = user_service.get_user_by_id(message.from_user.id)
-    if len(message.text) > 0 and password_service.get_hash_from_password(message.text) == user.hash_of_password:
-        token_service.update_and_get_tokens(user)
-        add_rights(user)
-    else:
-        bot.send_message(message.chat.id, "ваш пароль не верный")
-
-
-def remove_rights(user: SimpleUser):
-    user.login_access = False
-
-
-@error_decorator
-def logout_handler(message: telebot.types.Message, bot):
-    user = user_service.get_user_by_id(message.from_user.id)
-    remove_rights(user)
-    user.save()
-    bot.send_message(message.chat.id, "logout was confirmed")
+# @error_decorator
+# def login_handler(message: telebot.types.Message, bot):
+#     user = user_service.get_user_by_id(message.from_user.id)
+#     if user.hash_of_password is None:
+#         bot.send_message(message.chat.id, "У вас отсутствует пароль. Воспользуйтесь командой /new_password")
+#         return
+#     else:
+#         access_token = AuthToken.objects.filter(user=user, token_type="access")
+#         refresh_token = AuthToken.objects.filter(user=user, token_type="refresh")
+#         if len(list(access_token)) == 0 and len(list(refresh_token)) == 0:
+#             msg = bot.send_message(message.chat.id, "Введите свой пароль")
+#             bot.register_next_step_handler(msg, check_password, bot)
+#         elif token_service.check_is_expired(access_token.first()):
+#             if refresh_token is None or token_service.check_is_expired(refresh_token.first()):
+#                 token_service.revoke_all_tokens_for_user(user)
+#                 bot.send_message(message.chat.id, "please, login again")
+#                 return
+#             else:
+#                 token_service.update_and_get_tokens(user)
+#         add_rights(user)
+#         user.save()
+#         bot.send_message(message.chat.id, "login was confirmed")
+#
+#
+# def check_password(message: telebot.types.Message, bot):
+#     user = user_service.get_user_by_id(message.from_user.id)
+#     if len(message.text) > 0 and password_service.get_hash_from_password(message.text) == user.hash_of_password:
+#         token_service.update_and_get_tokens(user)
+#         add_rights(user)
+#     else:
+#         bot.send_message(message.chat.id, "ваш пароль не верный")
+#
+#
+# def remove_rights(user: SimpleUser):
+#     user.login_access = False
+#
+#
+# @error_decorator
+# def logout_handler(message: telebot.types.Message, bot):
+#     user = user_service.get_user_by_id(message.from_user.id)
+#     remove_rights(user)
+#     user.save()
+#     bot.send_message(message.chat.id, "logout was confirmed")

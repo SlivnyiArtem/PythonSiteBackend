@@ -1,7 +1,6 @@
 from django.db import models
 from rest_framework import status
 
-from app.internal.models.transaction_log import TransactionLog
 from app.internal.transport.messages import common_messages
 
 
@@ -12,7 +11,7 @@ class SimpleUser(models.Model):
     surname = models.CharField(max_length=255)
     phone_number = models.BigIntegerField(null=True, blank=True)
     friends = models.ManyToManyField(to="self", related_name="f", symmetrical=False, blank=True)
-    transactions_history = models.ManyToManyField(TransactionLog, blank=True)
+    # transactions_history = models.ManyToManyField(TransactionLog, blank=True)
     hash_of_password = models.CharField(max_length=255, null=True, default=None, editable=True, blank=True)
     login_access = models.BooleanField(default=False)
 
