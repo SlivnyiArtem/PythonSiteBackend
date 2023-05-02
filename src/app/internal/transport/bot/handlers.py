@@ -396,8 +396,12 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
     res_list = []
     senders = set()
     recipients = set()
-    for el in list(Transaction.objects.filter(transaction_recipient=user).values_list("transaction_sender", flat=True)):
-        senders.add(el)
+    # for el in list(Transaction.objects.filter(transaction_recipient=user).values_list("transaction_sender",
+    # flat=True)): senders.add(el)
+
+    # !!!!!! Values_list вернет просто идентификатор
+    for el in list(Transaction.objects.filter(transaction_recipient=user)):
+        senders.add(el.transaction_sender)
 
     for el in list(Transaction.objects.filter(transaction_sender=user)):
         recipients.add(el.transaction_recipient)
@@ -408,10 +412,10 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
     # bot.send_message(message.chat.id, senders)
 
     for uniq_sender in senders:
-        res_list.append(f"отправитель: {uniq_sender.full_username}")
-    res_list.append("############")
+        res_list.append(f"отправитель: {uniq_sender.full_username}\n")
+    res_list.append("############\n")
     for uniq_recipient in recipients:
-        res_list.append(f"получатель: {uniq_recipient.full_username}")
+        res_list.append(f"получатель: {uniq_recipient.full_username}\n")
 
     # users = set(
     #     map(
