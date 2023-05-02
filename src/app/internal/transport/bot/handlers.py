@@ -396,9 +396,9 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
     res_list = []
     senders = set()
     recipients = set()
-    for el in Transaction.objects.filter(transaction_recipient=user).values_list("transaction_sender"):
+    for el in list(Transaction.objects.filter(transaction_recipient=user).values_list("transaction_sender")):
         senders.add(el)
-    for el in Transaction.objects.filter(transaction_sender=user).values_list("transaction_recipient"):
+    for el in list(Transaction.objects.filter(transaction_sender=user).values_list("transaction_recipient")):
         recipients.add(el)
 
     for uniq_sender in senders:
