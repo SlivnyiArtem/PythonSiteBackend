@@ -398,10 +398,14 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
     recipients = set()
     for el in list(Transaction.objects.filter(transaction_recipient=user).values_list("transaction_sender", flat=True)):
         senders.add(el)
-    for el in list(Transaction.objects.filter(transaction_sender=user).values_list("transaction_recipient", flat=True)):
-        recipients.add(el)
+
+    for el in list(Transaction.objects.filter(transaction_sender=user)):
+        recipients.add(el.transaction_recipient)
+
+    # for el in list(Transaction.objects.filter(transaction_sender=user).values_list("transaction_recipient",
+    # flat=True)): recipients.add(el)
     bot.send_message(message.chat.id, recipients)
-    bot.send_message(message.chat.id, senders)
+    # bot.send_message(message.chat.id, senders)
 
     for uniq_sender in senders:
         res_list.append(f"отправитель: {uniq_sender.full_username}")
