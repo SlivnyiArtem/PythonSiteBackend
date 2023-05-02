@@ -4,12 +4,10 @@ import phonenumbers
 import telebot
 from django.db import transaction as blocking_transaction, transaction as transaction_locker
 
-# from app.internal.models.auth_token import AuthToken
+from app.internal.models.auth_token import AuthToken
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.simple_user import SimpleUser
-from app.internal.models.transaction import Transaction
-
-# from app.internal.models.transaction_log import TransactionLog
+from app.internal.models.transaction_log import TransactionLog
 from app.internal.services import banking_service, password_service, token_service, user_service
 from app.internal.services.user_service import get_user_by_username
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
@@ -215,6 +213,7 @@ def transaction(
             transaction_sender=bank_acc.account_owner,
             amount=amount,
             transaction_date=transaction_date,
+            is_outgoing_transaction=True,
         )
 
         # new_transaction_sender = TransactionLog.objects.create(
