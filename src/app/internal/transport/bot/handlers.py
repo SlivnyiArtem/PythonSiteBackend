@@ -7,13 +7,14 @@ from django.db import transaction as blocking_transaction, transaction as transa
 # from app.internal.models.auth_token import AuthToken
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.simple_user import SimpleUser
+from app.internal.models.transaction import Transaction
+
 # from app.internal.models.transaction_log import TransactionLog
 from app.internal.services import banking_service, password_service, token_service, user_service
 from app.internal.services.user_service import get_user_by_username
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
-from app.internal.models.transaction import Transaction
 
 
 def error_handler(exc, message, bot):
@@ -194,7 +195,7 @@ def ask_for_requisites(message: telebot.types.Message, bot):
 
 
 def transaction(
-        bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
+    bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
 ):
     with blocking_transaction.atomic():
         if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
@@ -287,45 +288,45 @@ def confirm_transaction(bot, msg_id):
     bot.send_message(msg_id, "transaction confirmed")
 
 
-@access_decorator
-@error_decorator
-def get_full_log(message: telebot.types.Message, bot):
-    user = user_service.get_user_by_id(message.from_user.id)
-    logs = list(user.transactions_history.all())
-    res_list = []
-
-    for el in logs:
-        res_list.append(
-            f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n"
-            f"сумма: {el.amount}\n"
-            f"дата: {el.transaction_date}\n"
-            f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
-            f"######\n"
-        )
-
-    bot.send_message(message.chat.id, result_handler(res_list))
-
-
-@access_decorator
-@error_decorator
-def all_transaction_recipients(message: telebot.types.Message, bot):
-    user = user_service.get_user_by_id(message.from_user.id)
-    users = set(
-        map(
-            lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
-            list(user.transactions_history.all()),
-        )
-    )
-    res_list = []
-
-    for uniq_user in users:
-        res_list.append(f"получатель/отправитель: {uniq_user}\n")
-    bot.send_message(message.chat.id, result_handler(res_list))
-
-
-def result_handler(res_list):
-    res = "".join(res_list)
-    return res if len(res) > 0 else "your transaction history is empty"
+# @access_decorator
+# @error_decorator
+# def get_full_log(message: telebot.types.Message, bot):
+#     user = user_service.get_user_by_id(message.from_user.id)
+#     logs = list(user.transactions_history.all())
+#     res_list = []
+#
+#     for el in logs:
+#         res_list.append(
+#             f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n"
+#             f"сумма: {el.amount}\n"
+#             f"дата: {el.transaction_date}\n"
+#             f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
+#             f"######\n"
+#         )
+#
+#     bot.send_message(message.chat.id, result_handler(res_list))
+#
+#
+# @access_decorator
+# @error_decorator
+# def all_transaction_recipients(message: telebot.types.Message, bot):
+#     user = user_service.get_user_by_id(message.from_user.id)
+#     users = set(
+#         map(
+#             lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
+#             list(user.transactions_history.all()),
+#         )
+#     )
+#     res_list = []
+#
+#     for uniq_user in users:
+#         res_list.append(f"получатель/отправитель: {uniq_user}\n")
+#     bot.send_message(message.chat.id, result_handler(res_list))
+#
+#
+# def result_handler(res_list):
+#     res = "".join(res_list)
+#     return res if len(res) > 0 else "your transaction history is empty"
 
 
 @error_decorator
@@ -340,8 +341,8 @@ def new_password_handler(message: telebot.types.Message, bot):
 
 def verify_current_password(message: telebot.types.Message, bot):
     if (
-            password_service.get_hash_from_password(message.text)
-            == user_service.get_user_by_id(message.from_user.id).hash_of_password
+        password_service.get_hash_from_password(message.text)
+        == user_service.get_user_by_id(message.from_user.id).hash_of_password
     ):
         msg = bot.send_message(message.chat.id, "Введите новый пароль")
         bot.register_next_step_handler(msg, change_password, bot)
@@ -356,6 +357,76 @@ def change_password(message: telebot.types.Message, bot):
 
 def add_rights(user: SimpleUser):
     user.login_access = True
+
+
+@access_decorator
+@error_decorator
+def get_full_log(message: telebot.types.Message, bot):
+    user = user_service.get_user_by_id(message.from_user.id)
+    sender_logs = list(Transaction.get_all_transactions_as_sender(user))
+    recipient_logs = list(Transaction.get_all_transactions_as_recipient(user))
+    # logs = list(user.transactions_history.all())
+    res_list = []
+
+    res_list.append("исходящие переводы:\n")
+    for el in sender_logs:
+        res_list.append(
+            f"получатель: {el.transaction_recipient.full_username}\n"
+            f"сумма: {el.amount}\n"
+            f"дата: {el.transaction_date}\n"
+            # f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
+            f"######\n"
+        )
+    res_list.append("$$$$$$")
+    res_list.append("входящие переводы:\n")
+    for el in recipient_logs:
+        res_list.append(
+            f"отправитель: {el.transaction_sender.full_username}\n"
+            f"сумма: {el.amount}\n"
+            f"дата: {el.transaction_date}\n"
+            # f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
+            f"######\n"
+        )
+    res_list.append("$$$$$$")
+
+    bot.send_message(message.chat.id, result_handler(res_list))
+
+
+@access_decorator
+@error_decorator
+def all_transaction_recipients(message: telebot.types.Message, bot):
+    user = user_service.get_user_by_id(message.from_user.id)
+    res_list = []
+    senders = set()
+    recipients = set()
+    for el in Transaction.objects.filter(transaction_recipient=user).values_list("transaction_sender"):
+        senders.add(el)
+    for el in Transaction.objects.filter(transaction_sender=user).valuse_list("transaction_recipient"):
+        recipients.add(el)
+
+    for uniq_sender in senders:
+        res_list.append(f"отправитель: {uniq_sender.full_username}")
+    res_list.append("############")
+    for uniq_recipient in recipients:
+        res_list.append(f"получатель: {uniq_recipient.full_username}")
+
+    # users = set(
+    #     map(
+    #         lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
+    #         list(user.transactions_history.all()),
+    #     )
+    # )
+    #
+    # "".join(res_list)
+    # for uniq_user in users:
+    #     res_list.append(f"получатель/отправитель: {uniq_user}\n")
+    bot.send_message(message.chat.id, result_handler(res_list))
+
+
+def result_handler(res_list):
+    res = "".join(res_list)
+    return res if len(res) > 0 else "your transaction history is empty"
+
 
 # @error_decorator
 # def login_handler(message: telebot.types.Message, bot):

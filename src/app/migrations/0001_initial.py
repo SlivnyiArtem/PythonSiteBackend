@@ -3,9 +3,9 @@
 import django.contrib.auth.models
 import django.contrib.auth.validators
 import django.core.validators
-from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -39,9 +39,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Transaction",
             fields=[
-                ("transaction_recipient", models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to="app.simpleuser")),
-                ("transaction_sender",
-                 models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to="app.simpleuser")),
+                (
+                    "transaction_recipient",
+                    models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to="app.simpleuser"),
+                ),
+                (
+                    "transaction_sender",
+                    models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to="app.simpleuser"),
+                ),
                 ("amount", models.DecimalField(decimal_places=2, max_digits=20, null=False)),
                 ("transaction_date", models.DateField(null=True)),
             ],
