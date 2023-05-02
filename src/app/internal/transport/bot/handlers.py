@@ -295,17 +295,31 @@ def confirm_transaction(bot, msg_id):
 @error_decorator
 def get_full_log(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
-    logs = list(user.transactions_history.all())
+    sender_logs = list(TransactionLog.get_all_transactions_as_sender(user))
+    recipient_logs = list(TransactionLog.get_all_transactions_as_recipient(user))
+    # logs = list(user.transactions_history.all())
     res_list = []
 
-    for el in logs:
+    res_list.append("исходящие переводы:\n")
+    for el in sender_logs:
         res_list.append(
-            f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n"
+            f"получатель: {el.transaction_recipient.full_username}\n"
             f"сумма: {el.amount}\n"
             f"дата: {el.transaction_date}\n"
-            f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
+            # f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
             f"######\n"
         )
+    res_list.append("$$$$$$")
+    res_list.append("входящие переводы:\n")
+    for el in recipient_logs:
+        res_list.append(
+            f"отправитель: {el.transaction_sender.full_username}\n"
+            f"сумма: {el.amount}\n"
+            f"дата: {el.transaction_date}\n"
+            # f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
+            f"######\n"
+        )
+    res_list.append("$$$$$$")
 
     bot.send_message(message.chat.id, result_handler(res_list))
 
@@ -314,16 +328,30 @@ def get_full_log(message: telebot.types.Message, bot):
 @error_decorator
 def all_transaction_recipients(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
-    users = set(
-        map(
-            lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
-            list(user.transactions_history.all()),
-        )
-    )
     res_list = []
+    senders = set()
+    recipients = set()
+    for el in user.get_all_transactions_as_recipient().values_list("transaction_sender"):
+        senders.add(el)
+    for el in user.get_all_transactions_as_sender().valuse_list("transaction_recipient"):
+        recipients.add(el)
 
-    for uniq_user in users:
-        res_list.append(f"получатель/отправитель: {uniq_user}\n")
+    for uniq_sender in senders:
+        res_list.append(f"отправитель: {uniq_sender.full_username}")
+    res_list.append("############")
+    for uniq_recipient in recipients:
+        res_list.append(f"получатель: {uniq_recipient.full_username}")
+
+    # users = set(
+    #     map(
+    #         lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
+    #         list(user.transactions_history.all()),
+    #     )
+    # )
+    #
+    # "".join(res_list)
+    # for uniq_user in users:
+    #     res_list.append(f"получатель/отправитель: {uniq_user}\n")
     bot.send_message(message.chat.id, result_handler(res_list))
 
 
