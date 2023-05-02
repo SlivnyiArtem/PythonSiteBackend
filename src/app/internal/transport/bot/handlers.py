@@ -361,12 +361,11 @@ def add_rights(user: SimpleUser):
 @error_decorator
 def get_full_log(message: telebot.types.Message, bot):
     user = user_service.get_user_by_id(message.from_user.id)
-    sender_logs = list(Transaction.get_all_transactions_as_sender(user))
-    recipient_logs = list(Transaction.get_all_transactions_as_recipient(user))
+    sender_logs = list(Transaction.objects.filter(transaction_recipient=user))
+    recipient_logs = list(Transaction.objects.filter(transaction_sender=user))
     # logs = list(user.transactions_history.all())
-    res_list = []
+    res_list = ["исходящие переводы:\n"]
 
-    res_list.append("исходящие переводы:\n")
     for el in sender_logs:
         res_list.append(
             f"получатель: {el.transaction_recipient.full_username}\n"
@@ -399,7 +398,7 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
     recipients = set()
     for el in Transaction.objects.filter(transaction_recipient=user).values_list("transaction_sender"):
         senders.add(el)
-    for el in Transaction.objects.filter(transaction_sender=user).valuse_list("transaction_recipient"):
+    for el in Transaction.objects.filter(transaction_sender=user).values_list("transaction_recipient"):
         recipients.add(el)
 
     for uniq_sender in senders:
