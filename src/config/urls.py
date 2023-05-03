@@ -8,7 +8,7 @@ from app.internal.transport.rest import handlers
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("app.internal.urls")),
-    path("testpage/", handlers.test_page),
+    path("userapi/testpage/", handlers.test_page),
     path("login/", handlers.LoginView.as_view()),
     path("userapi/<int:user_id>/me", handlers.me_http_inf_handler),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

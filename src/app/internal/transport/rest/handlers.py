@@ -21,8 +21,15 @@ def headers(headers_dict):
 
 
 def me_http_inf_handler(_, user_id: int):
+    me_endpoint(user_id)
+    # information = form_information_handlers.get_user_information(user_id)
+    # return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
+
+
+def me_endpoint(user_id: int):
     information = form_information_handlers.get_user_information(user_id)
-    return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
+    response = JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
+    response["user_id"] = user_id
 
 
 def test_page(_):
