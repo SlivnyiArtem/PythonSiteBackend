@@ -10,13 +10,14 @@ from app.internal.transport.rest.handlers import test_page
 env = environ.Env()
 environ.Env.read_env()
 
+
 class AuthMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
         response = self.get_response(request)
-        response['Test'] = "Test"
+        response["Test"] = "Test"
         return response
 
 
