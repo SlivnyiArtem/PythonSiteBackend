@@ -30,6 +30,7 @@ def me_endpoint(user_id: int):
     information = form_information_handlers.get_user_information(user_id)
     response = JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
     response["user_id"] = user_id
+    return response
 
 
 def test_page(_):
