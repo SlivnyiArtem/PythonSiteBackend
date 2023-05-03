@@ -15,18 +15,17 @@ def get_token_data(token: str):
     return jwt.decode(token, key=env("SECRET_FOR_TOKENS"), algorithms=["HS512"])
 
 
-# def check_is_expired(auth_token: RefreshToken):
-#     token_data = get_token_data(auth_token.Jti)
-#
-#     return (
-#         auth_token.token_type == "access"
-#         and datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"]
-#         > float(env("EXPIRE_TIME_ACCESS"))
-#     ) or (
-#         auth_token.token_type == "refresh"
-#         and datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"]
-#         > float(env("EXPIRE_TIME_REFRESH"))
-#     )
+def check_is_expired_refresh_token_obj(auth_token: RefreshToken):
+    # token_data = get_token_data(auth_token.Jti)
+    return check_is_token_expired(get_token_data(auth_token.Jti), env("EXPIRE_TIME_REFRESH"))
+
+    # return datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"] > float(
+    #     env("EXPIRE_TIME_REFRESH")
+    # )
+
+
+def check_is_token_expired(token_data: dict, expire_time: str):
+    return datetime.datetime.timestamp(datetime.datetime.now()) - token_data["start_time"] > float(expire_time)
 
 
 def create_payload(start_time, token_type, user_hash_password, user_id):
@@ -38,7 +37,7 @@ def create_payload(start_time, token_type, user_hash_password, user_id):
     }
 
 
-def create_access_token(user: SimpleUser) -> str:
+def create_access_token(user: SimpleUser, refreshToken: RefreshToken) -> str:
     access_token = jwt.encode(
         payload=create_payload(
             datetime.datetime.timestamp(datetime.datetime.now()),
@@ -51,6 +50,11 @@ def create_access_token(user: SimpleUser) -> str:
     )
     # AuthToken.objects.create(Jti=access_token, user=user, token_type="access")
     return access_token
+
+
+# def update_refresh_tokens(user: SimpleUser):
+#     revoke_all_tokens_for_user(user)
+#     create_refresh_token(user)
 
 
 def create_refresh_token(user: SimpleUser):
@@ -87,10 +91,16 @@ def revoke_all_tokens_for_user(user: SimpleUser):
     RefreshToken.objects.filter(user=user).delete()
 
 
-def update_and_get_tokens(user: SimpleUser):
-    access_token = create_access_token(user)
-    refresh_token = create_refresh_token(user)
+def update_and_get_tokens(user: SimpleUser, old_refresh_token_obj: RefreshToken):
+    revoke_all_tokens_for_user(user)
+    access_token = create_access_token(user, old_refresh_token_obj)
+    refresh_token, _ = create_refresh_token(user)
+
+    return refresh_token, access_token
+
+
+def create_json_response_for_tokens(raw_refresh_tokem: str, raw_access_token: str, user: SimpleUser):
     if user.login_access:
-        return JsonResponse({"status": True, "refresh_token": refresh_token, "access_token": access_token})
+        return JsonResponse({"status": True, "refresh_token": raw_refresh_tokem, "access_token": raw_access_token})
     else:
         return JsonResponse({"status": False})
