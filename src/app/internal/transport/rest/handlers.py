@@ -35,8 +35,10 @@ def me_http_inf_handler(_, user_id: int):
 #     return response
 
 
-def test_page(_):
-    return HttpResponse("<h1>connection established</h1>")
+def test_page(_, user_id: int):
+    response = HttpResponse("<h1>connection established</h1>")
+    response["user_id"] = str(user_id)
+    return response
 
 
 class LoginView(APIView):

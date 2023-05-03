@@ -26,18 +26,22 @@ def authentificate(request: HttpRequest, response: HttpResponse):
             token_service.get_token_data(raw_acc_token), env("EXPIRE_TIME_ACCESS")
         ):
             if refresh_token_obj is None:
+                # Please login
                 return HttpResponse(
-                    json.dumps({"login": "not_ok", "user_id": user.user_id}),
+                    json.dumps({"login": "please_login", "user_id": user.user_id}),
                     content_type="application/json",
                 )
                 # return JsonResponse({"Login": "Логинься"})
-                pass
             else:
                 raw_refresh_token = refresh_token_obj.Jti
                 refresh_token_data = token_service.get_token_data(raw_refresh_token)
                 if token_service.check_is_token_expired(refresh_token_data, env("EXPIRE_TIME_REFRESH")):
                     token_service.revoke_all_tokens_for_user(user)
-                    return test_page(None)
+                    # Please login
+                    return HttpResponse(
+                        json.dumps({"login": "please_login", "user_id": user.user_id}),
+                        content_type="application/json",
+                    )
                 else:
                     raw_refresh_token, raw_acc_token = token_service.update_and_get_tokens(user, refresh_token_obj)
                     return HttpResponse(
