@@ -12,27 +12,24 @@ environ.Env.read_env()
 
 def auth_middleware(get_response):
     def auth(request: HttpRequest):
-        # request_2 = request.GET.copy()
-        # request_2["mabooka"] = "great_mother"
-        # request.GET = request_2
-        # content = {"err": "err"}
+        return get_response(request)
 
-        if "userapi" not in request.path:
-            return get_response(request)
-
-        # проверка наличия и актуальности токенов
-        # пустой payload, просроченный токен,отсутствующий токен
-
-        user = user_service.get_user_by_id(request.headers.get("user_id"))
-        if user is None:
-            pass
-        raw_acc_token = request.headers.get("acc_token")
-
-        refresh_token_obj = RefreshToken.objects.filter(user=user).first()
-        raw_refresh_token = refresh_token_obj.Jti
+        # if "userapi" not in request.path:
+        #     return get_response(request)
+        #
+        # # проверка наличия и актуальности токенов
+        # # пустой payload, просроченный токен,отсутствующий токен
+        #
+        # user = user_service.get_user_by_id(request.headers.get("user_id"))
+        # if user is None:
+        #     pass
+        # raw_acc_token = request.headers.get("acc_token")
+        #
+        # refresh_token_obj = RefreshToken.objects.filter(user=user).first()
+        # raw_refresh_token = refresh_token_obj.Jti
         # refresh_token_data = token_service.get_token_data(raw_refresh_token)
-
-        # если асс-токена нет или он просрочен
+        #
+        # # если асс-токена нет или он просрочен
         # if raw_acc_token is None or token_service.check_is_token_expired(
         #     token_service.get_token_data(raw_acc_token), env("EXPIRE_TIME_ACCESS")
         # ):
@@ -54,11 +51,7 @@ def auth_middleware(get_response):
         # else:
         #     # все ок, наш токен свежий
         #     pass
-        #     # ------------------------------- acc_token_data = token_service.get_token_data(raw_acc_token) if
-        #     # token_service.check_is_expired_2(token_service.get_token_data(raw_acc_token),
-        #     # env("EXPIRE_TIME_ACCESS")): #проверка refresh, если валиден, то запрос с сервера нового access_токена(
-        #     # передавая рефреш), обновление рефреш токена pass else: #все ок, наш токен свежий pass
 
-        return token_service.create_json_response_for_tokens(raw_refresh_token, raw_acc_token, user)
+        # return token_service.create_json_response_for_tokens(raw_refresh_token, raw_acc_token, user)
 
     return auth
