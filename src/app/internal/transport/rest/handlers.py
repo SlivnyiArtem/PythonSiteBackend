@@ -7,6 +7,19 @@ from app.internal.services import token_service, user_service
 from app.internal.transport.information_former import form_information_handlers
 
 
+def headers(headers_dict):
+    def wrapper(orig_func):
+        def inner_wrapper(*args, **kwargs):
+            response = orig_func(*args, **kwargs)
+            for key, val in headers_dict.iteritems():
+                response[key] = val
+            return response
+
+        return inner_wrapper
+
+    return wrapper
+
+
 def me_http_inf_handler(_, user_id: int):
     information = form_information_handlers.get_user_information(user_id)
     return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
