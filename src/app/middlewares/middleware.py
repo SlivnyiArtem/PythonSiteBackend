@@ -12,7 +12,7 @@ def auth_middleware(get_response):
 
         response = get_response(request)
 
-        user = user_service.get_user_by_id(response.context["user_id"])
+        user = user_service.get_user_by_id(response.body["user_id"])
 
         json_tokens_response = token_service.update_and_get_tokens(user)
         return json_tokens_response
