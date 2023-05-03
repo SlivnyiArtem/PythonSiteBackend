@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpRequest
+from django.http import HttpRequest, JsonResponse
 
 from app.internal.services import token_service, user_service
 
