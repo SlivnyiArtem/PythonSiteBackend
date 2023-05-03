@@ -22,6 +22,7 @@ def auth_middleware(get_response):
         else:
             raw_acc_token = request.headers.get("acc_token")
             user = user_service.get_user_by_id(request.headers.get("user_id"))
+            return HttpResponse(user.user_id)
             refresh_token_obj = RefreshToken.objects.filter(user=user).first()
 
             if raw_acc_token is None or token_service.check_is_token_expired(
