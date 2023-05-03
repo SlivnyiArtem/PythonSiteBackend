@@ -28,7 +28,10 @@ def auth_middleware(get_response):
                 token_service.get_token_data(raw_acc_token), env("EXPIRE_TIME_ACCESS")
             ):
                 if refresh_token_obj is None:
-                    return test_page(None)
+                    return HttpResponse(
+                            json.dumps({"login": "not_ok", "user_id": user.user_id}),
+                            content_type="application/json",
+                        )
                     # return JsonResponse({"Login": "Логинься"})
                     pass
                 else:
