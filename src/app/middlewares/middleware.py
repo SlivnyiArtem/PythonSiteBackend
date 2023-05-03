@@ -7,7 +7,10 @@ def auth_middleware(get_response):
         request_2["mabooka"] = "great_mother"
         request.GET = request_2
         # response = get_response(request)
+        a = JsonResponse({"err": "err"}, status=404)
+        content = a.content
+        content["oweiu"] = "uewiruy"
 
-        return JsonResponse({"err": "err"}, status=404)
+        return JsonResponse(content, status=404)
 
     return auth
