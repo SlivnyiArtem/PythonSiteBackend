@@ -99,8 +99,15 @@ def update_and_get_tokens(user: SimpleUser, old_refresh_token_obj: RefreshToken)
     return refresh_token, access_token
 
 
+# def create_json_response_for_tokens(raw_refresh_tokem: str, raw_access_token: str, user: SimpleUser):
+#     if user.login_access:
+#         return JsonResponse({"status": True, "refresh_token": raw_refresh_tokem, "access_token": raw_access_token})
+#     else:
+#         return JsonResponse({"status": False})
+
+
 def create_json_response_for_tokens(raw_refresh_tokem: str, raw_access_token: str, user: SimpleUser):
     if user.login_access:
-        return JsonResponse({"status": True, "refresh_token": raw_refresh_tokem, "access_token": raw_access_token})
+        return {"status": True, "refresh_token": raw_refresh_tokem, "access_token": raw_access_token}
     else:
-        return JsonResponse({"status": False})
+        return {"status": False}
