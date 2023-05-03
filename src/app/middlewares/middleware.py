@@ -18,7 +18,7 @@ def authentificate(request: HttpRequest, response: HttpResponse):
         # return JsonResponse({"Ok": "OK"})
 
     else:
-        raw_acc_token = response["acc_token"]
+        raw_acc_token = response.headers.get("acc_token")
         user = user_service.get_user_by_id(response["user_id"])
         refresh_token_obj = RefreshToken.objects.filter(user=user).first()
 
