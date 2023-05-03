@@ -1,14 +1,17 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest
 
 from app.internal.services import token_service, user_service
 
 
 def auth_middleware(get_response):
-    def auth(request):
+    def auth(request: HttpRequest):
         # request_2 = request.GET.copy()
         # request_2["mabooka"] = "great_mother"
         # request.GET = request_2
         # content = {"err": "err"}
+
+        if "me" not in request.path:
+            return get_response(request)
 
         response = get_response(request)
 
