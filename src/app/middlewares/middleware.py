@@ -29,9 +29,9 @@ def auth_middleware(get_response):
             ):
                 if refresh_token_obj is None:
                     return HttpResponse(
-                            json.dumps({"login": "not_ok", "user_id": user.user_id}),
-                            content_type="application/json",
-                        )
+                        json.dumps({"login": "not_ok", "user_id": user.user_id}),
+                        content_type="application/json",
+                    )
                     # return JsonResponse({"Login": "Логинься"})
                     pass
                 else:
