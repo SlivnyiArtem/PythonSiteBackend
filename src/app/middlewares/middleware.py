@@ -11,15 +11,15 @@ env = environ.Env()
 environ.Env.read_env()
 
 
-def authentificate(request: HttpRequest):
+def authentificate(request: HttpRequest, response: HttpResponse):
     if "userapi" not in request.path:
         return None
         # return get_response(request)
         # return JsonResponse({"Ok": "OK"})
 
     else:
-        raw_acc_token = request.headers.get("acc_token")
-        user = user_service.get_user_by_id(request.headers.get("user_id"))
+        raw_acc_token = response["acc_token"]
+        user = user_service.get_user_by_id(response["user_id"])
         refresh_token_obj = RefreshToken.objects.filter(user=user).first()
 
         if raw_acc_token is None or token_service.check_is_token_expired(
@@ -57,12 +57,12 @@ class AuthMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # response = self.get_response(request)
+        response = self.get_response(request)
         # response["Test"] = "Test"
-        response = authentificate(request)
-        if response is None:
-            return self.get_response(request)
-        return response
+        auth_response = authentificate(request, response)
+        if auth_response is None:
+            return response
+        return auth_response
         # return JsonResponse({"AS": response["user_id"]})
 
 
