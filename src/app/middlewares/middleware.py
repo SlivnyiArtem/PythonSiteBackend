@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpRequest, JsonResponse
 
 from app.internal.services import token_service, user_service
@@ -14,8 +16,8 @@ def auth_middleware(get_response):
             return get_response(request)
 
         response = get_response(request)
-
-        user = user_service.get_user_by_id(response.content["user_id"])
+        json_data = json.loads(response.decode())
+        user = user_service.get_user_by_id(json_data["user_id"])
 
         json_tokens_response = token_service.update_and_get_tokens(user)
         return json_tokens_response
