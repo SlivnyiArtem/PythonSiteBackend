@@ -16,7 +16,7 @@ def auth_middleware(get_response):
             return get_response(request)
 
         response = get_response(request)
-        json_data = json.loads(response.decode())
+        json_data = json.loads(response.content.decode())
         user = user_service.get_user_by_id(json_data["user_id"])
 
         json_tokens_response = token_service.update_and_get_tokens(user)
