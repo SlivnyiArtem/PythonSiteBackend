@@ -1,8 +1,7 @@
 import environ
 from django.http import HttpRequest, JsonResponse
-
 from internal.models.refresh_token import RefreshToken
-from internal.services import user_service, token_service
+from internal.services import token_service, user_service
 
 env = environ.Env()
 environ.Env.read_env()
