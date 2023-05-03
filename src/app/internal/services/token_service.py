@@ -2,6 +2,7 @@ import datetime
 
 import environ
 import jwt
+from django.http import JsonResponse
 
 from app.internal.models.refresh_token import RefreshToken
 from app.internal.models.simple_user import SimpleUser
@@ -84,3 +85,12 @@ def revoke_all_tokens_for_user(user: SimpleUser):
     # AuthToken.objects.filter(user=user, token_type="refresh").delete()
     # AuthToken.objects.filter(user=user, token_type="access").delete()
     RefreshToken.objects.filter(user=user).delete()
+
+
+def update_and_get_tokens(user: SimpleUser):
+    access_token = create_access_token(user)
+    refresh_token = create_refresh_token(user)
+    if user.login_access:
+        return JsonResponse({"status": True, "refresh_token": refresh_token, "access_token": access_token})
+    else:
+        return JsonResponse({"status": False})
