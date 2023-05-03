@@ -18,7 +18,7 @@ class AuthMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
         response["Test"] = "Test"
-        return response
+        return JsonResponse({"AS": response["Test"]})
 
 
 # def auth_middleware(get_response):
