@@ -1,12 +1,13 @@
 import jwt
 import ninja
 from django.http import JsonResponse
-from app.internal.transport.information_former import form_information_handlers
 from ninja.constants import NOT_SET
 from ninja.security import HttpBearer
 from ninja_extra import NinjaExtraAPI, api_controller, route
 from ninja_jwt.authentication import JWTAuth
 from ninja_jwt.controller import NinjaJWTDefaultController
+
+from app.internal.transport.information_former import form_information_handlers
 
 api = NinjaExtraAPI()
 api.register_controllers(NinjaJWTDefaultController)
