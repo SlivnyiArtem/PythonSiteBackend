@@ -16,10 +16,9 @@ class UserLoginView(View):
         user_psw = request.headers.get("password")
 
         if user is None:
-            return HttpResponseForbidden("A")
+            return HttpResponseForbidden("UserIsNone")
 
         if password_service.get_hash_from_password(user_psw) == user.hash_of_password:
             refresh_token, access_token = token_service.create_tokens(user)
             return JsonResponse({"auth": "correct", "refresh_token": refresh_token, "access_token": access_token})
-        else:
-            return HttpResponseForbidden("B")
+        return HttpResponseForbidden("IncorrectPswd")

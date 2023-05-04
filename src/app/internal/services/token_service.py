@@ -112,7 +112,7 @@ def create_tokens(user: SimpleUser):
 #         return JsonResponse({"status": False})
 
 
-def create_json_response_for_tokens(raw_refresh_tokem: str, raw_access_token: str, user: SimpleUser):
+def get_json_dict_for_tokens(raw_refresh_tokem: str, raw_access_token: str, user: SimpleUser):
     if user.login_access:
         return {"status": True, "refresh_token": raw_refresh_tokem, "access_token": raw_access_token}
     else:
