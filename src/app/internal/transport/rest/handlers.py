@@ -38,10 +38,11 @@ def me_http_inf_handler(_, user_id: int):
 def test_page_new(_, user_id: int):
     response = HttpResponse("<h1>connection established</h1>")
     response["user_id"] = str(user_id)
+
     return response
 
 
-def test_page(_, user_id: int):
+def test_page(_):
     return HttpResponse("<h1>connection established</h1>")
 
 
