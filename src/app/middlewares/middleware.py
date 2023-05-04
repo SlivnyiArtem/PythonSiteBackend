@@ -3,9 +3,9 @@ import json
 import environ
 import requests
 from django.http import HttpRequest, HttpResponse
-from internal.models.simple_user import SimpleUser
 
 from app.internal.models.refresh_token import RefreshToken
+from app.internal.models.simple_user import SimpleUser
 from app.internal.services import token_service, user_service
 
 env = environ.Env()
