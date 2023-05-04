@@ -5,13 +5,12 @@ from app.internal.transport.messages import common_messages
 
 
 class SimpleUser(models.Model):
-    user_id = models.IntegerField(primary_key=True)
+    user_id = models.UUIDField(primary_key=True)
     full_username = models.CharField(max_length=255, null=True)
     user_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     phone_number = models.BigIntegerField(null=True, blank=True)
     friends = models.ManyToManyField(to="self", related_name="f", symmetrical=False, blank=True)
-    # transactions_history = models.ManyToManyField(TransactionLog, blank=True)
     hash_of_password = models.CharField(max_length=255, null=True, default=None, editable=True, blank=True)
     login_access = models.BooleanField(default=True)
 
@@ -30,9 +29,3 @@ class SimpleUser(models.Model):
         if code == status.HTTP_200_OK:
             serialize_dict.pop("_state")
         return serialize_dict
-
-    # def get_all_transactions_as_sender(self):
-    #     return TransactionLog.objects.filter(transaction_sender=self)
-    #
-    # def get_all_transactions_as_recipient(self):
-    #     return TransactionLog.objects.filter(transaction_recipient=self)

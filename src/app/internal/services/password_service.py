@@ -1,5 +1,4 @@
 import hashlib
-import uuid
 
 
 def get_hash_from_password(password: str) -> str:

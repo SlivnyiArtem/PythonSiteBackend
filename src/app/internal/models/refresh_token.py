@@ -1,5 +1,3 @@
-# класс refresh-token
-# access-token не нужно хранить в БД, он существует только во время сессии
 from django.db import models
 
 from app.internal.models.simple_user import SimpleUser
