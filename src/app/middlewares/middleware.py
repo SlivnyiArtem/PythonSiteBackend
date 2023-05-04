@@ -32,19 +32,20 @@ def authentificate(request: HttpRequest, response: HttpResponse):
         ):
             if refresh_token_obj is None:
                 requests.post("https://flamberg.backend23.2tapp.cc/login/", response)
-                return None
+                return HttpResponse("upd1")
             else:
                 raw_refresh_token = refresh_token_obj.Jti
                 refresh_token_data = token_service.get_token_data(raw_refresh_token)
                 if token_service.check_is_token_expired(refresh_token_data, env("EXPIRE_TIME_REFRESH")):
                     token_service.revoke_all_tokens_for_user(user)
                     requests.post("https://flamberg.backend23.2tapp.cc/login/", response)
-                    return None
+                    return HttpResponse("upd2")
 
                 else:
                     token_service.revoke_all_tokens_for_user(user)
                     raw_refresh_token, raw_acc_token = token_service.create_tokens(user)
-                    return token_service.create_json_response_for_tokens(raw_refresh_token, raw_acc_token, user)
+                    token_service.create_json_response_for_tokens(raw_refresh_token, raw_acc_token, user)
+                    return HttpResponse("upd3")
                     # return HttpResponse(
                     #     json.dumps(
                     #         token_service.create_json_response_for_tokens(raw_refresh_token, raw_acc_token, user)
@@ -52,7 +53,7 @@ def authentificate(request: HttpRequest, response: HttpResponse):
                     #     content_type="application/json",
                     # )
         else:
-            return None
+            return HttpResponse("acc is ok")
 
 
 class AuthMiddleware:
