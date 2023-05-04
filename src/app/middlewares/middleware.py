@@ -3,8 +3,10 @@ import json
 import environ
 import jwt
 import requests
+from django.contrib.auth.middleware import get_user
 from django.http import HttpRequest, HttpResponse
 from django.utils.deprecation import MiddlewareMixin
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from app.internal.models.refresh_token import RefreshToken
 from app.internal.models.simple_user import SimpleUser
@@ -34,7 +36,10 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
     #     # return auth_response
 
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
-        auth_data = request.headers.get("HTTP_AUTHORIZATION").split()
+        user_jwt = get_user(request)
+        if user_jwt.is_authenticated():
+            return user_jwt
+        auth_data = request.META.get("HTTP_AUTHORIZATION").split()
         # token_str = auth_data[1]
         if auth_data[0] != "Token":
             return HttpResponse(auth_data[0] + " " + "incorrect auth")
