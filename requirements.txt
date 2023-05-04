@@ -7,6 +7,7 @@ pyTelegramBotAPI==4.10.0
 psycopg2-binary==2.9.5
 pytest-django==4.5.2
 django_ninja_extra==0.18.8
+django_ninja==0.21.0
 pytest-cov==4.0.0
 uvicorn==0.21.1
 fastapi==0.95.0
