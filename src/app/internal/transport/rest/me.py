@@ -3,7 +3,8 @@ import json
 from django.http import HttpRequest, HttpResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from internal.transport.information_former import form_information_handlers
+
+from app.internal.transport.information_former import form_information_handlers
 
 
 class MeInfView(View):
