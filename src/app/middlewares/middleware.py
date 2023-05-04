@@ -56,8 +56,8 @@ class UserAuthMiddleware:
                 token_service.get_token_data(raw_acc_token), env("EXPIRE_TIME_ACCESS")
             ):
                 if refresh_token_obj is None:
-                    return requests.post("https://flamberg.backend23.2tapp.cc/login/", request)
-                    # return HttpResponse("upd1")
+                    requests.post("https://flamberg.backend23.2tapp.cc/login/", request)
+                    return HttpResponse("upd1")
                 else:
                     raw_refresh_token = refresh_token_obj.Jti
                     refresh_token_data = token_service.get_token_data(raw_refresh_token)
