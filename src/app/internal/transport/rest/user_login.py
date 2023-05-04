@@ -2,7 +2,8 @@ import json
 
 from django.http import HttpRequest, JsonResponse
 from django.views import View
-from internal.services import password_service, token_service, user_service
+
+from app.internal.services import password_service, token_service, user_service
 
 
 class UserLoginView(View):
