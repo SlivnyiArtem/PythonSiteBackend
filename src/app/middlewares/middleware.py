@@ -3,10 +3,10 @@ import json
 import environ
 import requests
 from django.http import HttpRequest, HttpResponse
+from internal.models.simple_user import SimpleUser
 
 from app.internal.models.refresh_token import RefreshToken
 from app.internal.services import token_service, user_service
-from internal.models.simple_user import SimpleUser
 
 env = environ.Env()
 environ.Env.read_env()
@@ -15,7 +15,8 @@ environ.Env.read_env()
 def please_login(user: SimpleUser):
     return HttpResponse(
         json.dumps({"login": "please_login", "user_id": user.user_id}),
-        content_type="application/json",)
+        content_type="application/json",
+    )
 
 
 def authentificate(request: HttpRequest, response: HttpResponse):

@@ -99,8 +99,6 @@ def create_tokens(user: SimpleUser):
     return refresh_token, access_token
 
 
-
-
 # def create_json_response_for_tokens(raw_refresh_tokem: str, raw_access_token: str, user: SimpleUser):
 #     if user.login_access:
 #         return JsonResponse({"status": True, "refresh_token": raw_refresh_tokem, "access_token": raw_access_token})
