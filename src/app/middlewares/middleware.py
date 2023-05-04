@@ -36,7 +36,7 @@ class UserAuthMiddleware:
             return None
 
         # Authoriz, user_id, psw
-        raw_acc_token = request.headers["Authorization"]
+        raw_acc_token = request.headers.get("Authorization")
 
         raw_acc_token = None
 
