@@ -1,16 +1,11 @@
 import json
 
 import environ
-import jwt
-import requests
 from django.contrib.auth.middleware import get_user
 from django.http import HttpRequest, HttpResponse
 from django.utils.deprecation import MiddlewareMixin
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from app.internal.models.refresh_token import RefreshToken
 from app.internal.models.simple_user import SimpleUser
-from app.internal.services import token_service, user_service
 
 env = environ.Env()
 environ.Env.read_env()
@@ -23,7 +18,7 @@ def please_login(user: SimpleUser):
     )
 
 
-class JWTAuthenticationMiddleware(MiddlewareMixin):
+class UserAuthMiddleware(MiddlewareMixin):
     # def __init__(self, get_response):
     #     self.get_response = get_response
     #
@@ -36,9 +31,8 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
     #     # return auth_response
 
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
-        user_jwt = get_user(request)
-        if user_jwt.is_authenticated():
-            return user_jwt
+        return HttpResponse(request.headers)
+
         auth_data = request.META.get("HTTP_AUTHORIZATION").split()
         # token_str = auth_data[1]
         if auth_data[0] != "Token":
