@@ -1,14 +1,21 @@
 import json
 
 import environ
-from django.http import HttpRequest, HttpResponse, JsonResponse
+import requests
+from django.http import HttpRequest, HttpResponse
 
 from app.internal.models.refresh_token import RefreshToken
 from app.internal.services import token_service, user_service
-from app.internal.transport.rest.handlers import test_page
+from internal.models.simple_user import SimpleUser
 
 env = environ.Env()
 environ.Env.read_env()
+
+
+def please_login(user: SimpleUser):
+    return HttpResponse(
+        json.dumps({"login": "please_login", "user_id": user.user_id}),
+        content_type="application/json",)
 
 
 def authentificate(request: HttpRequest, response: HttpResponse):
@@ -27,23 +34,22 @@ def authentificate(request: HttpRequest, response: HttpResponse):
         ):
             if refresh_token_obj is None:
                 # Please login
-                return HttpResponse(
-                    json.dumps({"login": "please_login", "user_id": user.user_id}),
-                    content_type="application/json",
-                )
+                return requests.post("https://flamberg.backend23.2tapp.cc/login/", request)
                 # return JsonResponse({"Login": "Логинься"})
             else:
                 raw_refresh_token = refresh_token_obj.Jti
                 refresh_token_data = token_service.get_token_data(raw_refresh_token)
                 if token_service.check_is_token_expired(refresh_token_data, env("EXPIRE_TIME_REFRESH")):
                     token_service.revoke_all_tokens_for_user(user)
+                    return requests.post("https://flamberg.backend23.2tapp.cc/login/", request)
                     # Please login
-                    return HttpResponse(
-                        json.dumps({"login": "please_login", "user_id": user.user_id}),
-                        content_type="application/json",
-                    )
+                    # return HttpResponse(
+                    #     json.dumps({"login": "please_login", "user_id": user.user_id}),
+                    #     content_type="application/json",
+                    # )
                 else:
-                    raw_refresh_token, raw_acc_token = token_service.update_and_get_tokens(user, refresh_token_obj)
+                    token_service.revoke_all_tokens_for_user(user)
+                    raw_refresh_token, raw_acc_token = token_service.create_tokens(user)
                     return HttpResponse(
                         json.dumps(
                             token_service.create_json_response_for_tokens(raw_refresh_token, raw_acc_token, user)

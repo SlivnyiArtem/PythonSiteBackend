@@ -37,7 +37,7 @@ def create_payload(start_time, token_type, user_hash_password, user_id):
     }
 
 
-def create_access_token(user: SimpleUser, refreshToken: RefreshToken) -> str:
+def create_access_token(user: SimpleUser) -> str:
     access_token = jwt.encode(
         payload=create_payload(
             datetime.datetime.timestamp(datetime.datetime.now()),
@@ -91,12 +91,14 @@ def revoke_all_tokens_for_user(user: SimpleUser):
     RefreshToken.objects.filter(user=user).delete()
 
 
-def update_and_get_tokens(user: SimpleUser, old_refresh_token_obj: RefreshToken):
-    revoke_all_tokens_for_user(user)
-    access_token = create_access_token(user, old_refresh_token_obj)
+def create_tokens(user: SimpleUser):
+    # revoke_all_tokens_for_user(user)
+    access_token = create_access_token(user)
     refresh_token, _ = create_refresh_token(user)
 
     return refresh_token, access_token
+
+
 
 
 # def create_json_response_for_tokens(raw_refresh_tokem: str, raw_access_token: str, user: SimpleUser):

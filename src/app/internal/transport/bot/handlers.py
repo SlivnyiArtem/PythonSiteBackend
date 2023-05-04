@@ -334,10 +334,10 @@ def new_password_handler(message: telebot.types.Message, bot):
         bot.register_next_step_handler(msg, change_password, bot)
     else:
         msg = bot.send_message(message.chat.id, "Введите текущий пароль")
-        bot.register_next_step_handler(msg, verify_current_password, bot)
+        bot.register_next_step_handler(msg, verify_current_password_bot, bot)
 
 
-def verify_current_password(message: telebot.types.Message, bot):
+def verify_current_password_bot(message: telebot.types.Message, bot):
     if (
         password_service.get_hash_from_password(message.text)
         == user_service.get_user_by_id(message.from_user.id).hash_of_password
