@@ -66,10 +66,12 @@ class Bot:
         # )
 
     def start(self):
-        self.application.remove_webhook()
-        self.application.run_webhooks(
-            listen="0.0.0.0", port=5000, webhook_url="https://" + env("MY_DOMEN") + "/bot", url_path="bot"
-        )
+        self.application.delete_webhook()
+        self.application.infinity_polling()
+        # self.application.remove_webhook()
+        # self.application.run_webhooks(
+        #     listen="0.0.0.0", port=5000, webhook_url="https://" + env("MY_DOMEN") + "/bot", url_path="bot"
+        # )
 
 
 if __name__ == "__main__":
