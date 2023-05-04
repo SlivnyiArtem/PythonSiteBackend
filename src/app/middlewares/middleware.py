@@ -32,7 +32,7 @@ class AuthMiddleware:
         # return auth_response
 
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
-        auth_data = request.headers.get("Authorization", "").split()
+        auth_data = request.headers.get("Authorization").split()
         # token_str = auth_data[1]
         if auth_data[0] != "Token":
             return HttpResponse(auth_data[0] + " " + "incorrect auth")
