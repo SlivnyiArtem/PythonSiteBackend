@@ -2,11 +2,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from ninja import NinjaAPI
 
 from app.internal.transport.rest import handlers, me_endpoint, user_login_endpoint
-
-api = NinjaAPI()
 
 # from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
