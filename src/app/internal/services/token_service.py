@@ -81,6 +81,12 @@ def create_refresh_token(user: SimpleUser):
 #     return acc_token, ref_token
 
 
+def refresh_token_pair(refresh_token_cur: RefreshToken):
+    user = refresh_token_cur.user
+    revoke_all_tokens_for_user(user)
+    create_tokens(user)
+
+
 def revoke_old_tokens(jti):
     RefreshToken.objects.filter(Jti=jti).delete()
 
