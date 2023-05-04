@@ -44,7 +44,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "app",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",  # required for Django collectstatic discovery
 ]
+
+SPECTACULAR_SETTINGS = {
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
