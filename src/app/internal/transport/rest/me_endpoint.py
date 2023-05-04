@@ -15,7 +15,7 @@ from app.internal.transport.rest.handlers import headers
 api = NinjaExtraAPI()
 api.register_controllers(NinjaJWTDefaultController)
 
-router = ninja.router("")
+router = ninja.Router()
 
 
 @router.get("/me_endpoint", auth=JWTAuth())
