@@ -17,16 +17,16 @@ def please_login(user: SimpleUser):
 
 
 class UserAuthMiddleware:
-    # def __init__(self, get_response):
-    #     self.get_response = get_response
-    #
-    # def __call__(self, request):
-    #     response = self.get_response(request)
-    #     return response
-    #     # auth_response = authentificate(request, response)
-    #     # if auth_response is None:
-    #     # return response
-    #     # return auth_response
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
+        # auth_response = authentificate(request, response)
+        # if auth_response is None:
+        # return response
+        # return auth_response
 
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
         return HttpResponse(request.headers)
