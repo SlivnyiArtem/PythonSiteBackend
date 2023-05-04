@@ -13,7 +13,7 @@ api = NinjaAPI(csrf=True)
 
 
 def check_is_token_ok(token):
-    return True
+    return False
 
 
 class Auth(HttpBearer):
