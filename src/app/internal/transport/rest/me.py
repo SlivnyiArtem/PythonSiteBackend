@@ -8,6 +8,7 @@ from app.internal.transport.information_former import form_information_handlers
 
 
 class MeInfView(View):
+    # request - user_id
     def get(self, request: HttpRequest):
         json_data = json.loads(request.body)
         user_id = json_data["user_id"]
