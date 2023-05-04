@@ -24,20 +24,9 @@ class UserAuthMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        response = self.get_response(request)
-        return response
-        # auth_response = authentificate(request, response)
-        # if auth_response is None:
-        # return response
-        # return auth_response
-
-    def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
+        # response = self.get_response(request)
         if "userapi" not in request.path:
-            return None
-
-        # Authoriz, user_id, psw
-        raw_acc_token = request.headers.get("Authorization")
-
+            return self.get_response(request)
         raw_acc_token = None
 
         # raw_acc_token = auth_data[1]
@@ -68,6 +57,19 @@ class UserAuthMiddleware:
                     return HttpResponse(res_dict)
         else:
             return HttpResponse("ok")
+
+        # auth_response = authentificate(request, response)
+        # if auth_response is None:
+        # return response
+        # return auth_response
+
+    def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
+        # if "userapi" not in request.path:
+        # return None
+
+        pass
+        # Authoriz, user_id, psw
+        # raw_acc_token = request.headers.get("Authorization")
 
         #         else:
         #             raw_refresh_token = refresh_token_obj.Jti
