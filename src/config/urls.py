@@ -13,7 +13,7 @@ urlpatterns = [
     path("api/", include("app.internal.urls")),
     path("userapi/<int:user_id>/newtestpage/", handlers.test_page_new),
     path("login/", user_login.UserLoginView.as_view()),
-    path("userapi/me", me.MeInfView.as_view()),
+    path("userapi/<int:user_id>/me", me.MeInfView.as_view()),
     # path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     # path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
