@@ -22,4 +22,4 @@ class AuthBearer(HttpBearer):
 class MyController:
     @route.get("/me", auth=JWTAuth())
     async def me(self):
-        return JsonResponse(jwt.decode(self.request.auth), json_dumps_params={"ensure_ascii": False})
+        return self.request.auth.user_id), json_dumps_params={"ensure_ascii": False})
