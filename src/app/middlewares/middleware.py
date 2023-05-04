@@ -1,8 +1,10 @@
 import json
 
 import environ
+import jwt
 import requests
 from django.http import HttpRequest, HttpResponse
+from django.utils.deprecation import MiddlewareMixin
 
 from app.internal.models.refresh_token import RefreshToken
 from app.internal.models.simple_user import SimpleUser
@@ -19,20 +21,20 @@ def please_login(user: SimpleUser):
     )
 
 
-class AuthMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
-        return response
-        # auth_response = authentificate(request, response)
-        # if auth_response is None:
-        # return response
-        # return auth_response
+class JWTAuthenticationMiddleware(MiddlewareMixin):
+    # def __init__(self, get_response):
+    #     self.get_response = get_response
+    #
+    # def __call__(self, request):
+    #     response = self.get_response(request)
+    #     return response
+    #     # auth_response = authentificate(request, response)
+    #     # if auth_response is None:
+    #     # return response
+    #     # return auth_response
 
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
-        auth_data = request.headers.get("Authorization").split()
+        auth_data = request.headers.get("HTTP_AUTHORIZATION").split()
         # token_str = auth_data[1]
         if auth_data[0] != "Token":
             return HttpResponse(auth_data[0] + " " + "incorrect auth")
