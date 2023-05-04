@@ -19,7 +19,7 @@ router = ninja.Router()
 
 
 @router.get("/me_endpoint", auth=JWTAuth())
-def me_endpoint():
+def me_endpoint(request):
     information = form_information_handlers.get_user_information(47)
     return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
 
