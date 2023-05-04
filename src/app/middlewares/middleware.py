@@ -47,7 +47,7 @@ class UserAuthMiddleware:
 
         if "userapi" not in request.path:
             return None  # no changes
-        else:  # ! acc_token, user_id
+        else:  # ! acc_token, user_id, password
             raw_acc_token = request.headers.get("acc_token")
             user = user_service.get_user_by_id(request.headers.get("user_id"))
             refresh_token_obj = RefreshToken.objects.filter(user=user).first()
