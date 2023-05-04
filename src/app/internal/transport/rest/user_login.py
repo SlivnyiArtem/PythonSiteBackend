@@ -8,8 +8,7 @@ from app.internal.services import password_service, token_service, user_service
 
 
 @csrf_exempt
-class UserLoginView:
-    def post(self, _, response: HttpResponse):
+def login_post(self, _, response: HttpResponse):
         # json_data = json.loads(request.body)
         user = user_service.get_user_by_id(response.headers.get("user_id"))
         # user_login = json_data["login"]

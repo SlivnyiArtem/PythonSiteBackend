@@ -9,6 +9,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("app.internal.urls")),
     path("userapi/<int:user_id>/newtestpage/", handlers.test_page_new),
-    path("login/", user_login.UserLoginView),
+    path("login/", user_login.login_post),
     path("userapi/<int:user_id>/me", handlers.me_http_inf_handler),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
