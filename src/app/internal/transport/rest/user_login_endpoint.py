@@ -8,11 +8,8 @@ from app.internal.services import password_service, token_service, user_service
 
 
 class UserLoginView(View):
-    # request - user_id, password
     def post(self, request: HttpRequest):
-        # json_data = json.loads(request.body)
         user = user_service.get_user_by_id(request.headers["user_id"])
-        # user_login = json_data["login"]
         user_psw = request.headers["password"]
         if user_psw is None:
             return HttpResponseForbidden("Please set your password")

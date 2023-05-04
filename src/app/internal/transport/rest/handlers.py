@@ -4,7 +4,6 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from rest_framework.views import APIView
 
 from app.internal.services import token_service, user_service
-from app.internal.transport.information_former import form_information_handlers
 
 
 def headers(headers_dict):

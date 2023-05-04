@@ -396,8 +396,6 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
     res_list = []
     senders = set()
     recipients = set()
-    # for el in list(Transaction.objects.filter(transaction_recipient=user).values_list("transaction_sender",
-    # flat=True)): senders.add(el)
 
     # !!!!!! Values_list вернет просто идентификатор
     for el in list(Transaction.objects.filter(transaction_recipient=user)):
@@ -406,27 +404,13 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
     for el in list(Transaction.objects.filter(transaction_sender=user)):
         recipients.add(el.transaction_recipient)
 
-    # for el in list(Transaction.objects.filter(transaction_sender=user).values_list("transaction_recipient",
-    # flat=True)): recipients.add(el)
     bot.send_message(message.chat.id, recipients)
-    # bot.send_message(message.chat.id, senders)
 
     for uniq_sender in senders:
         res_list.append(f"отправитель: {uniq_sender.full_username}\n")
     res_list.append("############\n")
     for uniq_recipient in recipients:
         res_list.append(f"получатель: {uniq_recipient.full_username}\n")
-
-    # users = set(
-    #     map(
-    #         lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
-    #         list(user.transactions_history.all()),
-    #     )
-    # )
-    #
-    # "".join(res_list)
-    # for uniq_user in users:
-    #     res_list.append(f"получатель/отправитель: {uniq_user}\n")
     bot.send_message(message.chat.id, result_handler(res_list))
 
 

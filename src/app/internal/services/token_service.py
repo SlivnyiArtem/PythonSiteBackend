@@ -2,7 +2,6 @@ import datetime
 
 import environ
 import jwt
-from django.http import JsonResponse
 
 from app.internal.models.refresh_token import RefreshToken
 from app.internal.models.simple_user import SimpleUser
