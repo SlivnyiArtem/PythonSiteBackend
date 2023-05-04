@@ -10,10 +10,10 @@ from app.internal.services import password_service, token_service, user_service
 class UserLoginView(View):
     # request - user_id, password
     def post(self, request: HttpRequest):
-        json_data = json.loads(request.body)
-        user = user_service.get_user_by_id(json_data["user_id"])
+        # json_data = json.loads(request.body)
+        user = user_service.get_user_by_id(request.headers.get("user_id"))
         # user_login = json_data["login"]
-        user_psw = json_data["password"]
+        user_psw = request.headers.get("password")
 
         if user is None:
             return HttpResponseForbidden("A")
