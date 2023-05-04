@@ -19,7 +19,7 @@ def please_login(user: SimpleUser):
     )
 
 
-def authentificate(request: HttpRequest, response: HttpResponse):
+def process_view(request: HttpRequest, response: HttpResponse):
     if "userapi" not in request.path:
         return None
     else:
@@ -62,7 +62,8 @@ class AuthMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        auth_response = authentificate(request, response)
-        if auth_response is None:
-            return response
-        return auth_response
+        return response
+        # auth_response = authentificate(request, response)
+        # if auth_response is None:
+        # return response
+        # return auth_response
