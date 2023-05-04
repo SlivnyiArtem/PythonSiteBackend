@@ -57,6 +57,11 @@ MIDDLEWARE = [
     "app.middlewares.middleware.UserAuthMiddleware",
 ]
 
+NINJA_JWT = {
+    "USER_ID_FIELD": "user_id",
+    "USER_ID_CLAIM": "user_id",
+}
+
 ROOT_URLCONF = "config.urls"
 
 # REST_FRAMEWORK = {
