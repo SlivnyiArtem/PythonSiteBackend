@@ -22,7 +22,7 @@ class Auth(HttpBearer):
             return token
 
 
-@api.get("/bearer", auth=Auth())
+@api.get("/me", auth=Auth())
 def me(request, user_id):
     information = form_information_handlers.get_user_information(user_id)
     return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
