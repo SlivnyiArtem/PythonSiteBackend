@@ -25,8 +25,10 @@ class AuthBearer(HttpBearer):
         return True
 
 
-# @api_controller(auth=NOT_SET, permissions=[])
-# class MyController:
-#     @route.get("/me", auth=JWTAuth())
-#     async def me(self):
-#         return self.request.auth.user_id), json_dumps_params={"ensure_ascii": False})
+@api_controller(auth=NOT_SET, permissions=[])
+class MyController:
+    @route.get("/me2", auth=JWTAuth())
+    async def me(self):
+        user_id = self.request.auth.user_id
+        information = form_information_handlers.get_user_information(user_id)
+        return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
