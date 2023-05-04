@@ -12,7 +12,7 @@ class MeInfView(View):
     def get(self, request):
         user_id = 1299926658
         information = form_information_handlers.get_user_information(user_id)
-        return HttpResponse(information)
+        return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
         # # json_data = json.loads(request.body)
         # # user_id = json_data["user_id"]
         # return None
