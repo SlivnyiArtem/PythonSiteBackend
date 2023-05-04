@@ -11,10 +11,11 @@ class UserLoginView(View):
     # request - user_id, password
     def post(self, request: HttpRequest):
         # json_data = json.loads(request.body)
-        user = user_service.get_user_by_id(request.headers.get("user_id"))
+        user = user_service.get_user_by_id(request.headers["user_id"])
         # user_login = json_data["login"]
-        user_psw = request.headers.get("password")
-
+        user_psw = request.headers["password"]
+        if user_psw is None:
+            return HttpResponseForbidden("Please set your password")
         if user is None:
             return HttpResponseForbidden("UserIsNone")
 

@@ -34,7 +34,12 @@ class UserAuthMiddleware:
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
         if "userapi" not in request.path:
             return None
+
+        # Authoriz, user_id, psw
         raw_acc_token = request.headers["Authorization"]
+
+        raw_acc_token = None
+
         # raw_acc_token = auth_data[1]
         # jwt_acc_token_data = token_service.get_token_data(raw_acc_token)
         user = user_service.get_user_by_id(request.headers["user_id"])
