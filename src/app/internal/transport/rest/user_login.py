@@ -2,10 +2,12 @@ import json
 
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 from app.internal.services import password_service, token_service, user_service
 
 
+@csrf_exempt
 class UserLoginView(View):
     def post(self, response: HttpResponse):
         # json_data = json.loads(request.body)
