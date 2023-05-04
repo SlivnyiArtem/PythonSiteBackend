@@ -1,9 +1,7 @@
 import json
 
 import environ
-from django.contrib.auth.middleware import get_user
 from django.http import HttpRequest, HttpResponse
-from django.utils.deprecation import MiddlewareMixin
 
 from app.internal.models.simple_user import SimpleUser
 
@@ -18,7 +16,7 @@ def please_login(user: SimpleUser):
     )
 
 
-class UserAuthMiddleware(MiddlewareMixin):
+class UserAuthMiddleware:
     # def __init__(self, get_response):
     #     self.get_response = get_response
     #
