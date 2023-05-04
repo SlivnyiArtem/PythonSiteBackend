@@ -1,15 +1,27 @@
 import json
 
+import ninja
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from ninja import NinjaAPI
 from ninja.security import HttpBearer, django_auth
+from ninja_extra import NinjaExtraAPI
+from ninja_jwt.authentication import JWTAuth
+from ninja_jwt.controller import NinjaJWTDefaultController
 
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.rest.handlers import headers
 
-api = NinjaAPI(csrf=True)
+api = NinjaExtraAPI()
+api.register_controllers(NinjaJWTDefaultController)
+
+router = ninja.router("")
+
+
+@router.get("/me_endpoint", auth=JWTAuth())
+def me_endpoint():
+    information = form_information_handlers.get_user_information(47)
+    return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
 
 
 def check_is_token_ok(token):
@@ -136,7 +148,6 @@ class Auth(HttpBearer):
             return token
 
 
-@api.get("/me", auth=Auth())
 def me(request, user_id):
     information = form_information_handlers.get_user_information(user_id)
     return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
