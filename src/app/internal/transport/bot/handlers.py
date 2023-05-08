@@ -3,7 +3,6 @@ import datetime
 import phonenumbers
 import telebot
 from django.db import transaction as transaction_locker
-from internal.models.banking_card import Card
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.simple_user import SimpleUser
