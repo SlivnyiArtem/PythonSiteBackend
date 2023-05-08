@@ -3,6 +3,7 @@ import datetime
 import phonenumbers
 import telebot
 from django.db import transaction as transaction_locker
+from internal.models.banking_card import Card
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.simple_user import SimpleUser
@@ -192,38 +193,40 @@ def ask_for_requisites(message: telebot.types.Message, bot):
 
 
 def safe_get_bank_accounts_id(reqs, message_text, bot, id):
-    r = list(
-        banking_service.get_card_by_id(int(reqs[0]))
-        .banking_account.values_list("account_number", "currency_amount")
-        .first()
-    )
-    bot.send_message(id, str(r))
+    # Card.objects.filter(card_number=int(reqs[0]))
+    our_acc = banking_service.get_card_by_id(int(reqs[0])).banking_account
 
-    our_acc_number, our_money = (
-        banking_service.get_card_by_id(int(reqs[0]))
-        .banking_account.values_list("account_number", "currency_amount")
-        .first()
-    )
+    # our_acc_number, our_money = (
+    #     banking_service.get_card_by_id(int(reqs[0]))
+    #     .banking_account.values_list("account_number", "currency_amount")
+    #     .first()
+    # )
     if message_text == "1":
         another_user = user_service.get_user_by_username(reqs[1])  # !
         if another_user is None:
             raise ValueError("пользователь не найден в БД")
+        # account_owner = user_service.get_user_by_id(user_id)
+        # if account_owner is None:
+        #     return None
+        # result: BankingAccount =
         another_bank_acc_id = (
-            banking_service.get_acc_by_user(another_user.user_id).values_list("account_number", flat=True).first()
-        )  # !
+            BankingAccount.objects.filter(account_owner=another_user).values_list("account_number", flat=True).first()
+        )
+        # banking_service.get_acc_by_user(another_user.user_id).values_list("account_number", flat=True).first()
+        # )  # !
     elif message_text == "2":
         another_card = banking_service.get_card_by_id(int(reqs[1]))  # !
         if another_card is None:
             raise ValueError("карта с таким номером не найдена в БД")
-        another_bank_acc_id = another_card.banking_account.values_list("account_number", flat=True).first()
+        another_bank_acc_id = another_card.banking_account.account_number
     elif message_text == "3":
         another_bank_acc = banking_service.get_acc_by_id(int(reqs[1]))  # !
         if another_bank_acc is None:
             raise ValueError("банковский счет получателя с такими реквизитами отсутствует")
-        another_bank_acc_id = another_bank_acc.values_list("account_number", flat=True).first()
+        another_bank_acc_id = another_bank_acc.account_number
     else:
         raise ValueError("Некорректный тип перевода")
-    return our_acc_number, another_bank_acc_id, our_money
+    return our_acc.account_number, another_bank_acc_id, our_acc.currency_amount
 
 
 def get_data_and_transact_2(message: telebot.types.Message, bot, message_text: str):
