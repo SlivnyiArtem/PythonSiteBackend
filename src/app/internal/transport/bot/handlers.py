@@ -226,13 +226,18 @@ def get_data_and_transact_2(message: telebot.types.Message, bot, message_text: s
         return
     amount = int(reqs[2])
     bank_acc_id, another_bank_acc_id, our_money = safe_get_bank_accounts_id(reqs, message_text)
+
+    bot.send_message(message.chat.id, str(bank_acc_id) + str(another_bank_acc_id))
+
     if send_msg_if_not_enough_money(bot, message.chat.id, amount, our_money):
         return
-    safe_transaction(amount, bank_acc_id, another_bank_acc_id)
+    safe_transaction(amount, bank_acc_id, another_bank_acc_id, bot, message.chat.id)
     confirm_transaction(bot, message.chat.id)
 
 
-def safe_transaction(amount, our_acc_number, other_acc_number):
+def safe_transaction(amount, our_acc_number, other_acc_number, bot, chat):
+    bot.send_message(chat, "@")
+
     with transaction_locker.atomic():
         BankingAccount.objects.select_for_update().get(pk=1)
         our_bank = BankingAccount.objects.select_for_update().get(account_number=our_acc_number)
@@ -247,6 +252,7 @@ def safe_transaction(amount, our_acc_number, other_acc_number):
             amount=amount,
             transaction_date=datetime.date.today(),
         )
+    bot.send_message(chat, "@##@#")
 
 
 # def get_data_and_transact(message: telebot.types.Message, bot, message_text: str):
