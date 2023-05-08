@@ -2,7 +2,8 @@ import datetime
 
 import phonenumbers
 import telebot
-from django.db import transaction as blocking_transaction, transaction as transaction_locker
+from django.db import transaction as transaction_locker
+from internal.models import banking_account
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.simple_user import SimpleUser
@@ -186,89 +187,136 @@ def ask_for_requisites(message: telebot.types.Message, bot):
     )
     func_dict = {"1": "username_transaction", "2": "card_transaction", "3": "bank_acc_transaction"}
     if message.text in func_dict.keys():
-        bot.register_next_step_handler(msg, get_data_and_transact, bot, message.text)
+        bot.register_next_step_handler(msg, get_data_and_transact_2, bot, message.text)
     else:
         bot.send_message(message.chat.id, "incorrect input")
 
 
-def transaction(
-    bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
-):
-    with blocking_transaction.atomic():
-        if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
-            return
-        with transaction_locker.atomic():
-            bank_acc.currency_amount -= amount
-            bank_acc.save()
-            another_bank_acc.currency_amount += amount
-            another_bank_acc.save()
-            transaction_date = datetime.date.today()
-
-        # recipient = another_bank_acc.account_owner
-        # sender = bank_acc.account_owner
-
-        Transaction.objects.create(
-            transaction_recipient=another_bank_acc.account_owner,
-            transaction_sender=bank_acc.account_owner,
-            amount=amount,
-            transaction_date=transaction_date,
-            # is_outgoing_transaction=True,
-        )
-
-        # new_transaction_sender = TransactionLog.objects.create(
-        #     transaction_recipient_id=recipient.user_id,
-        #     amount=amount,
-        #     transaction_date=transaction_date,
-        #     is_outgoing_transaction=True,
-        # )
-        # new_transaction_recipient = TransactionLog.objects.create(
-        #     transaction_recipient_id=sender.user_id,
-        #     amount=amount,
-        #     transaction_date=transaction_date,
-        #     is_outgoing_transaction=False,
-        # )
-        # sender.transactions_history.add(new_transaction_sender)
-        # recipient.transactions_history.add(new_transaction_recipient)
-        confirm_transaction(bot, message.chat.id)
+def safe_get_bank_accounts_id(reqs, message_text):
+    our_acc_number, our_money = (
+        banking_service.get_card_by_id(int(reqs[0]))
+        .banking_account.values_list("account_number", "currency_amount")
+        .first()
+    )
+    if message_text == "1":
+        another_user = user_service.get_user_by_username(reqs[1])  # !
+        if another_user is None:
+            raise ValueError("пользователь не найден в БД")
+        another_bank_acc_id = (
+            banking_service.get_acc_by_user(another_user.user_id).values_list("account_number", flat=True).first()
+        )  # !
+    elif message_text == "2":
+        another_card = banking_service.get_card_by_id(int(reqs[1]))  # !
+        if another_card is None:
+            raise ValueError("карта с таким номером не найдена в БД")
+        another_bank_acc_id = another_card.banking_account.values_list("account_number", flat=True).first()
+    elif message_text == "3":
+        another_bank_acc = banking_service.get_acc_by_id(int(reqs[1]))  # !
+        if another_bank_acc is None:
+            raise ValueError("банковский счет получателя с такими реквизитами отсутствует")
+        another_bank_acc_id = another_bank_acc.values_list("account_number", flat=True).first()
+    else:
+        raise ValueError("Некорректный тип перевода")
+    return our_acc_number, another_bank_acc_id, our_money
 
 
-def get_data_and_transact(message: telebot.types.Message, bot, message_text: str):
+def get_data_and_transact_2(message: telebot.types.Message, bot, message_text: str):
     reqs = message.text.split()
     if not incorrect_reqs(reqs[0], reqs[1], reqs[2], message_text) or len(reqs) != 3:
         bot.send_message(message.chat.id, "incorrect data")
         return
     amount = int(reqs[2])
-    try:
-        bank_acc, another_bank_acc = get_bank_accounts(reqs, message_text)
-        transaction(bot, message, amount, bank_acc, another_bank_acc)
-    except ValueError as error:
-        bot.send_message(message.chat.id, error)
+    bank_acc_id, another_bank_acc_id, our_money = safe_get_bank_accounts_id(reqs, message_text)
+    if send_msg_if_not_enough_money(bot, message.chat.id, amount, our_money):
+        return
+    safe_transaction(amount, bank_acc_id, another_bank_acc_id)
+    confirm_transaction(bot, message.chat.id)
 
 
-def get_bank_accounts(reqs, message_text):
-    bank_acc = banking_service.get_card_by_id(int(reqs[0])).banking_account
-    if message_text == "1":
-        another_user_name = reqs[1]
-        another_user = user_service.get_user_by_username(another_user_name)
-        if another_user is None:
-            raise ValueError("пользователь не найден в БД")
-        another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)
-    elif message_text == "2":
-        another_card_number = int(reqs[1])
-        another_card = banking_service.get_card_by_id(another_card_number)
-        if another_card is None:
-            raise ValueError("карта с таким номером не найдена в БД")
-        another_bank_acc = another_card.banking_account
-    elif message_text == "3":
-        another_bank_acc_number = int(reqs[1])
-        another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)
-    else:
-        another_bank_acc = bank_acc
-    if another_bank_acc is None:
-        raise ValueError("банковский счет получателя с такими реквизитами отсутствует")
-    if bank_acc is None:
-        raise ValueError("номер вашей карты введен неправильно")
-    return bank_acc, another_bank_acc
+def safe_transaction(amount, our_acc_number, other_acc_number):
+    with transaction_locker.atomic():
+        BankingAccount.objects.select_for_update().get(pk=1)
+        our_bank = BankingAccount.objects.select_for_update().get(account_number=our_acc_number)
+        our_bank.currency_amount -= amount
+        our_bank.save()
+        other_bank = BankingAccount.objects.select_for_update().get(account_number=other_acc_number)
+        other_bank.currency_amount += amount
+        other_bank.save()
+        Transaction.objects.create(
+            transaction_recipient=other_bank.account_owner,
+            transaction_sender=our_bank.account_owner,
+            amount=amount,
+            transaction_date=datetime.date.today(),
+        )
+
+
+# def get_data_and_transact(message: telebot.types.Message, bot, message_text: str):
+#     reqs = message.text.split()
+#     if not incorrect_reqs(reqs[0], reqs[1], reqs[2], message_text) or len(reqs) != 3:
+#         bot.send_message(message.chat.id, "incorrect data")
+#         return
+#     amount = int(reqs[2])
+#     with transaction_locker.atomic():
+#         try:
+#             bank_acc, another_bank_acc = get_bank_accounts(reqs, message_text)
+#             transaction(bot, message, amount, bank_acc, another_bank_acc)
+#         except ValueError as error:
+#             bot.send_message(message.chat.id, error)
+
+
+# def get_acc_numbers(reqs, message_text):
+#     if message_text == "1":
+#         another_user_name = reqs[1]
+#         another_user = user_service.get_user_by_username(another_user_name)  # !
+#         if another_user is None:
+#             raise ValueError("пользователь не найден в БД")
+#         another_bank_acc_number = banking_service.get_acc_by_user(another_user.user_id)
+
+
+# def get_bank_accounts(reqs, message_text):
+#     bank_acc = banking_service.get_card_by_id(int(reqs[0])).banking_account  # !
+#     if message_text == "1":
+#         another_user_name = reqs[1]
+#         another_user = user_service.get_user_by_username(another_user_name)  # !
+#         if another_user is None:
+#             raise ValueError("пользователь не найден в БД")
+#         another_bank_acc = banking_service.get_acc_by_user(another_user.user_id)  # !
+#     elif message_text == "2":
+#         another_card_number = int(reqs[1])
+#         another_card = banking_service.get_card_by_id(another_card_number)  # !
+#         if another_card is None:
+#             raise ValueError("карта с таким номером не найдена в БД")
+#         another_bank_acc = another_card.banking_account
+#     elif message_text == "3":
+#         another_bank_acc_number = int(reqs[1])
+#         another_bank_acc = banking_service.get_acc_by_id(another_bank_acc_number)  # !
+#     else:
+#         another_bank_acc = bank_acc
+#     if another_bank_acc is None:
+#         raise ValueError("банковский счет получателя с такими реквизитами отсутствует")
+#     if bank_acc is None:
+#         raise ValueError("номер вашей карты введен неправильно")
+#     return bank_acc, another_bank_acc
+
+
+# def transaction(
+#         bot, message: telebot.types.Message, amount: int, bank_acc: BankingAccount, another_bank_acc: BankingAccount
+# ):
+#     if send_msg_if_not_enough_money(bot, message.chat.id, amount, bank_acc.currency_amount):
+#         return
+#
+#     bank_acc.currency_amount -= amount  # !
+#     bank_acc.save()
+#     another_bank_acc.currency_amount += amount  # !
+#     another_bank_acc.save()
+#     transaction_date = datetime.date.today()
+#     Transaction.objects.create(
+#         transaction_recipient=another_bank_acc.account_owner,
+#         transaction_sender=bank_acc.account_owner,
+#         amount=amount,
+#         transaction_date=transaction_date,
+#     )
+#     confirm_transaction(bot, message.chat.id)
 
 
 def incorrect_reqs(user_cart: str, main_req: str, amount: str, code: str):
@@ -284,47 +332,6 @@ def send_msg_if_not_enough_money(bot, msg_id, transaction_amount, acc_amount):
 
 def confirm_transaction(bot, msg_id):
     bot.send_message(msg_id, "transaction confirmed")
-
-
-# @access_decorator
-# @error_decorator
-# def get_full_log(message: telebot.types.Message, bot):
-#     user = user_service.get_user_by_id(message.from_user.id)
-#     logs = list(user.transactions_history.all())
-#     res_list = []
-#
-#     for el in logs:
-#         res_list.append(
-#             f"получатель: {user_service.get_user_by_id(el.transaction_recipient_id).full_username}\n"
-#             f"сумма: {el.amount}\n"
-#             f"дата: {el.transaction_date}\n"
-#             f"{'снятие' if el.is_outgoing_transaction == True else 'пополнение'}\n"
-#             f"######\n"
-#         )
-#
-#     bot.send_message(message.chat.id, result_handler(res_list))
-#
-#
-# @access_decorator
-# @error_decorator
-# def all_transaction_recipients(message: telebot.types.Message, bot):
-#     user = user_service.get_user_by_id(message.from_user.id)
-#     users = set(
-#         map(
-#             lambda f: user_service.get_user_by_id(f.transaction_recipient_id).full_username,
-#             list(user.transactions_history.all()),
-#         )
-#     )
-#     res_list = []
-#
-#     for uniq_user in users:
-#         res_list.append(f"получатель/отправитель: {uniq_user}\n")
-#     bot.send_message(message.chat.id, result_handler(res_list))
-#
-#
-# def result_handler(res_list):
-#     res = "".join(res_list)
-#     return res if len(res) > 0 else "your transaction history is empty"
 
 
 @error_decorator
@@ -396,6 +403,8 @@ def all_transaction_recipients(message: telebot.types.Message, bot):
     res_list = []
     senders = set()
     recipients = set()
+
+    # MB Distinct
 
     # !!!!!! Values_list вернет просто идентификатор
     for el in list(Transaction.objects.filter(transaction_recipient=user)):
