@@ -230,7 +230,7 @@ def get_data_and_transact_2(message: telebot.types.Message, bot, message_text: s
         bot.send_message(message.chat.id, "incorrect data")
         return
     amount = int(reqs[2])
-    bank_acc_id, another_bank_acc_id, our_money = safe_get_bank_accounts_id(reqs, message_text)
+    bank_acc_id, another_bank_acc_id, our_money = safe_get_bank_accounts_id(reqs, message_text, bot, message.chat.id)
 
     bot.send_message(message.chat.id, str(bank_acc_id) + str(another_bank_acc_id))
 
