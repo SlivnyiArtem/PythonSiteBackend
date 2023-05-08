@@ -49,6 +49,10 @@ run_bot:
 run_server:
 	python src/manage.py runserver --settings=config.settings_local
 
+all_run:
+	python src/manage.py start_bot --settings=config.settings_local
+	python src/manage.py runserver --settings=config.settings_local
+
 docker_stop:
 	docker-compose down
 
