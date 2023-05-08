@@ -3,12 +3,11 @@ import datetime
 import phonenumbers
 import telebot
 from django.db import transaction as transaction_locker
-from internal.models import banking_account
 
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.simple_user import SimpleUser
 from app.internal.models.transaction import Transaction
-from app.internal.services import banking_service, password_service, token_service, user_service
+from app.internal.services import banking_service, password_service, user_service
 from app.internal.services.user_service import get_user_by_username
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
