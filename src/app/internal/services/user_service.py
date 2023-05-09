@@ -31,4 +31,4 @@ def create_auth_user(str_user_id: int) -> AuthUser:
 
 def update_user_password(user_id: int, password: str):
     hash_of_password = get_hash_from_password(password)
-    SimpleUser.objects.filter(user_id=user_id).update(hash_of_password=hash_of_password)
+    AuthUser.objects.filter(username=str(user_id)).update(password=hash_of_password)

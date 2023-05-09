@@ -14,7 +14,7 @@ environ.Env.read_env()
 
 def please_login(user: SimpleUser):
     return HttpResponse(
-        json.dumps({"login": "please_login", "user_id": user.user_id}),
+        json.dumps({"login": "please_login", "user_id": user.simple_user_id}),
         content_type="application/json",
     )
 
