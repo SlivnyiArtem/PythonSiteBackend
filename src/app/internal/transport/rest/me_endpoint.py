@@ -15,7 +15,7 @@ class Item(Schema):
 
 class LoginSchema(Schema):
     user_id: int
-    hash_password: str
+    password: str
 
 
 @rest_app_router.post("/test")
@@ -33,7 +33,7 @@ def me_handler():
 @rest_app_router.post("/login")
 def login(request, login_data: LoginSchema):
     # user = AuthUser.objects.filter(username=login_data.user_id).first()
-    user_data = {"user_id": str(login_data.user_id), "password": login_data.hash_password}
+    user_data = {"user_id": str(login_data.user_id), "password": login_data.password}
     serialized_log = LoginSerializer(data=user_data)
     res = serialized_log.is_valid(raise_exception=True)
     return HttpResponse(res)
