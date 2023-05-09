@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 
 
-class AdminUser(AbstractUser):
+class AuthUser(AbstractUser):
     pass

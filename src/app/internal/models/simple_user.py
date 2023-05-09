@@ -1,14 +1,15 @@
 from django.db import models
 from rest_framework import status
 
+from app.internal.models.admin_user import AuthUser
 from app.internal.transport.messages import common_messages
-from config import settings
 
 
 class SimpleUser(models.Model):
     # user_auth = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(AuthUser, on_delete=models.CASCADE)
 
-    user_id = models.IntegerField(primary_key=True)
+    simple_user_id = models.IntegerField(primary_key=True)
     full_username = models.CharField(max_length=255, null=True)
     user_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
@@ -18,7 +19,7 @@ class SimpleUser(models.Model):
     login_access = models.BooleanField(default=True)
 
     def __str__(self):
-        return str(self.user_id)
+        return str(self.simple_user_id)
 
     @staticmethod
     def get_dictionary_deserialize(user, code: str) -> dict:
