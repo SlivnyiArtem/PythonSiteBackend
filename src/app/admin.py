@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app.internal.models.admin_user import AuthUser
+from app.internal.models.auth_user import AuthUser
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.banking_card import Card
 from app.internal.models.refresh_token import RefreshToken

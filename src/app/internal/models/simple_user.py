@@ -1,7 +1,7 @@
 from django.db import models
 from rest_framework import status
 
-from app.internal.models.admin_user import AuthUser
+from app.internal.models.auth_user import AuthUser
 from app.internal.transport.messages import common_messages
 
 

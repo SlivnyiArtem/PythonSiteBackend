@@ -1,3 +1,4 @@
+from app.internal.models.auth_user import AuthUser
 from app.internal.models.simple_user import SimpleUser
 from app.internal.services.password_service import get_hash_from_password
 
@@ -18,6 +19,14 @@ def get_user_by_id(user_id: int) -> SimpleUser:
 def get_user_by_username(username: str) -> SimpleUser:
     result: SimpleUser = SimpleUser.objects.filter(full_username=username).first()
     return result
+
+
+def create_auth_user(str_user_id: int) -> AuthUser:
+    return AuthUser.objects.create_user(
+        username=str(str_user_id),
+        # email='jlennon@beatles.com',
+        password="123",
+    )
 
 
 def update_user_password(user_id: int, password: str):
