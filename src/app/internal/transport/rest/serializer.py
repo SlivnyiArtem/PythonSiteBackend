@@ -23,6 +23,7 @@ class LoginSerializer(serializers.Serializer):
     # token = serializers.CharField(max_length=255, read_only=True)
 
     def validate(self, data):
+        return {data}
         email = data.get("user_id")
         password = data.get("password")
         if password is None:
