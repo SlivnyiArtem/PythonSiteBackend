@@ -8,7 +8,7 @@ def update_user_number(user_id: int, phone_number: int):
 
 
 def update_create_user(user_id: int, default_updates: dict):
-    SimpleUser.objects.update_or_create(user_id=user_id, defaults=default_updates)
+    SimpleUser.objects.update_or_create(simple_user_id=user_id, defaults=default_updates)
 
 
 def get_user_by_id(user_id: int) -> SimpleUser:
