@@ -32,8 +32,9 @@ def me_handler():
 
 @rest_app_router.post("/login")
 def login(request, login_data: LoginSchema):
-    user = AuthUser.objects.filter(username=login_data.user_id).first()
-    serialized_log = LoginSerializer(data=user)
+    # user = AuthUser.objects.filter(username=login_data.user_id).first()
+    user_data = {"username": str(login_data.user_id), "password": login_data.hash_password}
+    serialized_log = LoginSerializer(data=user_data)
     res = serialized_log.is_valid(raise_exception=True)
     return HttpResponse(res)
 
