@@ -6,7 +6,7 @@ from config import settings
 
 
 class SimpleUser(models.Model):
-    user_auth = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # user_auth = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     user_id = models.IntegerField(primary_key=True)
     full_username = models.CharField(max_length=255, null=True)
