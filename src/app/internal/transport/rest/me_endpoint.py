@@ -1,21 +1,21 @@
-from datetime import datetime
-from typing import Optional
-
 from django.http import HttpResponse, JsonResponse
-from ninja import ModelSchema, Router, Schema
-from ninja_jwt import schema
+from ninja import Router, Schema
 from ninja_jwt.authentication import JWTAuth
-from ninja_jwt.tokens import SlidingToken
 
-from app.internal.models.simple_user import SimpleUser
+from app.internal.models.auth_user import AuthUser
 from app.internal.services import user_service
-from app.internal.transport.rest.serializer import UserSerializer
+from app.internal.transport.rest.serializer import LoginSerializer, UserSerializer
 
 rest_app_router = Router()
 
 
 class Item(Schema):
     id: int
+
+
+class LoginSchema(Schema):
+    user_id: int
+    hash_password: str
 
 
 @rest_app_router.post("/test")
@@ -28,6 +28,14 @@ def test(request, user_id: Item):
 @rest_app_router.get("/me", auth=JWTAuth())
 def me_handler():
     return HttpResponse("sdlkfj")
+
+
+@rest_app_router.post("/login")
+def login(request, login_data: LoginSchema):
+    user = AuthUser.objects.filter(username=login_data.user_id).first()
+    serialized_log = LoginSerializer(data=user)
+    res = serialized_log.is_valid(raise_exception=True)
+    return HttpResponse(res)
 
 
 #
