@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from app.internal.models.admin_user import AuthUser
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.banking_card import Card
 from app.internal.models.refresh_token import RefreshToken
@@ -13,3 +14,4 @@ admin.site.register(BankingAccount)
 admin.site.register(Card)
 admin.site.register(Transaction)
 admin.site.register(RefreshToken)
+admin.site.register(AuthUser)
