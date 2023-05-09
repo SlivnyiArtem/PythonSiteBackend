@@ -7,9 +7,9 @@ from app.internal.transport.messages import common_messages
 
 class SimpleUser(models.Model):
     # user_auth = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    user = models.OneToOneField(AuthUser, on_delete=models.CASCADE)
 
     simple_user_id = models.IntegerField(primary_key=True)
+    user = models.OneToOneField(AuthUser, on_delete=models.CASCADE)
     full_username = models.CharField(max_length=255, null=True)
     user_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)

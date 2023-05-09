@@ -83,9 +83,10 @@ def me_inf_handler(message: telebot.types.Message, bot):
 def start_handler(message: telebot.types.Message, bot):
     user = message.from_user
     default_updates = {"user_name": user.first_name, "surname": user.last_name, "full_username": user.username}
-    user_service.create_auth_user(user.id)
+    auth_user = user_service.create_auth_user(user.id)
     bot.send_message(message.chat.id, "@@@")
-    user_service.update_create_user(user.id, default_updates)
+    bot.send_message(message.chat.id, user.id)
+    user_service.update_create_user(user.id, default_updates, auth_user)
 
     bot.send_message(message.chat.id, common_messages.user_add_message(user.username))
 

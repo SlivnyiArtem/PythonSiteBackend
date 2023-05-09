@@ -4,15 +4,15 @@ from app.internal.services.password_service import get_hash_from_password
 
 
 def update_user_number(user_id: int, phone_number: int):
-    SimpleUser.objects.filter(user_id=user_id).update(phone_number=phone_number)
+    SimpleUser.objects.filter(simple_user_id=user_id).update(phone_number=phone_number)
 
 
-def update_create_user(user_id: int, default_updates: dict):
-    SimpleUser.objects.update_or_create(simple_user_id=user_id, defaults=default_updates)
+def update_create_user(user_id: int, default_updates: dict, auth_user: AuthUser):
+    SimpleUser.objects.update_or_create(simple_user_id=user_id, user=auth_user, defaults=default_updates)
 
 
 def get_user_by_id(user_id: int) -> SimpleUser:
-    result: SimpleUser = SimpleUser.objects.filter(user_id=user_id).first()
+    result: SimpleUser = SimpleUser.objects.filter(simple_user_id=user_id).first()
     return result
 
 
