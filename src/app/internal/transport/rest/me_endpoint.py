@@ -44,7 +44,7 @@ def login(request, login_data: LoginSchema):
     user_data = {"user_id": str(login_data.user_id), "password": login_data.password}
     serialized_log = LoginSerializer(data=user_data)
     serialized_log.is_valid(raise_exception=True)
-    return
+    return HttpResponse(serialized_log.validated_data)
     # return serialized_log.errors
     # return HttpResponse(res)
 
