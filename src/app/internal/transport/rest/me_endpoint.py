@@ -43,8 +43,8 @@ def login(request, login_data: LoginSchema):
     # user = AuthUser.objects.filter(username=login_data.user_id).first()
     user_data = {"user_id": str(login_data.user_id), "password": login_data.password}
     serialized_log = LoginSerializer(data=user_data)
-    serialized_log.is_valid(raise_exception=True)
-    return HttpResponse(serialized_log.validated_data)
+    res = serialized_log.is_valid(raise_exception=True)
+    return HttpResponse(res)
     # return serialized_log.errors
     # return HttpResponse(res)
 
