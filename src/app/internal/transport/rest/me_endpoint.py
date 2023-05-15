@@ -30,6 +30,15 @@ def me_handler():
     return HttpResponse("sdlkfj")
 
 
+def testo():
+    return HttpResponse("123213")
+
+
+@rest_app_router.get("me")
+def me_handler():
+    return HttpResponse("testudo")
+
+
 @rest_app_router.post("/login")
 def login(request, login_data: LoginSchema):
     # user = AuthUser.objects.filter(username=login_data.user_id).first()
@@ -37,7 +46,6 @@ def login(request, login_data: LoginSchema):
     serialized_log = LoginSerializer(data=user_data)
     res = serialized_log.is_valid(raise_exception=True)
     return HttpResponse(res)
-
 
 #
 # class UserRetrieveSchema(ModelSchema):

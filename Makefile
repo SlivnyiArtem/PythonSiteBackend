@@ -8,6 +8,9 @@ makemigrations:
 	python src/manage.py makemigrations
 	sudo chown -R ${USER} src/app/migrations/
 
+makemigrations_local:
+	make python src/manage.py makemigrations --settings=config.settings_local
+
 createsuperuser:
 	python src/manage.py createsuperuser --settings=config.settings_local
 
