@@ -1,8 +1,9 @@
 # url для модуля
+from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from django.conf import settings
+
 from app.internal.transport.rest import me_endpoint
 from config.urls import api
 

@@ -34,8 +34,8 @@ def testo():
     return HttpResponse("123213")
 
 
-@rest_app_router.get("me")
-def me_handler():
+@rest_app_router.get("/me2")
+def me_handler_2():
     return HttpResponse("testudo")
 
 
@@ -46,6 +46,7 @@ def login(request, login_data: LoginSchema):
     serialized_log = LoginSerializer(data=user_data)
     res = serialized_log.is_valid(raise_exception=True)
     return HttpResponse(res)
+
 
 #
 # class UserRetrieveSchema(ModelSchema):
