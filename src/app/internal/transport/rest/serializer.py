@@ -20,16 +20,11 @@ class UserSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.BaseSerializer):
     user_id = serializers.IntegerField()
     password = serializers.CharField(max_length=255)
-    # email = serializers.CharField(max_length=255)
-    # username = serializers.CharField(max_length=255, read_only=True)
-    # password = serializers.CharField(max_length=128, write_only=True)
 
     def to_internal_value(self, data):
         user_id = data.get("user_id")
         password = data.get("password")
 
-        # Return the validated values. This will be available as
-        # the `.validated_data` property.
         return {"user_id": user_id, "password": password}
 
     def to_representation(self, instance):
@@ -40,16 +35,15 @@ class LoginSerializer(serializers.BaseSerializer):
 
     # token = serializers.CharField(max_length=255, read_only=True)
 
-    # def validate(self, data):
-    #
-    #     return data
-    #     email = data.get("user_id")
-    #     password = data.get("password")
-    #     if password is None:
-    #         raise serializers.ValidationError("A password is required to log in.")
-    #     user = authenticate(username=email, password=password)
-    #     if user is None:
-    #         raise serializers.ValidationError("A user with this email and password was not found.")
-    #     if not user.is_active:
-    #         raise serializers.ValidationError("This user has been deactivated.")
-    #     return {"username": user.username, "token": user.password}
+    def validate(self, data):
+        # return data
+        user_id = data.get("user_id")
+        password = data.get("password")
+        if password is None:
+            raise serializers.ValidationError("A password is required to log in.")
+        user = authenticate(username=user_id, password=password)
+        if user is None:
+            raise serializers.ValidationError("A user with this email and password was not found.")
+        if not user.is_active:
+            raise serializers.ValidationError("This user has been deactivated.")
+        return data
