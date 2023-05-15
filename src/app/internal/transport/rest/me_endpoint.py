@@ -2,7 +2,6 @@ from django.http import HttpResponse, JsonResponse
 from ninja import Router, Schema
 from ninja_jwt.authentication import JWTAuth
 
-from app.internal.models.auth_user import AuthUser
 from app.internal.services import user_service
 from app.internal.transport.rest.serializer import LoginSerializer, UserSerializer
 
@@ -35,7 +34,7 @@ def testo():
 
 
 @rest_app_router.get("/me2")
-def me_handler_2():
+def me_handler_2(request):
     return HttpResponse("testudo")
 
 
@@ -44,8 +43,10 @@ def login(request, login_data: LoginSchema):
     # user = AuthUser.objects.filter(username=login_data.user_id).first()
     user_data = {"user_id": str(login_data.user_id), "password": login_data.password}
     serialized_log = LoginSerializer(data=user_data)
-    res = serialized_log.is_valid(raise_exception=True)
-    return HttpResponse(res)
+    serialized_log.is_valid(raise_exception=True)
+    return
+    # return serialized_log.errors
+    # return HttpResponse(res)
 
 
 #
@@ -99,11 +100,7 @@ def login(request, login_data: LoginSchema):
 #         return True
 #
 #
-# @api_controller(auth=NOT_SET, permissions=[])
-# class MyController:
-#     @route.get("/me2", auth=JWTAuth())
-#     async def me(self):
-#         return HttpResponse("sdlkfj")
-#         # user_id = self.request.auth.user_id
-#         # information = form_information_handlers.get_user_information(user_id)
-#         # return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
+# @api_controller(auth=NOT_SET, permissions=[]) class MyController: @route.get("/me2", auth=JWTAuth()) async def me(
+# self): return HttpResponse("sdlkfj") # user_id = self.request.auth.user_id # information =
+# form_information_handlers.get_user_information(user_id) # return JsonResponse(information, json_dumps_params={
+# "ensure_ascii": False}, status=information["error_code"])
