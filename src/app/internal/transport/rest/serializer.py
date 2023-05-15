@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from app.internal.models.auth_user import AuthUser
@@ -34,6 +35,28 @@ class LoginSerializer(serializers.BaseSerializer):
         return AuthUser.objects.create(**validated_data)
 
     # token = serializers.CharField(max_length=255, read_only=True)
+
+    def is_valid(self, *, raise_exception=False):
+        assert hasattr(self, "initial_data"), (
+            "Cannot call `.is_valid()` as no `data=` keyword argument was "
+            "passed when instantiating the serializer instance."
+        )
+
+        if not hasattr(self, "_validated_data"):
+            try:
+                self._validated_data = self.run_validation(self.initial_data)
+            except ValidationError as exc:
+                self._validated_data = {}
+                self._errors = exc.detail
+            else:
+                self._errors = {}
+
+        if self._errors and raise_exception:
+            raise ValidationError(self.errors)
+
+        raise Exception(str(hasattr(self, "_validated_data")) + "@")
+
+        return not bool(self._errors)
 
     def validate(self, data):
         # return data
