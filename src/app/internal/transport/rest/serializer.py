@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
 
+from app.internal.models.auth_user import AuthUser
 from app.internal.models.simple_user import SimpleUser
 
 
@@ -16,10 +17,25 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["simple_user_id", "full_username", "user_name", "surname"]
 
 
-class LoginSerializer(serializers.Serializer):
+class LoginSerializer(serializers.BaseSerializer):
     # email = serializers.CharField(max_length=255)
-    username = serializers.CharField(max_length=255, read_only=True)
-    password = serializers.CharField(max_length=128, write_only=True)
+    # username = serializers.CharField(max_length=255, read_only=True)
+    # password = serializers.CharField(max_length=128, write_only=True)
+
+    def to_internal_value(self, data):
+        user_id = data.get("user_id")
+        password = data.get("password")
+
+        # Return the validated values. This will be available as
+        # the `.validated_data` property.
+        return {"user_id": user_id, "password": password}
+
+    def to_representation(self, instance):
+        return {"user_id": instance.user_id, "password": instance.password}
+
+    def create(self, validated_data):
+        return AuthUser.objects.create(**validated_data)
+
     # token = serializers.CharField(max_length=255, read_only=True)
 
     # def validate(self, data):
