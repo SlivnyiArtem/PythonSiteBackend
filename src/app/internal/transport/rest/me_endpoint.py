@@ -3,6 +3,7 @@ from ninja import Router, Schema
 from ninja_jwt.authentication import JWTAuth
 
 from app.internal.services import user_service
+from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.rest.serializer import LoginSerializer, UserSerializer
 
 rest_app_router = Router()
@@ -30,7 +31,9 @@ class Item(Schema):
 
 @rest_app_router.get("/me", auth=JWTAuth())
 def me_handler(request):
-    return HttpResponse("sdlkfj")
+    return JsonResponse(request.auth)
+    information = form_information_handlers.get_user_information(123)
+    return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
 
 
 @rest_app_router.get("/test")

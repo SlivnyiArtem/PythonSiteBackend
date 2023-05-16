@@ -1,6 +1,6 @@
 from ninja_extra import ControllerBase, api_controller, http_post
 from ninja_extra.permissions import AllowAny
-from ninja_jwt.controller import TokenObtainPairController, TokenVerificationController, schema
+from ninja_jwt.controller import TokenVerificationController, schema
 
 
 class CustomTokenObtainPairController(ControllerBase):
