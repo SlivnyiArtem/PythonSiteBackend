@@ -6,12 +6,14 @@ from ninja_extra import NinjaExtraAPI
 from ninja_jwt.controller import NinjaJWTDefaultController
 
 from app.internal.transport.rest import me_endpoint
+from app.internal.transport.rest.Controllers import CustomController
 from app.internal.transport.rest.me_endpoint import rest_app_router
 
 # from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 api = NinjaExtraAPI()
-api.register_controllers(NinjaJWTDefaultController)
+# api.register_controllers(NinjaJWTDefaultController)
+api.register_controllers(CustomController)
 #
 api.add_router("/", rest_app_router)
 
