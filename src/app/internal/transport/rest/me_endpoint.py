@@ -25,7 +25,7 @@ class LoginSchema(Schema):
 
 
 @rest_app_router.get("/me", auth=JWTAuth())
-def me_handler():
+def me_handler(request):
     return HttpResponse("sdlkfj")
 
 

@@ -21,11 +21,11 @@ def get_user_by_username(username: str) -> SimpleUser:
     return result
 
 
-def create_auth_user(str_user_id: int) -> AuthUser:
+def create_auth_user(str_user_id: int, password: str) -> AuthUser:
     return AuthUser.objects.create_user(
         username=str(str_user_id),
         # email='jlennon@beatles.com',
-        password="123",
+        password=password,
     )
 
 
