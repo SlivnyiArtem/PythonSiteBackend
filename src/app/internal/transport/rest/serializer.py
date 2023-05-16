@@ -60,16 +60,16 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         # return data
-        # user_id = data.get("user_id")
+        user_id = data.get("user_id")
         password = data.get("password")
         if password is None:
             raise serializers.ValidationError("A password is required to log in.")
 
-        # user = authenticate(username=user_id, password=password)
-        #
-        # if user is None:
-        #     raise serializers.ValidationError("A user with this email and password was not found.")
-        # if not user.is_active:
-        #     raise serializers.ValidationError("This user has been deactivated.")
+        user = authenticate(username=user_id, password=password)
+
+        if user is None:
+            raise serializers.ValidationError("A user with this email and password was not found.")
+        if not user.is_active:
+            raise serializers.ValidationError("This user has been deactivated.")
 
         return data

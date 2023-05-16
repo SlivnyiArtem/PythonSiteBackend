@@ -13,7 +13,7 @@ class Item(Schema):
 
 
 class LoginSchema(Schema):
-    user_id: int
+    user_id: str
     password: str
 
 
