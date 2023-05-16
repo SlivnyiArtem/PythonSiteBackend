@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "ninja_extra",
     "app",
     # "drf_spectacular",
     # "drf_spectacular_sidecar",  # required for Django collectstatic discovery
