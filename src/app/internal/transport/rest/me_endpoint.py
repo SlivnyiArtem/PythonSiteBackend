@@ -24,9 +24,11 @@ class LoginSchema(Schema):
 #     return JsonResponse({"user": serialized_user})
 
 
-# @rest_app_router.get("/me", auth=JWTAuth())
-# def me_handler():
-#     return HttpResponse("sdlkfj")
+@rest_app_router.get("/me", auth=JWTAuth())
+def me_handler():
+    return HttpResponse("sdlkfj")
+
+
 #
 #
 # def testo():
