@@ -17,31 +17,31 @@ class LoginSchema(Schema):
     password: str
 
 
-@rest_app_router.post("/test")
-def test(request, user_id: Item):
-    user = user_service.get_user_by_id(user_id.id)
-    serialized_user = UserSerializer(user).data
-    return JsonResponse({"user": serialized_user})
+# @rest_app_router.post("/test")
+# def test(request, user_id: Item):
+#     user = user_service.get_user_by_id(user_id.id)
+#     serialized_user = UserSerializer(user).data
+#     return JsonResponse({"user": serialized_user})
 
 
-@rest_app_router.get("/me", auth=JWTAuth())
-def me_handler():
-    return HttpResponse("sdlkfj")
-
-
-def testo():
-    return HttpResponse("123213")
-
-
-@rest_app_router.get("/me2")
-def me_handler_2(request):
-    return HttpResponse("testudo")
+# @rest_app_router.get("/me", auth=JWTAuth())
+# def me_handler():
+#     return HttpResponse("sdlkfj")
+#
+#
+# def testo():
+#     return HttpResponse("123213")
+#
+#
+# @rest_app_router.get("/me2")
+# def me_handler_2(request):
+#     return HttpResponse("testudo")
 
 
 @rest_app_router.post("/login")
 def login(request, login_data: LoginSchema):
     # user = AuthUser.objects.filter(username=login_data.user_id).first()
-    user_data = {"user_id": str(login_data.user_id), "password": login_data.password}
+    user_data = {"user_id": login_data.user_id, "password": login_data.password}
     serialized_log = LoginSerializer(data=user_data)
     res = serialized_log.is_valid(raise_exception=True)
     return HttpResponse(res)

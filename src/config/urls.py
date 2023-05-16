@@ -19,7 +19,7 @@ urlpatterns = [
     # path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("admin/", admin.site.urls),
     path("api/", include("app.internal.urls")),
-    path("testo/", me_endpoint.testo),
+    # path("testo/", me_endpoint.testo),
     path("", api.urls),
     # path("userapi/<int:user_id>/newtestpage/", handlers.test_page_new),
     # path("login/", user_login_endpoint.UserLoginView.as_view()),
