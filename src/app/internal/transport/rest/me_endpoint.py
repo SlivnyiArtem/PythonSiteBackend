@@ -31,7 +31,7 @@ class Item(Schema):
 
 @rest_app_router.get("/me", auth=JWTAuth())
 def me_handler(request):
-    return JsonResponse(request.auth)
+    return HttpResponse(request.user.username)
     information = form_information_handlers.get_user_information(123)
     return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
 
