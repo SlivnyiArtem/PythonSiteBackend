@@ -11,7 +11,7 @@ from app.internal.transport.bot.text_serialization_handlers import convert_dict_
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
 from app.internal.users.application import user_service
-from app.internal.users.db_data.models import SimpleUser
+from app.internal.users.db_data.models import AuthUser, SimpleUser
 from app.internal.users.domain.services import get_hash_from_password
 
 
@@ -88,7 +88,8 @@ def start_handler(message: telebot.types.Message, bot):
     auth_user = user_service.create_auth_user(user.id, password)
     # bot.send_message(message.chat.id, "@@@")
     # bot.send_message(message.chat.id, user.id)
-    user_service.update_create_user(user.id, default_updates, auth_user)
+    auth_user_obj = AuthUser.objects.filter(username=auth_user.get["username"]).first()
+    user_service.update_create_user(user.id, default_updates, auth_user_obj)
 
     bot.send_message(message.chat.id, common_messages.user_add_message(user.username))
 
