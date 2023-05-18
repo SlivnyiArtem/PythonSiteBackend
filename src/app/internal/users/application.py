@@ -11,9 +11,9 @@ def get_api():
     api = NinjaExtraAPI()
     user_repo = UserRepository()
     user_service = UserService(user_repo=user_repo)
-    user_handlers = UserHandlers(user_service=user_service)
+    # user_handlers = UserHandlers(user_service=user_service)
     api.register_controllers(CustomController)
-    api.add_router("/users", get_users_router(user_handlers))
+    # api.add_router("/users", get_users_router(user_handlers))
 
     # add_users_router(api, user_handlers)
 
