@@ -11,7 +11,7 @@ def get_users_router(user_handlers: UserHandlers):
     #     path="/me", auth=JWTAuth(), methods=["GET"], response={}, view_func=user_handlers.me_information
     # )
     #
-    # router.add_api_operation(path="/test", methods=["GET"], response={}, view_func=user_handlers.test_information)
+    router.add_api_operation(path="/test", methods=["GET"], response={}, view_func=user_handlers.test_information)
 
     return router
 

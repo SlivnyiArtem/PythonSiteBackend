@@ -23,10 +23,10 @@ class IUserRepository:
     def update_auth_user_password(self, user_id, new_password: str) -> AuthUserSchema:
         pass
 
-    def get_test_information(self) -> TestInfSchema:
+    def get_test_information(self):
         pass
 
-    def get_me_information(self) -> UserInfSchema:
+    def get_me_information(self):
         pass
 
 
