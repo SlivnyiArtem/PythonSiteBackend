@@ -26,11 +26,6 @@ class IUserRepository:
     def update_auth_user_password(self, user_id, new_password: str) -> AuthUserSchema:
         pass
 
-    # def get_test_information(self):
-    #     pass
-    #
-    # def get_me_information(self, user_id):
-    #     pass
     def delete_user(self, user_id):
         pass
 
@@ -66,13 +61,9 @@ class UserService:
         user = self.get_user_by_id(user_id)
         user_obj = SimpleUser.objects.filter(simple_user_id=user.simple_user_id).first()
         information = SimpleUser.get_dictionary_deserialize(user_obj, status.HTTP_200_OK)
-        # user_obj = user
-        # information = {"MQ": 42}
-        # information = user_service.get_user_information(request.user.username)
         return JsonResponse(
             information,
             json_dumps_params={"ensure_ascii": False},
-            # status=information["error_code"]
         )
 
     def get_test_information(self):

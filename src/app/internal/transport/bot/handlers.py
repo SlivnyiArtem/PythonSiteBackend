@@ -86,8 +86,6 @@ def start_handler(message: telebot.types.Message, bot):
     password = "123"
     default_updates = {"user_name": user.first_name, "surname": user.last_name, "full_username": user.username}
     auth_user = user_service.create_auth_user(user.id, password)
-    # bot.send_message(message.chat.id, "@@@")
-    # bot.send_message(message.chat.id, user.id)
     auth_user_obj = AuthUser.objects.filter(username=auth_user.get["username"]).first()
     print(auth_user_obj.username)
     user_service.update_create_user(user.id, default_updates, auth_user_obj)

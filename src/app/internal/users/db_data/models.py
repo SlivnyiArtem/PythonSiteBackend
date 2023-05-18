@@ -12,8 +12,6 @@ class AuthUser(AbstractUser):
 
 
 class SimpleUser(models.Model):
-    # user_auth = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
     simple_user_id = models.IntegerField(primary_key=True)
     user = models.OneToOneField(AuthUser, on_delete=models.CASCADE)
     full_username = models.CharField(max_length=255, null=True)
