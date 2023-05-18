@@ -13,7 +13,11 @@ def get_users_router(user_handlers: UserHandlers):
 
     @router.get("/test")
     def test_handler(request):
-        return user_handlers.test_information(request)
+        return user_handlers.test_information()
+
+    @router.get("/transactions")
+    def transactions_log_handler(request):
+        return user_handlers.get_transactions_log(request)
 
     return router
 
