@@ -39,18 +39,18 @@ class UserHandlers:
 
             password = "123"
             default_updates = {
-                "user_name": user_schema["user_first_name"],
-                "surname": user_schema["user_last_name"],
-                "full_username": user_schema["user_full_username"],
+                "user_name": user_schema["user_name"],
+                "surname": user_schema["surname"],
+                "full_username": user_schema["full_username"],
             }
-            auth_user = self._user_service.create_auth_user(user_schema["user_id"], password)
-            return self._user_service.update_create_user(user_schema["user_id"], default_updates, auth_user)
+            auth_user = self._user_service.create_auth_user(user_schema["simple_user_id"], password)
+            return self._user_service.update_create_user(user_schema["simple_user_id"], default_updates, auth_user)
         else:
             return
 
     def delete_user(self, user_schema: UserSchema):
         username = user_schema.user.username
         if username == "Admin":
-            return self._user_service.delete_user(user_schema["user_id"])
+            return self._user_service.delete_user(user_schema["simple_user_id"])
         else:
             return
