@@ -1,8 +1,9 @@
 import hashlib
 
 from django.http import HttpResponse, JsonResponse
+from rest_framework import status
 
-from app.internal.users.db_data.models import AuthUser
+from app.internal.users.db_data.models import AuthUser, SimpleUser
 from app.internal.users.presentation.entities import AuthUserSchema, UserSchema
 
 
@@ -63,8 +64,10 @@ class UserService:
 
     def get_me_information(self, user_id):
         user = self.get_user_by_id(user_id)
-        print(user)
-        information = {"MQ": 42}
+        user_obj = SimpleUser.objects.filter(simple_user_id=user.simple_user_id).first()
+        information = SimpleUser.get_dictionary_deserialize(user_obj, status.HTTP_200_OK)
+        # user_obj = user
+        # information = {"MQ": 42}
         # information = user_service.get_user_information(request.user.username)
         return JsonResponse(
             information,
