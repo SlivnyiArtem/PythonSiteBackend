@@ -1,7 +1,8 @@
 from rest_framework import status
 
-from app.internal.models.simple_user import SimpleUser
-from app.internal.services import banking_service, user_service
+from app.internal.services import banking_service
+from app.internal.users.application import user_service
+from app.internal.users.db_data.models import SimpleUser
 
 
 def get_currency_information(user_inf: dict, requisite_id: int) -> int:

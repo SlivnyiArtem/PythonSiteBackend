@@ -5,13 +5,14 @@ import telebot
 from django.db import transaction as transaction_locker
 
 from app.internal.models.banking_account import BankingAccount
-from app.internal.models.simple_user import SimpleUser
 from app.internal.models.transaction import Transaction
-from app.internal.services import banking_service, password_service, user_service
-from app.internal.services.user_service import get_user_by_username
+from app.internal.services import banking_service
 from app.internal.transport.bot.text_serialization_handlers import convert_dict_to_str
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.transport.messages import common_messages
+from app.internal.users.application import user_service
+from app.internal.users.db_data.models import SimpleUser
+from app.internal.users.domain.services import get_hash_from_password
 
 
 def error_handler(exc, message, bot):
@@ -141,7 +142,7 @@ def add_user(message: telebot.types.Message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        another_user = get_user_by_username(message.text[1:])
+        another_user = user_service.get_user_by_username(message.text[1:])
         if another_user is None:
             pass
         else:
@@ -164,7 +165,7 @@ def remove_user(message: telebot.types.Message, bot):
         user = user_service.get_user_by_id(message.from_user.id)
         if user is None:
             return
-        another_user = get_user_by_username(message.text[1:])
+        another_user = user_service.get_user_by_username(message.text[1:])
         if another_user is None:
             pass
         else:
@@ -349,10 +350,7 @@ def new_password_handler(message: telebot.types.Message, bot):
 
 
 def verify_current_password_bot(message: telebot.types.Message, bot):
-    if (
-        password_service.get_hash_from_password(message.text)
-        == user_service.get_user_by_id(message.from_user.id).hash_of_password
-    ):
+    if get_hash_from_password(message.text) == user_service.get_user_by_id(message.from_user.id).hash_of_password:
         msg = bot.send_message(message.chat.id, "Введите новый пароль")
         bot.register_next_step_handler(msg, change_password, bot)
     else:

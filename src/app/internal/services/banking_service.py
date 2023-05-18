@@ -1,6 +1,8 @@
 from app.internal.models.banking_account import BankingAccount
 from app.internal.models.banking_card import Card
-from app.internal.services import user_service
+
+# from app.internal.users.domain.services import UserService
+from app.internal.users.application import user_service
 
 
 def get_card_by_id(card_number: int) -> Card:
