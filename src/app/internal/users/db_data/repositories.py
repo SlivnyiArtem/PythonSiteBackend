@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from app.internal.transport.information_former import form_information_handlers
 from app.internal.users.db_data.models import AuthUser, SimpleUser
 from app.internal.users.domain.services import IUserRepository, get_hash_from_password
-from app.internal.users.presentation.entities import AuthUserSchema, TestInfSchema, UserInfSchema, UserSchema
+from app.internal.users.presentation.entities import AuthUserSchema, UserSchema
 
 
 class UserRepository(IUserRepository):
