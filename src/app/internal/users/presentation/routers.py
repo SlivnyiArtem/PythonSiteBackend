@@ -15,9 +15,13 @@ def get_users_router(user_handlers: UserHandlers):
     def test_handler(request):
         return user_handlers.test_information()
 
-    @router.get("/transactions")
+    @router.get("/transactions", auth=JWTAuth())
     def transactions_log_handler(request):
         return user_handlers.get_transactions_log(request)
+
+    @router.put("/create_user", auth=JWTAuth())
+    def transactions_create_user(request):
+        return user_handlers.create_user(request)
 
     return router
 
