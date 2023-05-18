@@ -4,7 +4,7 @@ from app.internal.transport.rest.Controllers import CustomController
 from app.internal.users.db_data.repositories import UserRepository
 from app.internal.users.domain.services import UserService
 from app.internal.users.presentation.handlers import UserHandlers
-from app.internal.users.presentation.routers import get_users_router
+from app.internal.users.presentation.routers import get_users_router, router
 
 
 def get_api():
@@ -13,7 +13,8 @@ def get_api():
     user_service = UserService(user_repo=user_repo)
     # user_handlers = UserHandlers(user_service=user_service)
     api.register_controllers(CustomController)
-    api.add_router("/users", get_users_router(UserHandlers(user_service=user_service)))  # !!!
+    api.add_router(router)
+    # api.add_router("/users", get_users_router(UserHandlers(user_service=user_service)))  # !!!
 
     # add_users_router(api, user_handlers)
 
