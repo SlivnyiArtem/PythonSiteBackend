@@ -16,7 +16,7 @@ class IUserRepository:
     def create_auth_user(self, user_id: int, password: str) -> AuthUserSchema:
         pass
 
-    def update_create_user(self, user_id: int, default_updates: dict, auth_user: AuthUserSchema):
+    def update_create_user(self, user_id: int, default_updates: dict, auth_user: AuthUser):
         pass
 
     def update_user_number(self, user_id: int, valid_phone_number) -> UserSchema:
