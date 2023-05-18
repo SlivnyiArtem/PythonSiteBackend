@@ -2,7 +2,7 @@ from django.http import HttpResponse
 
 from app.internal.models.transaction import Transaction
 from app.internal.users.domain.services import UserService
-from app.internal.users.presentation.entities import UserSchema
+from app.internal.users.presentation.entities import SimpleUserSchema, UserSchema
 
 
 class UserHandlers:
@@ -32,25 +32,25 @@ class UserHandlers:
             res_dict = {"senders_log": new_sender, "recipient_logs": new_recipient}
             return HttpResponse(res_dict)
 
-    def create_user(self, user_schema: UserSchema):
-        username = user_schema.user.username
+    def create_user(self, user_schema: SimpleUserSchema):
+        username = "Admin"
         if username == "Admin":
             # user = self._user_service.get_user_by_id(user_id=username)
 
             password = "123"
             default_updates = {
-                "user_name": user_schema["user_name"],
-                "surname": user_schema["surname"],
-                "full_username": user_schema["full_username"],
+                "user_name": user_schema.user_name,
+                "surname": user_schema.surname,
+                "full_username": user_schema.full_username,
             }
-            auth_user = self._user_service.create_auth_user(user_schema["simple_user_id"], password)
-            return self._user_service.update_create_user(user_schema["simple_user_id"], default_updates, auth_user)
+            auth_user = self._user_service.create_auth_user(int(user_schema.simple_user_id), password)
+            return self._user_service.update_create_user(int(user_schema.simple_user_id), default_updates, auth_user)
         else:
             return
 
-    def delete_user(self, user_schema: UserSchema):
+    def delete_user(self, user_schema: SimpleUserSchema):
         username = user_schema.user.username
         if username == "Admin":
-            return self._user_service.delete_user(user_schema["simple_user_id"])
+            return self._user_service.delete_user(user_schema.simple_user_id)
         else:
             return

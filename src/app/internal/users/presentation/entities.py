@@ -9,6 +9,13 @@ UserSchema = create_schema(SimpleUser)
 AuthUserSchema = create_schema(AuthUser)
 
 
+class SimpleUserSchema(Schema):
+    user_name: str = Field()
+    surname: str = Field()
+    full_username: str = Field()
+    simple_user_id: str = Field()
+
+
 class TestInfSchema(Schema):
     id: int = Field()
 
