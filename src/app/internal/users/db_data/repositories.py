@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 
+from app.internal.transport.information_former import form_information_handlers
 from app.internal.users.db_data.models import AuthUser, SimpleUser
 from app.internal.users.domain.services import IUserRepository, get_hash_from_password
 from app.internal.users.presentation.entities import AuthUserSchema, TestInfSchema, UserInfSchema, UserSchema
@@ -30,11 +31,12 @@ class UserRepository(IUserRepository):
         hash_of_password = get_hash_from_password(new_password)
         return AuthUser.objects.filter(username=str(user_id)).update(password=hash_of_password)
 
-    def get_test_information(self):
+    def get_test_information(self, request):
         return HttpResponse("df")
 
-    def get_me_information(self):
-        return HttpResponse("cf")
+    def get_me_information(self, request):
+        information = form_information_handlers.get_user_information(request.user.username)
+        return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
 
 
 # class Inf():

@@ -23,10 +23,10 @@ class IUserRepository:
     def update_auth_user_password(self, user_id, new_password: str) -> AuthUserSchema:
         pass
 
-    def get_test_information(self):
+    def get_test_information(self, request):
         pass
 
-    def get_me_information(self):
+    def get_me_information(self, request):
         pass
 
 
@@ -81,8 +81,8 @@ class UserService:
     # def update_user_password(user_id: int, password: str):
     #     hash_of_password = get_hash_from_password(password)
     #     AuthUser.objects.filter(username=str(user_id)).update(password=hash_of_password)
-    def get_me_information(self):
-        return self.user_repo.get_me_information()
+    def get_me_information(self, request):
+        return self.user_repo.get_me_information(request)
 
-    def get_test_information(self):
-        return self.user_repo.get_test_information()
+    def get_test_information(self, request):
+        return self.user_repo.get_test_information(request)
