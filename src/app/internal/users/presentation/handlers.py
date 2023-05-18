@@ -16,7 +16,11 @@ class UserHandlers:
 
     # здесь функции
     def get_transactions_log(self, request):
-        user_id = request.user.username
+        username = request.user.username
+        if username == "Admin":
+            return
+        else:
+            user_id = int(username)
         user = self._user_service.get_user_by_id(user_id)
 
         sender_logs = list(Transaction.objects.filter(transaction_recipient=user))
