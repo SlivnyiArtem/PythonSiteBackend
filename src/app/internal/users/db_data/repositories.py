@@ -1,6 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 
 from app.internal.transport.information_former import form_information_handlers
+from app.internal.users.application import user_service
 from app.internal.users.db_data.models import AuthUser, SimpleUser
 from app.internal.users.domain.services import IUserRepository, get_hash_from_password
 from app.internal.users.presentation.entities import AuthUserSchema, UserSchema
@@ -35,7 +36,7 @@ class UserRepository(IUserRepository):
         return HttpResponse("df")
 
     def get_me_information(self, request):
-        information = form_information_handlers.get_user_information(request.user.username)
+        information = user_service.get_user_information(request.user.username)
         return JsonResponse(information, json_dumps_params={"ensure_ascii": False}, status=information["error_code"])
 
 

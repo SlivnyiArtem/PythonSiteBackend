@@ -55,12 +55,12 @@ def currency_amount_handler(message: telebot.types.Message, bot):
 
 
 def send_amount_inf(message: telebot.types.Message, bot):
-    user_inf = form_information_handlers.get_user_information(message.from_user.id)
+    user_inf = user_service.get_user_information(message.from_user.id)
     if user_inf is None:
         bot.send_message(message.chat.id, common_messages.no_information_in_db_message)
         return
     try:
-        amount = form_information_handlers.get_currency_information(user_inf, int(message.text))
+        amount = user_service.get_currency_information(user_inf, int(message.text))
     except PermissionError:
         bot.send_message(message.chat.id, common_messages.access_denied())
         return
@@ -75,9 +75,7 @@ def send_amount_inf(message: telebot.types.Message, bot):
 @access_decorator
 @error_decorator
 def me_inf_handler(message: telebot.types.Message, bot):
-    bot.send_message(
-        message.chat.id, convert_dict_to_str(form_information_handlers.get_user_information(message.from_user.id))
-    )
+    bot.send_message(message.chat.id, convert_dict_to_str(user_service.get_user_information(message.from_user.id)))
 
 
 @error_decorator
