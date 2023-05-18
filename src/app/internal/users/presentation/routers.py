@@ -5,7 +5,7 @@ from app.internal.users.presentation.handlers import UserHandlers
 
 
 def get_users_router(user_handlers: UserHandlers):
-    router = Router(tags=["users"])
+    router = Router()
 
     router.add_api_operation(
         path="/me", auth=JWTAuth(), methods=["GET"], response={}, view_func=user_handlers.me_information
