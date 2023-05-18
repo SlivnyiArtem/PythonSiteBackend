@@ -1,1 +1,1 @@
-from app.internal.models.auth_user import AuthUser
+from app.internal.users.db_data.models import AuthUser

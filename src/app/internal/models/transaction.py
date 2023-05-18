@@ -1,6 +1,6 @@
 from django.db import models
 
-from app.internal.models.simple_user import SimpleUser
+from app.internal.users.db_data.models import SimpleUser
 
 
 class Transaction(models.Model):
