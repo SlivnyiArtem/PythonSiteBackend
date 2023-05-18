@@ -30,14 +30,14 @@ class UserRepository(IUserRepository):
         hash_of_password = get_hash_from_password(new_password)
         return AuthUser.objects.filter(username=str(user_id)).update(password=hash_of_password)
 
-    def get_test_information(self, request):
-        return HttpResponse("df")
-
-    def get_me_information(self, request):
-        information = {"MQ": 42}
-        # information = user_service.get_user_information(request.user.username)
-        return JsonResponse(
-            information,
-            json_dumps_params={"ensure_ascii": False},
-            # status=information["error_code"]
-        )
+    # def get_test_information(self, request):
+    #     return HttpResponse("df")
+    #
+    # def get_me_information(self, request):
+    #     information = {"MQ": 42}
+    #     # information = user_service.get_user_information(request.user.username)
+    #     return JsonResponse(
+    #         information,
+    #         json_dumps_params={"ensure_ascii": False},
+    #         # status=information["error_code"]
+    #     )

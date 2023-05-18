@@ -15,9 +15,6 @@ def get_api():
     api.register_controllers(CustomController)
     router = get_users_router(user_handlers)
     api.add_router("/users", router)
-    # api.add_router("/users", get_users_router(UserHandlers(user_service=user_service)))  # !!!
-
-    # add_users_router(api, user_handlers)
 
     return api, user_service
 

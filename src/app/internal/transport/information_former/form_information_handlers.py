@@ -6,7 +6,6 @@ from app.internal.users.db_data.models import SimpleUser
 
 
 def get_currency_information(user_inf: dict, requisite_id: int) -> int:
-    # return 0
     acc_inf = banking_service.get_acc_by_id(requisite_id)
     card_inf = banking_service.get_card_by_id(requisite_id)
     if card_inf is not None:
@@ -20,7 +19,6 @@ def get_currency_information(user_inf: dict, requisite_id: int) -> int:
 
 
 def get_user_information(user_id: int) -> dict:
-    # return {"A": 1}
     user = user_service.get_user_by_id(user_id)
     code = status.HTTP_200_OK
     if user is None:

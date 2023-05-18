@@ -6,9 +6,9 @@ class UserHandlers:
         self._user_service = user_service
 
     def me_information(self, request):
-        return self._user_service.get_me_information(request)
+        return self._user_service.get_me_information()
 
     def test_information(self, request):
-        return self._user_service.get_test_information(request)
+        return self._user_service.get_test_information()
 
     # здесь функции
