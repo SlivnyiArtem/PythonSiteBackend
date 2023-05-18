@@ -89,25 +89,25 @@ class UserService:
     def get_test_information(self, request):
         return self.user_repo.get_test_information(request)
 
-    def get_currency_information(user_inf: dict, requisite_id: int) -> int:
-        return 0
-        # acc_inf = banking_service.get_acc_by_id(requisite_id)
-        # card_inf = banking_service.get_card_by_id(requisite_id)
-        # if card_inf is not None:
-        #     if card_inf.banking_account.account_owner.simple_user_id != user_inf["simple_user_id"]:
-        #         raise PermissionError("Access restr")
-        #     return card_inf.banking_account.currency_amount
-        # elif acc_inf is not None:
-        #     if acc_inf.account_owner.simple_user_id != user_inf["simple_user_id"]:
-        #         raise PermissionError("Access restr")
-        #     return acc_inf.currency_amount
-
-    def get_user_information(self, user_id: int) -> dict:
-        user = self.get_user_by_id(user_id)
-        # user = self.user_repo.get_user_by_id(user_id)
-        code = status.HTTP_200_OK
-        if user is None:
-            code = status.HTTP_404_NOT_FOUND
-        elif user.phone_number is None:
-            code = status.HTTP_403_FORBIDDEN
-        return SimpleUser.get_dictionary_deserialize(user, code)
+    # def get_currency_information(user_inf: dict, requisite_id: int) -> int:
+    #     return 0
+    #     # acc_inf = banking_service.get_acc_by_id(requisite_id)
+    #     # card_inf = banking_service.get_card_by_id(requisite_id)
+    #     # if card_inf is not None:
+    #     #     if card_inf.banking_account.account_owner.simple_user_id != user_inf["simple_user_id"]:
+    #     #         raise PermissionError("Access restr")
+    #     #     return card_inf.banking_account.currency_amount
+    #     # elif acc_inf is not None:
+    #     #     if acc_inf.account_owner.simple_user_id != user_inf["simple_user_id"]:
+    #     #         raise PermissionError("Access restr")
+    #     #     return acc_inf.currency_amount
+    #
+    # def get_user_information(self, user_id: int) -> dict:
+    #     user = self.get_user_by_id(user_id)
+    #     # user = self.user_repo.get_user_by_id(user_id)
+    #     code = status.HTTP_200_OK
+    #     if user is None:
+    #         code = status.HTTP_404_NOT_FOUND
+    #     elif user.phone_number is None:
+    #         code = status.HTTP_403_FORBIDDEN
+    #     return SimpleUser.get_dictionary_deserialize(user, code)
