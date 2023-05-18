@@ -30,6 +30,8 @@ class IUserRepository:
     #
     # def get_me_information(self, user_id):
     #     pass
+    def delete_user(self, user_id):
+        pass
 
 
 def get_hash_from_password(password: str) -> str:
@@ -72,3 +74,6 @@ class UserService:
 
     def get_test_information(self):
         return HttpResponse("df")
+
+    def delete_user(self, user_id):
+        return self.user_repo.delete_user(user_id=user_id)

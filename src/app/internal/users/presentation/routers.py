@@ -1,6 +1,7 @@
 from ninja import Router
 from ninja_jwt.authentication import JWTAuth
 
+from app.internal.users.presentation.entities import UserSchema
 from app.internal.users.presentation.handlers import UserHandlers
 
 
@@ -20,8 +21,12 @@ def get_users_router(user_handlers: UserHandlers):
         return user_handlers.get_transactions_log(request)
 
     @router.put("/create_user", auth=JWTAuth())
-    def transactions_create_user(request):
-        return user_handlers.create_user(request)
+    def create_user(user: UserSchema):
+        return user_handlers.create_user(user)
+
+    @router.delete("/delete_user", auth=JWTAuth())
+    def delete_user(user: UserSchema):
+        return user_handlers.delete_user(user)
 
     return router
 

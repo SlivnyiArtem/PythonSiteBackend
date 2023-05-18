@@ -20,6 +20,10 @@ class UserRepository(IUserRepository):
             password=password,
         )
 
+    def delete_user(self, user_id):
+        user = AuthUser.objects.filter(username=user_id).first()
+        user.delete()
+
     def update_create_user(self, user_id: int, default_updates: dict, auth_user: AuthUser) -> UserSchema:
         return SimpleUser.objects.update_or_create(simple_user_id=user_id, user=auth_user, defaults=default_updates)
 
