@@ -8,8 +8,4 @@ __pycache__
 .sqlLite
 db.sqlite3
 .orig
-.env
-/src/config/.env
-/env
-/.env
 /token
